@@ -30,7 +30,7 @@ html, body {
 }
 
 .studio-container, .app-wrapper {
-    max-width: 1300px;
+    max-width: 1280px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -60,6 +60,7 @@ html, body {
     display: flex !important;
     align-items: center !important;
     gap: 14px !important;
+    max-width: 100% !important;
 }
 
 .app-logo, .brand-icon {
@@ -78,6 +79,7 @@ html, body {
 .app-title-container, .brand-info {
     display: flex !important;
     flex-direction: column !important;
+    max-width: 100% !important;
 }
 
 .app-title, .brand-name {
@@ -109,6 +111,7 @@ html, body {
     align-items: center !important;
     gap: 6px !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
+    cursor: pointer !important;
 }
 
 .badge-pill.gold {
@@ -165,8 +168,8 @@ html, body {
 /* Main Layout Grid */
 .main-grid, .studio-main {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 16px !important;
+    grid-template-columns: 1.15fr 0.85fr !important;
+    gap: 20px !important;
     width: 100% !important;
 }
 
@@ -184,8 +187,8 @@ html, body {
     box-sizing: border-box !important;
 }
 
-.card-title {
-    font-size: 1.1rem !important;
+.card-title, .section-title-row {
+    font-size: 1.15rem !important;
     font-weight: 700 !important;
     color: #fff !important;
     display: flex !important;
@@ -213,8 +216,8 @@ html, body {
 /* Voice Models Selector Grid */
 .voice-models-container {
     display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
-    gap: 8px !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
     max-height: 270px !important;
     overflow-y: auto !important;
     padding-right: 6px !important;
@@ -356,7 +359,7 @@ input[type="range"] {
     box-shadow: 0 12px 35px rgba(124, 58, 237, 0.6) !important;
 }
 
-/* FULL-WIDTH EDGE-TO-EDGE MOBILE EXPANSION SYSTEM */
+/* PERFECT NON-OVERFLOWING MOBILE SYSTEM */
 @media (max-width: 768px) {
     html, body {
         padding: 4px !important;
@@ -372,7 +375,7 @@ input[type="range"] {
         overflow-x: hidden !important;
     }
 
-    /* Header Full-Width Fix */
+    /* Header Mobile Rules - NO OVERFLOW */
     .top-nav, .app-header {
         flex-direction: column !important;
         align-items: stretch !important;
@@ -382,20 +385,21 @@ input[type="range"] {
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
+        overflow: hidden !important;
     }
 
     .brand-group, .header-left {
         display: flex !important;
         align-items: center !important;
-        gap: 10px !important;
+        gap: 8px !important;
         width: 100% !important;
         max-width: 100% !important;
     }
 
     .brand-icon, .app-logo {
-        width: 40px !important;
-        height: 40px !important;
-        font-size: 1.2rem !important;
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 1.1rem !important;
         border-radius: 10px !important;
         flex-shrink: 0 !important;
         padding: 4px !important;
@@ -410,10 +414,15 @@ input[type="range"] {
     }
 
     .brand-name, .app-title {
-        font-size: 1.1rem !important;
-        line-height: 1.2 !important;
+        font-size: 1.05rem !important;
+        line-height: 1.25 !important;
         white-space: normal !important;
         word-break: break-word !important;
+        flex-wrap: wrap !important;
+    }
+
+    .brand-name span {
+        display: inline-block !important;
     }
 
     .brand-tagline, .app-subtitle {
@@ -476,7 +485,7 @@ input[type="range"] {
         box-sizing: border-box !important;
     }
 
-    /* 100 Models Single Column Full Width */
+    /* 100 Models - 1 Card Per Row Full Width */
     .voice-models-container {
         grid-template-columns: 1fr !important;
         gap: 6px !important;
