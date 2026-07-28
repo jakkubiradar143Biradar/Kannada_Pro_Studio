@@ -24,21 +24,6 @@
             </div>
         </nav>
 
-        <!-- Category Navigation Bar (Pill Tabs) -->
-        <div class="category-nav-bar">
-            <button class="cat-pill active" onclick="filterCategory('all', this)">🌐 All 100 Models (100 ಧ್ವನಿಗಳು)</button>
-            <button class="cat-pill" onclick="filterCategory('mahiti', this)">📢 1. ಮಾಹಿತಿ ಚಕ್ರ Specials</button>
-            <button class="cat-pill" onclick="filterCategory('amazon', this)">📦 2. Amazon Affiliate Deals</button>
-            <button class="cat-pill" onclick="filterCategory('ads', this)">🎙️ 3. Commercial FM Ads</button>
-            <button class="cat-pill" onclick="filterCategory('reels', this)">📲 4. Shorts & Reels</button>
-            <button class="cat-pill" onclick="filterCategory('news', this)">📰 5. News & Media</button>
-            <button class="cat-pill" onclick="filterCategory('story', this)">📖 6. Stories & Novels</button>
-            <button class="cat-pill" onclick="filterCategory('edu', this)">💡 7. Education & Guide</button>
-            <button class="cat-pill" onclick="filterCategory('cinema', this)">🎬 8. Cinema & Mass</button>
-            <button class="cat-pill" onclick="filterCategory('kids', this)">👧 9. Kids & Cartoons</button>
-            <button class="cat-pill" onclick="filterCategory('special', this)">🔮 10. Transport & Special FX</button>
-        </div>
-
         <!-- Main Studio Grid -->
         <main class="studio-main">
             <!-- Left Side: Voice Character Selection -->
@@ -49,17 +34,17 @@
                         <!-- Quick Dropdown Menu -->
                         <select id="quickVoiceMenu" class="quick-dropdown" onchange="selectVoiceByName(this.value)">
                             <option value="">▼ Quick Voice Menu (100 Models)</option>
-                            <optgroup label="📢 ಮಾಹಿತಿ ಚಕ್ರ Specials">
-                                <option value="mahiti_job">ಮಾಹಿತಿ ಚಕ್ರ Special #1 - ಉದ್ಯೋಗ ವರದಿಗಾರ</option>
-                                <option value="mahiti_scheme">ಮಾಹಿತಿ ಚಕ್ರ Special #2 - ಯೋಜನೆಗಳ ಮಾರ್ಗದರ್ಶಿ</option>
-                                <option value="mahiti_scholarship">ಮಾಹಿತಿ ಚಕ್ರ Special #3 - ವಿದ್ಯಾರ್ಥಿವೇತನ</option>
-                                <option value="mahiti_farmer">ಮಾಹಿತಿ ಚಕ್ರ Special #4 - ರೈತ ಮಿತ್ರ</option>
-                                <option value="mahiti_senior">ಮಾಹಿತಿ ಚಕ್ರ Special #5 - ಹಿರಿಯ ಪಿಂಚಣಿ</option>
-                                <option value="mahiti_pension">ಮಾಹಿತಿ ಚಕ್ರ Special #6 - ಅಂಗವಿಕಲ ವೇತನ</option>
-                                <option value="mahiti_dairy">ಮಾಹಿತಿ ಚಕ್ರ Special #7 - ಹೈನುಗಾರಿಕೆ ಸಬ್ಸಿಡಿ</option>
-                                <option value="mahiti_women">ಮಾಹಿತಿ ಚಕ್ರ Special #8 - ಮಹಿಳಾ ಯೋಜನೆ</option>
-                                <option value="mahiti_result">ಮಾಹಿತಿ ಚಕ್ರ Special #9 - ರಿಸಲ್ಟ್ ಲೈವ್</option>
-                                <option value="mahiti_health">ಮಾಹಿತಿ ಚಕ್ರ Special #10 - ಆರೋಗ್ಯ ಸಂಜೀವಿನಿ</option>
+                            <optgroup label="📢 100 Pro AI Voices">
+                                <option value="mahiti_job">1. ಉದ್ಯೋಗ ವರದಿಗಾರ (Govt Job Bulletin)</option>
+                                <option value="mahiti_scheme">2. ಸರ್ಕಾರಿ ಯೋಜನೆಗಳ ಮಾರ್ಗದರ್ಶಿ (Govt Schemes)</option>
+                                <option value="mahiti_scholarship">3. ವಿದ್ಯಾರ್ಥಿವೇತನ ಮಾರ್ಗದರ್ಶಿ (Scholarship Expert)</option>
+                                <option value="mahiti_farmer">4. ರೈತ ಮಿತ್ರ ಕೃಷಿ ವಾಚಕ (Farmer Agriculture Host)</option>
+                                <option value="mahiti_senior">5. ಹಿರಿಯ ನಾಗರಿಕರ ಪಿಂಚಣಿ (Senior Pension)</option>
+                                <option value="mahiti_pension">6. ಅಂಗವಿಕಲ ವೇತನ ಸಹಾಯಕ (Disability Pension)</option>
+                                <option value="mahiti_dairy">7. ಹೈನುಗಾರಿಕೆ ಸಬ್ಸಿಡಿ ಗೈಡ್ (Dairy Subsidy Host)</option>
+                                <option value="mahiti_women">8. ಮಹಿಳಾ ಸಮೃದ್ಧಿ ಯೋಜನೆ (Women Scheme Voice)</option>
+                                <option value="mahiti_result">9. ಪರೀಕ್ಷಾ ರಿಸಲ್ಟ್ ರಿಪೋರ್ಟರ್ (Exam Result Reporter)</option>
+                                <option value="mahiti_health">10. ಆರೋಗ್ಯ ಸಂಜೀವಿನಿ ಗೈಡ್ (Ayushman Health Host)</option>
                             </optgroup>
                             <optgroup label="📦 Amazon Affiliate & Deals">
                                 <option value="amazon_unboxing">11. Amazon Tech Unboxing</option>
@@ -149,61 +134,61 @@
 
                         <div class="search-box">
                             <span>🔍</span>
-                            <input type="text" id="voiceSearchInput" placeholder="Search..." oninput="searchVoices(this.value)">
+                            <input type="text" id="voiceSearchInput" placeholder="Search your models..." oninput="searchVoices(this.value)">
                         </div>
                     </div>
                 </div>
 
                 <div class="voice-models-container" id="voiceGrid100">
-                    <!-- CATEGORY 1: MAHITI CHAKRA BLOG SPECIALS (1-10) -->
+                    <!-- CATEGORY 1: PRO AI VOICES (1-10) -->
                     <div class="model-card active" data-cat="mahiti" onclick="selectVoice('mahiti_job', this)">
                         <div class="avatar">💼</div>
-                        <div class="details"><div class="model-name">ಮಾಹಿತಿ ಚಕ್ರ Special #1</div><div class="model-desc">ಸರ್ಕಾರಿ ಉದ್ಯೋಗ ವರದಿಗಾರ (Govt Job Bulletin)</div></div>
+                        <div class="details"><div class="model-name">1. ಉದ್ಯೋಗ ವರದಿಗಾರ</div><div class="model-desc">ಸರ್ಕಾರಿ ಉದ್ಯೋಗ ವರದಿಗಾರ (Govt Job Bulletin)</div></div>
                         <span class="badge-tag">Blog Special</span>
                     </div>
                     <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_scheme', this)">
                         <div class="avatar">📜</div>
-                        <div class="details"><div class="model-name">ಮಾಹಿತಿ ಚಕ್ರ Special #2</div><div class="model-desc">ಸರ್ಕಾರಿ ಯೋಜನೆಗಳ ಮಾರ್ಗದರ್ಶಿ (Govt Schemes)</div></div>
+                        <div class="details"><div class="model-name">2. ಸರ್ಕಾರಿ ಯೋಜನೆಗಳ ಮಾರ್ಗದರ್ಶಿ</div><div class="model-desc">ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು (Govt Schemes)</div></div>
                         <span class="badge-tag">Govt Schemes</span>
                     </div>
                     <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_scholarship', this)">
                         <div class="avatar">🎓</div>
-                        <div class="details"><div class="model-name">ಮಾಹಿತಿ ಚಕ್ರ Special #3</div><div class="model-desc">ವಿದ್ಯಾರ್ಥಿವೇತನ ಮಾರ್ಗದರ್ಶಿ (Scholarship Expert)</div></div>
+                        <div class="details"><div class="model-name">3. ವಿದ್ಯಾರ್ಥಿವೇತನ ಮಾರ್ಗದರ್ಶಿ</div><div class="model-desc">ವಿದ್ಯಾರ್ಥಿವೇತನ (Scholarship Expert)</div></div>
                         <span class="badge-tag">Education</span>
                     </div>
                     <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_farmer', this)">
                         <div class="avatar">🌾</div>
-                        <div class="details"><div class="model-name">ಮಾಹಿತಿ ಚಕ್ರ Special #4</div><div class="model-desc">ರೈತ ಮಿತ್ರ ಕೃಷಿ ವಾಚಕ (Farmer Agriculture Host)</div></div>
+                        <div class="details"><div class="model-name">4. ರೈತ ಮಿತ್ರ ಕೃಷಿ ವಾಚಕ</div><div class="model-desc">ರೈತ ಮಿತ್ರ (Farmer Agriculture Host)</div></div>
                         <span class="badge-tag">Farmers</span>
                     </div>
                     <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_senior', this)">
                         <div class="avatar">👵</div>
-                        <div class="details"><div class="model-name">ಮಾಹಿತಿ ಚಕ್ರ Special #5</div><div class="model-desc">ಹಿರಿಯ ನಾಗರಿಕರ ಪಿಂಚಣಿ ಗೈಡ್ (Senior Pension)</div></div>
+                        <div class="details"><div class="model-name">5. ಹಿರಿಯ ನಾಗರಿಕರ ಪಿಂಚಣಿ</div><div class="model-desc">ಪಿಂಚಣಿ ಗೈಡ್ (Senior Pension)</div></div>
                         <span class="badge-tag">Pension</span>
                     </div>
                     <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_pension', this)">
                         <div class="avatar">♿</div>
-                        <div class="details"><div class="model-name">ಮಾಹಿತಿ ಚಕ್ರ Special #6</div><div class="model-desc">ಅಂಗವಿಕಲ ವೇತನ ಸಹಾಯಕ (Disability Pension)</div></div>
+                        <div class="details"><div class="model-name">6. ಅಂಗವಿಕಲ ವೇತನ ಸಹಾಯಕ</div><div class="model-desc">ವೇತನ ಸಹಾಯಕ (Disability Pension)</div></div>
                         <span class="badge-tag">Welfare</span>
                     </div>
                     <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_dairy', this)">
                         <div class="avatar">🐄</div>
-                        <div class="details"><div class="model-name">ಮಾಹಿತಿ ಚಕ್ರ Special #7</div><div class="model-desc">ಹೈನುಗಾರಿಕೆ ಸಬ್ಸಿಡಿ ಗೈಡ್ (Dairy Subsidy Host)</div></div>
+                        <div class="details"><div class="model-name">7. ಹೈನುಗಾರಿಕೆ ಸಬ್ಸಿಡಿ ಗೈಡ್</div><div class="model-desc">ಸಬ್ಸಿಡಿ ಗೈಡ್ (Dairy Subsidy Host)</div></div>
                         <span class="badge-tag">Subsidy</span>
                     </div>
                     <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_women', this)">
                         <div class="avatar">👩</div>
-                        <div class="details"><div class="model-name">ಮಾಹಿತಿ ಚಕ್ರ Special #8</div><div class="model-desc">ಮಹಿಳಾ ಸಮೃದ್ಧಿ ಯೋಜನೆ (Women Scheme Voice)</div></div>
+                        <div class="details"><div class="model-name">8. ಮಹಿಳಾ ಸಮೃದ್ಧಿ ಯೋಜನೆ</div><div class="model-desc">ಮಹಿಳಾ ಯೋಜನೆ (Women Scheme Voice)</div></div>
                         <span class="badge-tag">Women Welfare</span>
                     </div>
                     <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_result', this)">
                         <div class="avatar">📋</div>
-                        <div class="details"><div class="model-name">ಮಾಹಿತಿ ಚಕ್ರ Special #9</div><div class="model-desc">ಪರೀಕ್ಷಾ ರಿಸಲ್ಟ್ ರಿಪೋರ್ಟರ್ (Exam Result Reporter)</div></div>
+                        <div class="details"><div class="model-name">9. ಪರೀಕ್ಷಾ ರಿಸಲ್ಟ್ ರಿಪೋರ್ಟರ್</div><div class="model-desc">ರಿಸಲ್ಟ್ ಲೈವ್ (Exam Result Reporter)</div></div>
                         <span class="badge-tag">Results</span>
                     </div>
                     <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_health', this)">
                         <div class="avatar">🏥</div>
-                        <div class="details"><div class="model-name">ಮಾಹಿತಿ ಚಕ್ರ Special #10</div><div class="model-desc">ಆರೋಗ್ಯ ಸಂಜೀವಿನಿ ಗೈಡ್ (Ayushman Health Host)</div></div>
+                        <div class="details"><div class="model-name">10. ಆರೋಗ್ಯ ಸಂಜೀವಿನಿ ಗೈಡ್</div><div class="model-desc">ಆರೋಗ್ಯ ಗೈಡ್ (Ayushman Health Host)</div></div>
                         <span class="badge-tag">Health</span>
                     </div>
 
