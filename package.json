@@ -1,0 +1,21 @@
+{
+  "name": "mahiti-chakra-pro-ai-voice-studio",
+  "version": "2.0.0",
+  "description": "Mahiti Chakra 100 Pro Kannada HD AI Voice Studio Web Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  },
+  "keywords": [
+    "kannada",
+    "tts",
+    "ai-voice",
+    "mahiti-chakra"
+  ],
+  "author": "Mahiti Chakra (mahitichakra.in)",
+  "license": "ISC"
+}
