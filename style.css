@@ -165,34 +165,6 @@ html, body {
     gap: 10px !important;
 }
 
-/* Premium Quick Dropdown Selector */
-.quick-select-dropdown, .quick-dropdown {
-    padding: 10px 16px !important;
-    background: linear-gradient(135deg, #1e1b4b, #311b92) !important;
-    border: 1px solid #8b5cf6 !important;
-    border-radius: 14px !important;
-    color: #ffffff !important;
-    font-size: 0.88rem !important;
-    font-weight: 700 !important;
-    outline: none !important;
-    cursor: pointer !important;
-    box-shadow: 0 4px 18px rgba(139, 92, 246, 0.4) !important;
-    max-width: 100% !important;
-}
-
-optgroup {
-    background: #0f172a !important;
-    color: #c084fc !important;
-    font-weight: 800 !important;
-}
-
-option {
-    background: #0f172a !important;
-    color: #f8fafc !important;
-    padding: 10px !important;
-    font-weight: 600 !important;
-}
-
 /* Sleek Search Box */
 .search-box {
     display: flex !important;
@@ -231,7 +203,7 @@ option {
     border-radius: 16px !important;
     padding: 12px 14px !important;
     cursor: pointer !important;
-    transition: all 0.25 ease !important;
+    transition: all 0.25s ease !important;
     display: flex !important;
     align-items: center !important;
     gap: 12px !important;
@@ -281,7 +253,7 @@ option {
     color: var(--text-secondary) !important;
 }
 
-/* Modulator Sliders Panel */
+/* Modulator Sliders Panel & Dropdown Fix */
 .modulator-panel {
     background: rgba(0, 0, 0, 0.35) !important;
     border: 1px solid var(--card-border) !important;
@@ -292,6 +264,18 @@ option {
     gap: 14px !important;
     width: 100% !important;
     box-sizing: border-box !important;
+}
+
+#eqSelect, select {
+    background: linear-gradient(135deg, #1e1b4b, #311b92) !important;
+    border: 1px solid #8b5cf6 !important;
+    border-radius: 12px !important;
+    color: #ffffff !important;
+    padding: 8px 12px !important;
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    outline: none !important;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3) !important;
 }
 
 .slider-group, .slider-box {
@@ -317,6 +301,78 @@ input[type="range"] {
     accent-color: var(--primary-cyan) !important;
     cursor: pointer !important;
     width: 100% !important;
+}
+
+/* Sample Flow Pills Row Fix (3D Glowing Dark Pills) */
+.sample-pills-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+}
+
+.sample-pills-row .pill, .pill {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95)) !important;
+    border: 1px solid rgba(139, 92, 246, 0.35) !important;
+    border-radius: 20px !important;
+    color: #f1f5f9 !important;
+    padding: 8px 14px !important;
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    cursor: pointer !important;
+}
+
+.sample-pills-row .pill:hover, .pill.active, .pill:hover {
+    background: linear-gradient(135deg, #7c3aed, #0284c7) !important;
+    border-color: #a78bfa !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 18px rgba(124, 58, 237, 0.4) !important;
+}
+
+/* Kanglish Transliteration Helper Styling */
+.kanglish-accordion {
+    background: rgba(17, 24, 39, 0.7) !important;
+    border: 1px solid rgba(139, 92, 246, 0.3) !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    margin-top: 12px !important;
+    margin-bottom: 16px !important;
+}
+
+.accordion-header {
+    background: rgba(30, 41, 59, 0.5) !important;
+    padding: 10px 14px !important;
+    color: #38bdf8 !important;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+}
+
+.accordion-body input {
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 12px !important;
+    color: #ffffff !important;
+    padding: 10px 12px !important;
+    font-size: 0.88rem !important;
+    width: 100% !important;
+}
+
+.btn-apply-kang {
+    background: linear-gradient(135deg, #7c3aed, #0284c7) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    padding: 10px 16px !important;
+    font-size: 0.82rem !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4) !important;
+    margin-top: 8px !important;
 }
 
 /* Text Input Area */
@@ -363,6 +419,44 @@ input[type="range"] {
 .btn-generate-speech:hover, .btn-generate:hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 12px 35px rgba(124, 58, 237, 0.6) !important;
+}
+
+/* Audio Player Card & Ultra-Premium Download Button */
+.player-card {
+    background: rgba(17, 24, 39, 0.7) !important;
+    border: 1px solid rgba(139, 92, 246, 0.3) !important;
+    border-radius: 20px !important;
+    padding: 16px !important;
+    margin-top: 14px !important;
+}
+
+.btn-download-mp3 {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    padding: 16px !important;
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    border: 1px solid #34d399 !important;
+    border-radius: 16px !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    font-weight: 800 !important;
+    font-size: 1rem !important;
+    box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4) !important;
+    transition: all 0.25s ease !important;
+    margin-top: 14px !important;
+}
+
+.btn-download-mp3:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.6) !important;
+}
+
+.btn-download-mp3.disabled {
+    opacity: 0.5 !important;
+    pointer-events: none !important;
 }
 
 /* PERFECT NON-OVERFLOWING MOBILE SYSTEM */
@@ -479,13 +573,6 @@ input[type="range"] {
         width: 100% !important;
     }
 
-    .quick-dropdown, .quick-select-dropdown {
-        width: 100% !important;
-        max-width: 100% !important;
-        font-size: 0.82rem !important;
-        padding: 10px !important;
-    }
-
     .search-box {
         width: 100% !important;
         padding: 6px 10px !important;
@@ -525,22 +612,6 @@ input[type="range"] {
         box-sizing: border-box !important;
         display: flex !important;
         justify-content: space-between !important;
-    }
-
-    .model-name, .voice-name {
-        font-size: 0.85rem !important;
-    }
-
-    .model-desc, .voice-tag {
-        font-size: 0.72rem !important;
-    }
-
-    .badge-tag {
-        position: relative !important;
-        top: auto !important;
-        right: auto !important;
-        margin-left: auto !important;
-        flex-shrink: 0 !important;
     }
 
     /* Modulator Panel Full Width Fix */
@@ -583,7 +654,7 @@ input[type="range"] {
         box-sizing: border-box !important;
     }
 
-    /* FIX SCREENSHOT 1: Hide floating badge tags on mobile so text never squishes */
+    /* Hide floating badge tags on mobile so text never squishes */
     .badge-tag {
         display: none !important;
     }
@@ -762,4 +833,3 @@ input[type="range"] {
     font-size: 0.78rem !important;
     color: var(--text-secondary) !important;
 }
-
