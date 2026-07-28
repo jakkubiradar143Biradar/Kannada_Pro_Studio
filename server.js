@@ -248,6 +248,19 @@ app.post('/api/generate-tts', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 Kannada Pro AI Voice Studio running on port ${PORT}`);
+app.get('/ping', (req, res) => {
+    res.status(200).send('PONG - Kannada Pro AI Voice Studio Server Active 24/7');
 });
+
+const serverInstance = app.listen(PORT, () => {
+    console.log(`🚀 Kannada Pro AI Voice Studio running on port ${PORT}`);
+    
+    // Internal Self-Ping Keeping Render Server 100% Warm & Instant 24/7
+    setInterval(() => {
+        try {
+            const https = require('https');
+            https.get('https://kannada-pro-studio.onrender.com/ping', () => {}).on('error', () => {});
+        } catch (e) {}
+    }, 3 * 60 * 1000); // Pings every 3 minutes
+});
+
