@@ -375,7 +375,7 @@ input[type="range"] {
         overflow-x: hidden !important;
     }
 
-    /* Header Mobile Rules - NO OVERFLOW */
+    /* Header Mobile Rules */
     .top-nav, .app-header {
         flex-direction: column !important;
         align-items: stretch !important;
@@ -419,10 +419,6 @@ input[type="range"] {
         white-space: normal !important;
         word-break: break-word !important;
         flex-wrap: wrap !important;
-    }
-
-    .brand-name span {
-        display: inline-block !important;
     }
 
     .brand-tagline, .app-subtitle {
@@ -471,6 +467,41 @@ input[type="range"] {
         flex-shrink: 0 !important;
     }
 
+    /* Section Titles & Header Controls Fix */
+    .section-title-row, .card-title {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+        width: 100% !important;
+    }
+
+    h2 {
+        font-size: 0.98rem !important;
+        word-break: break-word !important;
+        white-space: normal !important;
+    }
+
+    .header-controls {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+        width: 100% !important;
+    }
+
+    .quick-dropdown, .quick-select-dropdown {
+        width: 100% !important;
+        max-width: 100% !important;
+        font-size: 0.8rem !important;
+    }
+
+    .search-box {
+        width: 100% !important;
+    }
+
+    .search-box input {
+        width: 100% !important;
+    }
+
     /* Main Layout Grid Full-Width */
     .main-grid, .studio-main {
         grid-template-columns: 1fr !important;
@@ -485,48 +516,66 @@ input[type="range"] {
         box-sizing: border-box !important;
     }
 
-    /* 100 Models - 1 Card Per Row Full Width */
+    /* 100 Models Single Column Full Width */
     .voice-models-container {
         grid-template-columns: 1fr !important;
         gap: 6px !important;
-        max-height: 290px !important;
+        max-height: 280px !important;
         width: 100% !important;
     }
 
     .model-card, .voice-card {
-        padding: 9px 10px !important;
+        padding: 8px 10px !important;
         border-radius: 10px !important;
         width: 100% !important;
         box-sizing: border-box !important;
+        display: flex !important;
+        justify-content: space-between !important;
     }
 
     .model-name, .voice-name {
-        font-size: 0.85rem !important;
+        font-size: 0.82rem !important;
     }
 
     .model-desc, .voice-tag {
-        font-size: 0.72rem !important;
+        font-size: 0.70rem !important;
     }
 
-    /* Modulator Panel Full Width */
+    .badge-tag {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        margin-left: auto !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Modulator Panel Full Width Fix */
     .modulator-panel {
+        display: flex !important;
+        flex-direction: column !important;
         padding: 10px !important;
         border-radius: 12px !important;
         width: 100% !important;
         box-sizing: border-box !important;
+        gap: 8px !important;
     }
 
     .sliders-grid {
-        grid-template-columns: 1fr !important;
+        display: flex !important;
+        flex-direction: column !important;
         gap: 8px !important;
+        width: 100% !important;
+    }
+
+    .slider-box {
         width: 100% !important;
     }
 
     /* Enter Text Section Full Width */
     .input-container textarea, .text-input-area {
-        min-height: 200px !important;
-        font-size: 0.92rem !important;
-        padding: 12px !important;
+        min-height: 180px !important;
+        font-size: 0.90rem !important;
+        padding: 10px !important;
         border-radius: 12px !important;
         width: 100% !important;
         box-sizing: border-box !important;
@@ -534,7 +583,7 @@ input[type="range"] {
 
     .btn-generate-speech, .btn-generate {
         padding: 14px !important;
-        font-size: 0.98rem !important;
+        font-size: 0.95rem !important;
         border-radius: 12px !important;
         width: 100% !important;
         box-sizing: border-box !important;
