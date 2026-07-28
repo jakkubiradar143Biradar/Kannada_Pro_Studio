@@ -25,50 +25,52 @@ html, body {
     background: radial-gradient(circle at top center, #111827, #070913);
     color: var(--text-primary);
     min-height: 100vh;
-    padding: 16px;
+    padding: 10px 8px;
     line-height: 1.4;
 }
 
 .studio-container, .app-wrapper {
-    max-width: 1350px;
+    max-width: 900px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 14px;
     width: 100%;
     overflow-x: hidden;
 }
 
-/* Header Section */
+/* Header Section - 100% Responsive Clean Layout */
 .app-header, .top-nav {
     background: var(--card-bg) !important;
     border: 1px solid var(--card-border) !important;
-    border-radius: 20px !important;
+    border-radius: 18px !important;
     backdrop-filter: blur(16px) !important;
-    padding: 18px 26px !important;
+    padding: 14px 16px !important;
     display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
-    flex-wrap: wrap !important;
-    gap: 14px !important;
+    gap: 10px !important;
     width: 100% !important;
     box-sizing: border-box !important;
+    overflow: hidden !important;
 }
 
 .header-left, .brand-group {
     display: flex !important;
     align-items: center !important;
-    gap: 16px !important;
-    max-width: 100% !important;
+    gap: 10px !important;
+    width: 100% !important;
 }
 
 .app-logo, .brand-icon {
-    font-size: 2.2rem !important;
+    width: 42px !important;
+    height: 42px !important;
+    font-size: 1.3rem !important;
     background: var(--accent-gradient) !important;
-    border-radius: 18px !important;
-    padding: 10px 14px !important;
-    box-shadow: 0 0 25px var(--glow-purple) !important;
+    border-radius: 12px !important;
+    padding: 6px !important;
+    box-shadow: 0 0 20px var(--glow-purple) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -79,33 +81,45 @@ html, body {
 .app-title-container, .brand-info {
     display: flex !important;
     flex-direction: column !important;
-    max-width: 100% !important;
+    flex: 1 !important;
+    overflow: hidden !important;
+    width: 100% !important;
 }
 
 .app-title, .brand-name {
-    font-size: 1.65rem !important;
+    font-size: 1.15rem !important;
+    line-height: 1.25 !important;
     font-weight: 800 !important;
     color: #ffffff !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+}
+
+.brand-name span {
+    display: inline-block !important;
 }
 
 .app-subtitle, .brand-tagline {
-    font-size: 0.88rem !important;
+    font-size: 0.72rem !important;
     color: var(--text-secondary) !important;
+    line-height: 1.2 !important;
+    white-space: normal !important;
+    word-break: break-word !important;
 }
 
 .header-badges, .nav-actions {
     display: flex !important;
     align-items: center !important;
-    gap: 12px !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    width: 100% !important;
+    flex-wrap: wrap !important;
 }
 
 .badge-pill, .btn-smart-pick {
-    padding: 8px 18px !important;
-    border-radius: 20px !important;
-    font-size: 0.85rem !important;
+    padding: 6px 12px !important;
+    border-radius: 18px !important;
+    font-size: 0.75rem !important;
     font-weight: 700 !important;
     display: inline-flex !important;
     align-items: center !important;
@@ -120,49 +134,76 @@ html, body {
     border: 1px solid rgba(255, 183, 3, 0.4) !important;
 }
 
-.badge-pill.green {
+.badge-pill.green, .live-status {
     background: rgba(16, 185, 129, 0.18) !important;
     color: #34d399 !important;
     border: 1px solid rgba(16, 185, 129, 0.4) !important;
+    padding: 5px 10px !important;
+    font-size: 0.75rem !important;
+    border-radius: 18px !important;
 }
 
-/* Main Layout Grid */
+/* UNIFIED 1-COLUMN FLEX LAYOUT FOR BOTH MOBILE MODE AND DESKTOP MODE (A TO Z IDENTICAL) */
 .main-grid, .studio-main {
-    display: grid !important;
-    grid-template-columns: 1.15fr 0.85fr !important;
-    gap: 24px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
     width: 100% !important;
 }
 
 .grid-card, .section-card {
     background: var(--card-bg) !important;
     border: 1px solid var(--card-border) !important;
-    border-radius: 24px !important;
-    padding: 24px !important;
+    border-radius: 18px !important;
+    padding: 14px !important;
     backdrop-filter: blur(16px) !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 16px !important;
+    gap: 12px !important;
     width: 100% !important;
     box-sizing: border-box !important;
 }
 
 .card-title, .section-title-row {
-    font-size: 1.2rem !important;
+    font-size: 1.05rem !important;
     font-weight: 700 !important;
     color: #fff !important;
     display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
     border-bottom: 1px solid var(--card-border) !important;
-    padding-bottom: 12px !important;
+    padding-bottom: 10px !important;
+    width: 100% !important;
+}
+
+h2 {
+    font-size: 1rem !important;
+    word-break: break-word !important;
+    white-space: normal !important;
 }
 
 .header-controls {
     display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+}
+
+/* Quick Voice Button */
+.btn-quick-voice {
+    padding: 10px 16px !important;
+    background: linear-gradient(135deg, #1e1b4b, #311b92) !important;
+    border: 1px solid #8b5cf6 !important;
+    border-radius: 14px !important;
+    color: #ffffff !important;
+    font-size: 0.88rem !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 18px rgba(139, 92, 246, 0.4) !important;
+    width: 100% !important;
+    text-align: center !important;
 }
 
 /* Sleek Search Box */
@@ -173,8 +214,9 @@ html, body {
     background: rgba(0, 0, 0, 0.4) !important;
     border: 1px solid var(--card-border) !important;
     border-radius: 14px !important;
-    padding: 8px 14px !important;
+    padding: 8px 12px !important;
     box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+    width: 100% !important;
 }
 
 .search-box input {
@@ -182,31 +224,31 @@ html, body {
     border: none !important;
     outline: none !important;
     color: #ffffff !important;
-    font-size: 0.88rem !important;
+    font-size: 0.85rem !important;
     width: 100% !important;
 }
 
-/* Voice Models Selector Grid */
+/* Voice Models Selector Grid - 1 Single Column Everywhere */
 .voice-models-container {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 12px !important;
-    max-height: 300px !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    max-height: 290px !important;
     overflow-y: auto !important;
-    padding-right: 6px !important;
+    padding-right: 4px !important;
     width: 100% !important;
 }
 
 .model-card, .voice-card {
     background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.85)) !important;
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    border-radius: 16px !important;
-    padding: 12px 14px !important;
+    border-radius: 14px !important;
+    padding: 10px 12px !important;
     cursor: pointer !important;
-    transition: all 0.25s ease !important;
+    transition: all 0.2s ease !important;
     display: flex !important;
     align-items: center !important;
-    gap: 12px !important;
+    gap: 10px !important;
     width: 100% !important;
     box-sizing: border-box !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
@@ -215,8 +257,6 @@ html, body {
 .model-card:hover, .voice-card:hover {
     background: linear-gradient(135deg, rgba(51, 65, 85, 0.8), rgba(30, 41, 59, 0.95)) !important;
     border-color: rgba(139, 92, 246, 0.5) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3) !important;
 }
 
 .model-card.active, .voice-card.selected {
@@ -226,10 +266,11 @@ html, body {
 }
 
 .avatar, .voice-icon {
-    font-size: 22px !important;
+    font-size: 20px !important;
     background: rgba(255, 255, 255, 0.08) !important;
-    padding: 8px !important;
-    border-radius: 12px !important;
+    padding: 6px !important;
+    border-radius: 10px !important;
+    flex-shrink: 0 !important;
 }
 
 .details, .voice-info {
@@ -240,42 +281,42 @@ html, body {
 }
 
 .model-name, .voice-name {
-    font-size: 0.92rem !important;
+    font-size: 0.9rem !important;
     font-weight: 800 !important;
     color: #ffffff !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    white-space: normal !important;
+    word-break: break-word !important;
 }
 
 .model-desc, .voice-tag {
-    font-size: 0.78rem !important;
+    font-size: 0.76rem !important;
     color: var(--text-secondary) !important;
+    white-space: normal !important;
+    word-break: break-word !important;
 }
 
-/* Modulator Sliders Panel & Dropdown Fix */
+.badge-tag {
+    display: none !important;
+}
+
+/* Modulator Sliders Panel - 1 Column Everywhere */
 .modulator-panel {
     background: rgba(0, 0, 0, 0.35) !important;
     border: 1px solid var(--card-border) !important;
-    border-radius: 16px !important;
-    padding: 18px !important;
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 16px !important;
+    border-radius: 14px !important;
+    padding: 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
     width: 100% !important;
     box-sizing: border-box !important;
 }
 
-#eqSelect, select {
-    background: linear-gradient(135deg, #1e1b4b, #311b92) !important;
-    border: 1px solid #8b5cf6 !important;
-    border-radius: 12px !important;
-    color: #ffffff !important;
-    padding: 8px 12px !important;
-    font-size: 0.85rem !important;
-    font-weight: 700 !important;
-    outline: none !important;
-    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3) !important;
+.sliders-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
 }
 
 .slider-group, .slider-box {
@@ -286,7 +327,7 @@ html, body {
 }
 
 .slider-label {
-    font-size: 0.82rem !important;
+    font-size: 0.8rem !important;
     color: var(--text-secondary) !important;
     display: flex !important;
     justify-content: space-between !important;
@@ -303,12 +344,25 @@ input[type="range"] {
     width: 100% !important;
 }
 
-/* Sample Flow Pills Row Fix (3D Glowing Dark Pills) */
+#eqSelect, select {
+    background: linear-gradient(135deg, #1e1b4b, #311b92) !important;
+    border: 1px solid #8b5cf6 !important;
+    border-radius: 12px !important;
+    color: #ffffff !important;
+    padding: 8px 12px !important;
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    outline: none !important;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3) !important;
+    width: 100% !important;
+}
+
+/* Sample Flow Pills Row */
 .sample-pills-row {
     display: flex !important;
     flex-wrap: wrap !important;
-    gap: 8px !important;
-    margin-bottom: 12px !important;
+    gap: 6px !important;
+    margin-bottom: 10px !important;
 }
 
 .sample-pills-row .pill, .pill {
@@ -316,11 +370,10 @@ input[type="range"] {
     border: 1px solid rgba(139, 92, 246, 0.35) !important;
     border-radius: 20px !important;
     color: #f1f5f9 !important;
-    padding: 8px 14px !important;
-    font-size: 0.82rem !important;
+    padding: 7px 12px !important;
+    font-size: 0.8rem !important;
     font-weight: 700 !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
-    transition: all 0.2s ease !important;
     display: inline-flex !important;
     align-items: center !important;
     gap: 6px !important;
@@ -331,82 +384,74 @@ input[type="range"] {
     background: linear-gradient(135deg, #7c3aed, #0284c7) !important;
     border-color: #a78bfa !important;
     color: #ffffff !important;
-    box-shadow: 0 4px 18px rgba(124, 58, 237, 0.4) !important;
 }
 
 /* Kanglish Transliteration Helper Styling */
 .kanglish-accordion {
     background: rgba(17, 24, 39, 0.7) !important;
     border: 1px solid rgba(139, 92, 246, 0.3) !important;
-    border-radius: 16px !important;
+    border-radius: 14px !important;
     overflow: hidden !important;
-    margin-top: 12px !important;
-    margin-bottom: 16px !important;
+    margin-top: 10px !important;
+    margin-bottom: 14px !important;
 }
 
 .accordion-header {
     background: rgba(30, 41, 59, 0.5) !important;
-    padding: 10px 14px !important;
+    padding: 8px 12px !important;
     color: #38bdf8 !important;
     font-weight: 700 !important;
-    font-size: 0.85rem !important;
+    font-size: 0.82rem !important;
 }
 
 .accordion-body input {
     background: rgba(0, 0, 0, 0.5) !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    border-radius: 12px !important;
+    border-radius: 10px !important;
     color: #ffffff !important;
-    padding: 10px 12px !important;
-    font-size: 0.88rem !important;
+    padding: 8px 10px !important;
+    font-size: 0.85rem !important;
     width: 100% !important;
 }
 
 .btn-apply-kang {
     background: linear-gradient(135deg, #7c3aed, #0284c7) !important;
     border: none !important;
-    border-radius: 12px !important;
+    border-radius: 10px !important;
     color: #ffffff !important;
     font-weight: 800 !important;
-    padding: 10px 16px !important;
-    font-size: 0.82rem !important;
+    padding: 8px 14px !important;
+    font-size: 0.8rem !important;
     cursor: pointer !important;
-    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4) !important;
     margin-top: 8px !important;
 }
 
 /* Text Input Area */
 .input-container textarea, .text-input-area {
     width: 100% !important;
-    min-height: 200px !important;
+    min-height: 180px !important;
     background: rgba(0, 0, 0, 0.45) !important;
     border: 1px solid var(--card-border) !important;
-    border-radius: 16px !important;
-    padding: 16px !important;
+    border-radius: 14px !important;
+    padding: 12px !important;
     color: #ffffff !important;
-    font-size: 0.98rem !important;
+    font-size: 0.92rem !important;
     resize: vertical !important;
     outline: none !important;
     line-height: 1.6 !important;
     box-sizing: border-box !important;
 }
 
-.input-container textarea:focus, .text-input-area:focus {
-    border-color: #8b5cf6 !important;
-    box-shadow: 0 0 20px var(--glow-purple) !important;
-}
-
 /* Action Button */
 .btn-generate-speech, .btn-generate {
     background: var(--button-gradient) !important;
     color: #ffffff !important;
-    font-size: 1.1rem !important;
+    font-size: 1.05rem !important;
     font-weight: 800 !important;
-    padding: 18px !important;
+    padding: 16px !important;
     border: none !important;
-    border-radius: 16px !important;
+    border-radius: 14px !important;
     cursor: pointer !important;
-    transition: all 0.3s ease !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -416,18 +461,13 @@ input[type="range"] {
     box-sizing: border-box !important;
 }
 
-.btn-generate-speech:hover, .btn-generate:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 12px 35px rgba(124, 58, 237, 0.6) !important;
-}
-
-/* Audio Player Card & Ultra-Premium Download Button */
+/* Audio Player Card & Download Button */
 .player-card {
     background: rgba(17, 24, 39, 0.7) !important;
     border: 1px solid rgba(139, 92, 246, 0.3) !important;
-    border-radius: 20px !important;
-    padding: 18px !important;
-    margin-top: 14px !important;
+    border-radius: 16px !important;
+    padding: 14px !important;
+    margin-top: 12px !important;
 }
 
 .btn-download-mp3 {
@@ -436,263 +476,21 @@ input[type="range"] {
     justify-content: center !important;
     gap: 8px !important;
     width: 100% !important;
-    padding: 16px !important;
+    padding: 14px !important;
     background: linear-gradient(135deg, #10b981, #059669) !important;
     border: 1px solid #34d399 !important;
-    border-radius: 16px !important;
+    border-radius: 14px !important;
     color: #ffffff !important;
     text-decoration: none !important;
     font-weight: 800 !important;
-    font-size: 1rem !important;
+    font-size: 0.95rem !important;
     box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4) !important;
-    transition: all 0.25s ease !important;
-    margin-top: 14px !important;
-}
-
-.btn-download-mp3:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.6) !important;
+    margin-top: 12px !important;
 }
 
 .btn-download-mp3.disabled {
     opacity: 0.5 !important;
     pointer-events: none !important;
-}
-
-/* 100% FULL-WIDTH MOBILE LAYOUT - NO DARK EMPTY RIGHT SPACE */
-@media (max-width: 768px) {
-    html, body {
-        padding: 4px !important;
-        width: 100% !important;
-        max-width: 100vw !important;
-        overflow-x: hidden !important;
-    }
-
-    .studio-container, .app-wrapper {
-        gap: 10px !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        overflow-x: hidden !important;
-        margin: 0 auto !important;
-    }
-
-    /* Header Mobile Rules */
-    .top-nav, .app-header {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        padding: 12px 10px !important;
-        gap: 8px !important;
-        border-radius: 14px !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-        overflow: hidden !important;
-    }
-
-    .brand-group, .header-left {
-        display: flex !important;
-        align-items: center !important;
-        gap: 8px !important;
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    .brand-icon, .app-logo {
-        width: 38px !important;
-        height: 38px !important;
-        font-size: 1.1rem !important;
-        border-radius: 10px !important;
-        flex-shrink: 0 !important;
-        padding: 4px !important;
-    }
-
-    .brand-info, .app-title-container {
-        display: flex !important;
-        flex-direction: column !important;
-        flex: 1 !important;
-        overflow: hidden !important;
-        width: 100% !important;
-    }
-
-    .brand-name, .app-title {
-        font-size: 1.05rem !important;
-        line-height: 1.25 !important;
-        white-space: normal !important;
-        word-break: break-word !important;
-        flex-wrap: wrap !important;
-    }
-
-    .brand-name span {
-        display: inline-block !important;
-    }
-
-    .brand-tagline, .app-subtitle {
-        font-size: 0.68rem !important;
-        line-height: 1.2 !important;
-        white-space: normal !important;
-        word-break: break-word !important;
-    }
-
-    .nav-actions, .header-badges {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        gap: 6px !important;
-        width: 100% !important;
-        flex-wrap: wrap !important;
-    }
-
-    .btn-smart-pick, .badge-pill {
-        padding: 5px 10px !important;
-        font-size: 0.7rem !important;
-        border-radius: 18px !important;
-    }
-
-    .live-status {
-        padding: 4px 8px !important;
-        font-size: 0.7rem !important;
-    }
-
-    /* Section Titles & Header Controls Fix */
-    .section-title-row, .card-title {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 6px !important;
-        width: 100% !important;
-    }
-
-    h2 {
-        font-size: 0.98rem !important;
-        word-break: break-word !important;
-        white-space: normal !important;
-    }
-
-    .header-controls {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 6px !important;
-        width: 100% !important;
-    }
-
-    .search-box {
-        width: 100% !important;
-        padding: 6px 10px !important;
-    }
-
-    .search-box input {
-        width: 100% !important;
-        font-size: 0.82rem !important;
-    }
-
-    /* Main Layout Grid Full-Width */
-    .main-grid, .studio-main {
-        grid-template-columns: 1fr !important;
-        gap: 10px !important;
-        width: 100% !important;
-    }
-
-    .grid-card, .section-card {
-        padding: 10px !important;
-        border-radius: 14px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-    }
-
-    /* 100 Models Single Column Full Width */
-    .voice-models-container {
-        grid-template-columns: 1fr !important;
-        gap: 6px !important;
-        max-height: 280px !important;
-        width: 100% !important;
-    }
-
-    .model-card, .voice-card {
-        padding: 9px 10px !important;
-        border-radius: 12px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-        display: flex !important;
-        justify-content: space-between !important;
-    }
-
-    /* Modulator Panel Full Width Fix */
-    .modulator-panel {
-        display: flex !important;
-        flex-direction: column !important;
-        padding: 10px !important;
-        border-radius: 12px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-        gap: 8px !important;
-    }
-
-    .sliders-grid {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 8px !important;
-        width: 100% !important;
-    }
-
-    .slider-box {
-        width: 100% !important;
-    }
-
-    /* Enter Text Section Full Width */
-    .input-container textarea, .text-input-area {
-        min-height: 180px !important;
-        font-size: 0.90rem !important;
-        padding: 10px !important;
-        border-radius: 12px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-    }
-
-    .btn-generate-speech, .btn-generate {
-        padding: 14px !important;
-        font-size: 0.95rem !important;
-        border-radius: 12px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-    }
-
-    /* Hide floating badge tags on mobile so text never squishes */
-    .badge-tag {
-        display: none !important;
-    }
-
-    .model-name, .voice-name {
-        font-size: 0.92rem !important;
-        white-space: normal !important;
-        word-break: break-word !important;
-    }
-
-    .model-desc, .voice-tag {
-        font-size: 0.78rem !important;
-        white-space: normal !important;
-        word-break: break-word !important;
-    }
-}
-
-/* Quick Voice Menu Button Styling */
-.btn-quick-voice {
-    padding: 10px 18px !important;
-    background: linear-gradient(135deg, #1e1b4b, #311b92) !important;
-    border: 1px solid #8b5cf6 !important;
-    border-radius: 14px !important;
-    color: #ffffff !important;
-    font-size: 0.88rem !important;
-    font-weight: 700 !important;
-    cursor: pointer !important;
-    box-shadow: 0 4px 18px rgba(139, 92, 246, 0.4) !important;
-    transition: all 0.2s ease !important;
-    width: 100% !important;
-    text-align: center !important;
-}
-
-.btn-quick-voice:hover {
-    background: linear-gradient(135deg, #311b92, #4c1d95) !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 6px 22px rgba(139, 92, 246, 0.6) !important;
 }
 
 /* Custom Glassmorphic Voice Selection Modal Overlay */
@@ -801,7 +599,6 @@ input[type="range"] {
 .modal-voice-btn:hover {
     background: linear-gradient(135deg, rgba(51, 65, 85, 0.9), rgba(30, 41, 59, 0.95)) !important;
     border-color: #8b5cf6 !important;
-    transform: translateY(-1px) !important;
 }
 
 .modal-voice-btn.active {
