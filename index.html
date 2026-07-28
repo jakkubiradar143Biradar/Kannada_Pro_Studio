@@ -31,106 +31,8 @@
                 <div class="section-title-row">
                     <h2>1. Select Voice Character Model</h2>
                     <div class="header-controls">
-                        <!-- Quick Dropdown Menu -->
-                        <select id="quickVoiceMenu" class="quick-dropdown" onchange="selectVoiceByName(this.value)">
-                            <option value="">▼ Quick Voice Menu (100 Models)</option>
-                            <optgroup label="📢 100 Pro AI Voices">
-                                <option value="mahiti_job">1. ಉದ್ಯೋಗ ವರದಿಗಾರ (Govt Job Bulletin)</option>
-                                <option value="mahiti_scheme">2. ಸರ್ಕಾರಿ ಯೋಜನೆಗಳ ಮಾರ್ಗದರ್ಶಿ (Govt Schemes)</option>
-                                <option value="mahiti_scholarship">3. ವಿದ್ಯಾರ್ಥಿವೇತನ ಮಾರ್ಗದರ್ಶಿ (Scholarship Expert)</option>
-                                <option value="mahiti_farmer">4. ರೈತ ಮಿತ್ರ ಕೃಷಿ ವಾಚಕ (Farmer Agriculture Host)</option>
-                                <option value="mahiti_senior">5. ಹಿರಿಯ ನಾಗರಿಕರ ಪಿಂಚಣಿ (Senior Pension)</option>
-                                <option value="mahiti_pension">6. ಅಂಗವಿಕಲ ವೇತನ ಸಹಾಯಕ (Disability Pension)</option>
-                                <option value="mahiti_dairy">7. ಹೈನುಗಾರಿಕೆ ಸಬ್ಸಿಡಿ ಗೈಡ್ (Dairy Subsidy Host)</option>
-                                <option value="mahiti_women">8. ಮಹಿಳಾ ಸಮೃದ್ಧಿ ಯೋಜನೆ (Women Scheme Voice)</option>
-                                <option value="mahiti_result">9. ಪರೀಕ್ಷಾ ರಿಸಲ್ಟ್ ರಿಪೋರ್ಟರ್ (Exam Result Reporter)</option>
-                                <option value="mahiti_health">10. ಆರೋಗ್ಯ ಸಂಜೀವಿನಿ ಗೈಡ್ (Ayushman Health Host)</option>
-                            </optgroup>
-                            <optgroup label="📦 Amazon Affiliate & Deals">
-                                <option value="amazon_unboxing">11. Amazon Tech Unboxing</option>
-                                <option value="mobile_gadget">12. Smartphone Specs Specialist</option>
-                                <option value="home_kitchen">13. Home & Kitchen Promoter</option>
-                                <option value="fashion_lifestyle">14. Fashion & Beauty Reviewer</option>
-                                <option value="flash_sale">15. Flash Sale Today's Deal</option>
-                                <option value="headphone_audio">16. Audio & Headphone Specialist</option>
-                                <option value="car_accessory">17. Car & Bike Accessories</option>
-                                <option value="baby_kids">18. Baby Care & Kids Products</option>
-                                <option value="fitness_health">19. Fitness & Gym Specialist</option>
-                                <option value="laptop_pc">20. Gaming Laptop & PC Specialist</option>
-                            </optgroup>
-                            <optgroup label="🎙️ Commercial Ads & FM Radio">
-                                <option value="fm_radio_ad">21. FM Radio Commercial Host</option>
-                                <option value="luxury_brand">22. Luxury Brand Premium Voice</option>
-                                <option value="supermarket_discount">23. Supermarket Discount Mela</option>
-                                <option value="travel_resort">24. Travel & Resort Promo Host</option>
-                                <option value="app_launch">25. App & Startup Launch Host</option>
-                                <option value="food_restaurant">26. Food & Restaurant Ad Host</option>
-                                <option value="bank_festival">27. Bank & Gold Loan Festival</option>
-                                <option value="cinema_sponsor">28. Cinema Theatre Screen Ad</option>
-                                <option value="real_estate">29. Real Estate Flat Promoter</option>
-                                <option value="shopping_mall">30. Shopping Mall Mega Sale</option>
-                            </optgroup>
-                            <optgroup label="📲 Shorts & Reels">
-                                <option value="shorts_facts">31. Shorts Top 5 Facts Host</option>
-                                <option value="science_trivia">32. Did You Know? Science</option>
-                                <option value="stock_money">33. Money & Stock Tips Host</option>
-                                <option value="food_vlogger">34. Street Food Vlogger</option>
-                                <option value="travel_vlogger">35. Travel Explorer Vlogger</option>
-                                <option value="gaming_esports">36. Esports & Gaming Host</option>
-                                <option value="mystery_crime">37. Unsolved Mystery Crime</option>
-                                <option value="sports_match">38. Sports Match Highlights</option>
-                                <option value="motivation_coach">39. Motivational Energy Coach</option>
-                                <option value="ott_reviewer">40. OTT Movie & Series Reviewer</option>
-                            </optgroup>
-                            <optgroup label="📰 News & Media Anchors">
-                                <option value="kn-IN-SapnaNeural">41. Prime Time News (Sapna)</option>
-                                <option value="kn-IN-GaganNeural">42. Prime Time News (Gagan)</option>
-                                <option value="prajwal_news">43. Breaking News Live Reporter</option>
-                                <option value="political_debate">44. Politics & Debate Host</option>
-                                <option value="business_reporter">45. Business & Market Reporter</option>
-                                <option value="weather_reader">46. Weather Forecast Reader</option>
-                                <option value="crime_bulletin">47. Crime Bulletin Reporter</option>
-                                <option value="geo_news">48. International Geo News</option>
-                                <option value="podcast_interviewer">49. Studio Podcast Host</option>
-                                <option value="editorial_reader">50. Newspaper Editorial Reader</option>
-                            </optgroup>
-                            <optgroup label="📖 Stories & Novels">
-                                <option value="kavitha_grandma">51. Kavitha Grandma Story</option>
-                                <option value="radhika_audiobook">52. Radhika Novel Reader</option>
-                                <option value="dasara_purana">53. Purana & Harikathe Reciter</option>
-                                <option value="fantasy_story">54. Sci-Fi & Space Narrator</option>
-                                <option value="kids_animal_story">55. Children's Animal Fables</option>
-                                <option value="horror_ghost">56. Horror & Ghost Story</option>
-                                <option value="history_epic">57. Historical Epic Reader</option>
-                                <option value="coastal_folk">58. Coastal Karnataka Folk</option>
-                                <option value="spiritual_gita">59. Spiritual Philosophy Reader</option>
-                                <option value="kingdom_legend">60. Kingdom Legend Reader</option>
-                            </optgroup>
-                            <optgroup label="🎬 Cinema, Mass & Theatre">
-                                <option value="vikram_deep">71. Vikram Action Narrator</option>
-                                <option value="drama_stage">72. Drama Stage Actor</option>
-                                <option value="movie_villain">73. Movie Villain Heavy Bass</option>
-                                <option value="retro_hero">74. Retro 70s Cinema Superstar</option>
-                                <option value="royal_warrior">75. Kingdom Royal Warrior</option>
-                                <option value="docu_host">76. NatGeo Documentary Host</option>
-                                <option value="award_host">77. Award Ceremony Host</option>
-                                <option value="wedding_mc">78. Grand Wedding Anchor MC</option>
-                                <option value="standup_comic">79. Standup Comedy Presenter</option>
-                                <option value="maharaja_darbar">80. Royal Palace Maharaja</option>
-                            </optgroup>
-                            <optgroup label="👧 Kids & Cartoons">
-                                <option value="ananya_kid">81. Ananya Cute School Girl</option>
-                                <option value="chintu_boy">82. Chintu School Boy</option>
-                                <option value="cartoon_kid">83. Funny Cartoon Animal</option>
-                                <option value="circus_clown">84. Circus Comedy Clown</option>
-                                <option value="toy_robot">85. Toy Robot Character</option>
-                                <option value="wizard_magic">86. Fantasy Wizard Elder</option>
-                                <option value="talking_parrot">87. Talking Parrot Character</option>
-                                <option value="toddler_baby">88. Toddler Baby Cute Voice</option>
-                                <option value="teenager_boy">89. High School Teenager</option>
-                                <option value="puppet_show">90. Puppet Show Character</option>
-                            </optgroup>
-                        </select>
+                        <!-- Quick Voice Menu Button (Triggers Ultra-Premium Modal) -->
+                        <button id="quickVoiceMenuBtn" class="btn-quick-voice" onclick="openVoiceModal()">▼ Quick Voice Menu (100 Models)</button>
 
                         <div class="search-box">
                             <span>🔍</span>
@@ -776,6 +678,23 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- Custom Glassmorphic Ultra-Premium Voice Selection Modal -->
+    <div id="voiceModal" class="voice-modal-overlay" onclick="closeVoiceModal(event)">
+        <div class="voice-modal-content" onclick="event.stopPropagation()">
+            <div class="voice-modal-header">
+                <h3>🎙️ Choose Voice Character (100 Models)</h3>
+                <button class="btn-close-modal" onclick="closeVoiceModal()">✕</button>
+            </div>
+            <div class="voice-modal-search">
+                <span>🔍</span>
+                <input type="text" id="modalSearchInput" placeholder="Search 100 models..." oninput="filterModalVoices(this.value)">
+            </div>
+            <div class="voice-modal-list" id="modalVoiceList">
+                <!-- 100 Glowing Premium Buttons Populated Dynamically -->
+            </div>
+        </div>
     </div>
 
     <script src="app.js"></script>

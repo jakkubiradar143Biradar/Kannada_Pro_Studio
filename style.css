@@ -582,4 +582,184 @@ input[type="range"] {
         width: 100% !important;
         box-sizing: border-box !important;
     }
+
+    /* FIX SCREENSHOT 1: Hide floating badge tags on mobile so text never squishes */
+    .badge-tag {
+        display: none !important;
+    }
+
+    .model-name, .voice-name {
+        font-size: 0.92rem !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+    }
+
+    .model-desc, .voice-tag {
+        font-size: 0.78rem !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+    }
 }
+
+/* Quick Voice Menu Button Styling */
+.btn-quick-voice {
+    padding: 10px 18px !important;
+    background: linear-gradient(135deg, #1e1b4b, #311b92) !important;
+    border: 1px solid #8b5cf6 !important;
+    border-radius: 14px !important;
+    color: #ffffff !important;
+    font-size: 0.88rem !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 18px rgba(139, 92, 246, 0.4) !important;
+    transition: all 0.2s ease !important;
+    width: 100% !important;
+    text-align: center !important;
+}
+
+.btn-quick-voice:hover {
+    background: linear-gradient(135deg, #311b92, #4c1d95) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 22px rgba(139, 92, 246, 0.6) !important;
+}
+
+/* Custom Glassmorphic Voice Selection Modal Overlay */
+.voice-modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(7, 9, 19, 0.85) !important;
+    backdrop-filter: blur(16px) !important;
+    z-index: 99999 !important;
+    display: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px !important;
+}
+
+.voice-modal-overlay.active {
+    display: flex !important;
+}
+
+.voice-modal-content {
+    background: linear-gradient(145deg, #111827, #070913) !important;
+    border: 1px solid rgba(139, 92, 246, 0.4) !important;
+    border-radius: 24px !important;
+    width: 100% !important;
+    max-width: 520px !important;
+    max-height: 85vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 20px !important;
+    gap: 14px !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(139, 92, 246, 0.3) !important;
+}
+
+.voice-modal-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding-bottom: 12px !important;
+}
+
+.voice-modal-header h3 {
+    font-size: 1.1rem !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+}
+
+.btn-close-modal {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: none !important;
+    border-radius: 50% !important;
+    color: #fff !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 1.1rem !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.voice-modal-search {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 14px !important;
+    padding: 10px 14px !important;
+}
+
+.voice-modal-search input {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    color: #ffffff !important;
+    font-size: 0.95rem !important;
+    width: 100% !important;
+}
+
+.voice-modal-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    overflow-y: auto !important;
+    max-height: 55vh !important;
+    padding-right: 4px !important;
+}
+
+.modal-voice-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 12px 14px !important;
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9)) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 16px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+.modal-voice-btn:hover {
+    background: linear-gradient(135deg, rgba(51, 65, 85, 0.9), rgba(30, 41, 59, 0.95)) !important;
+    border-color: #8b5cf6 !important;
+    transform: translateY(-1px) !important;
+}
+
+.modal-voice-btn.active {
+    background: linear-gradient(135deg, #7c3aed, #0284c7) !important;
+    border-color: #a78bfa !important;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.5) !important;
+}
+
+.modal-voice-icon {
+    font-size: 24px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    padding: 8px !important;
+    border-radius: 12px !important;
+    flex-shrink: 0 !important;
+}
+
+.modal-voice-text {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+}
+
+.modal-voice-title {
+    font-size: 0.92rem !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+}
+
+.modal-voice-desc {
+    font-size: 0.78rem !important;
+    color: var(--text-secondary) !important;
+}
+

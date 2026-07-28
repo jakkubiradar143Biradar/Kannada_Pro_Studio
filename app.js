@@ -501,3 +501,71 @@ async function generateProTTS() {
         alert("Error generating speech. Please try again.");
     }
 }
+
+// ----------------------------------------------------
+// Custom Ultra-Premium Glassmorphic Voice Modal Logic
+// ----------------------------------------------------
+function openVoiceModal() {
+    const modal = document.getElementById('voiceModal');
+    if (!modal) return;
+    modal.classList.add('active');
+    populateVoiceModalList();
+}
+
+function closeVoiceModal(e) {
+    const modal = document.getElementById('voiceModal');
+    if (modal) modal.classList.remove('active');
+}
+
+function populateVoiceModalList() {
+    const listContainer = document.getElementById('modalVoiceList');
+    if (!listContainer) return;
+    
+    const cards = document.querySelectorAll('.voice-models-container .model-card');
+    let html = '';
+    cards.forEach(card => {
+        const onClickAttr = card.getAttribute('onclick');
+        if (!onClickAttr) return;
+        const match = onClickAttr.match(/'([^']+)'/);
+        if (!match) return;
+        const voiceKey = match[1];
+        const isSelected = voiceKey === selectedVoice ? 'active' : '';
+        const titleEl = card.querySelector('.model-name');
+        const descEl = card.querySelector('.model-desc');
+        const avatarEl = card.querySelector('.avatar');
+        
+        const title = titleEl ? titleEl.innerText : voiceKey;
+        const desc = descEl ? descEl.innerText : '';
+        const icon = avatarEl ? avatarEl.innerText : '🎙️';
+        
+        html += `
+            <div class="modal-voice-btn ${isSelected}" onclick="selectVoiceFromModal('${voiceKey}')">
+                <div class="modal-voice-icon">${icon}</div>
+                <div class="modal-voice-text">
+                    <div class="modal-voice-title">${title}</div>
+                    <div class="modal-voice-desc">${desc}</div>
+                </div>
+            </div>
+        `;
+    });
+    listContainer.innerHTML = html;
+}
+
+function selectVoiceFromModal(voiceKey) {
+    selectVoiceByName(voiceKey);
+    closeVoiceModal();
+}
+
+function filterModalVoices(query) {
+    const q = query.toLowerCase();
+    const btns = document.querySelectorAll('.modal-voice-btn');
+    btns.forEach(btn => {
+        const text = btn.innerText.toLowerCase();
+        if (text.includes(q)) {
+            btn.style.display = 'flex';
+        } else {
+            btn.style.display = 'none';
+        }
+    });
+}
+
