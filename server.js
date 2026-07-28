@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
-const { exec } = require('child_process');
+const { EdgeTTS } = require('node-edge-tts');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,14 +12,10 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname)));
 
-// Upload & Temp storage
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
-
-// System edge-tts fallback or local path
-const EDGE_TTS_BIN = process.env.EDGE_TTS_BIN || "edge-tts";
 
 // Extensive Dictionary to convert English Words & Abbreviations into 100% Smooth Kannada Phonetics
 const ENGLISH_TO_KANNADA_PHONETICS = {
@@ -195,7 +191,7 @@ function getModelPreset(rawVoice) {
     return { selectedVoice, basePitch };
 }
 
-app.post('/api/generate-tts', (req, res) => {
+app.post('/api/generate-tts', async (req, res) => {
     let { text, voice, pitch, rate, volume } = req.body;
     if (!text || !text.trim()) {
         return res.status(400).json({ error: 'Text parameter is required' });
@@ -212,46 +208,44 @@ app.post('/api/generate-tts', (req, res) => {
     let volumeVal = volume || '+50%';
 
     const uniqueId = `${Date.now()}_${Math.random().toString(36).substring(7)}`;
-    const tempTxtPath = path.join(uploadDir, `input_${uniqueId}.txt`);
     const tempMp3Path = path.join(uploadDir, `speech_${uniqueId}.mp3`);
 
     let formattedText = formatHumanFlow(text);
-    
-    fs.writeFile(tempTxtPath, formattedText, 'utf8', (writeErr) => {
-        if (writeErr) {
-            console.error('Error writing temp file:', writeErr);
-            return res.status(500).json({ error: 'Failed to prepare input text file.' });
+
+    try {
+        console.log(`Executing 100-Model Node Edge-TTS (${rawVoice} -> ${selectedVoice}): '${formattedText.substring(0, 60)}...'`);
+
+        const tts = new EdgeTTS({
+            voice: selectedVoice,
+            lang: 'kn-IN',
+            outputFormat: 'audio-24khz-48kbitrate-mono-mp3',
+            pitch: pitchVal,
+            rate: rateVal,
+            volume: volumeVal
+        });
+
+        await tts.ttsPromise(formattedText, tempMp3Path);
+
+        if (fs.existsSync(tempMp3Path)) {
+            res.set({
+                'Content-Type': 'audio/mpeg',
+                'Content-Disposition': 'inline; filename="mahiti_chakra_speech.mp3"'
+            });
+
+            const stream = fs.createReadStream(tempMp3Path);
+            stream.pipe(res);
+
+            res.on('finish', () => {
+                fs.unlink(tempMp3Path, () => {});
+            });
+        } else {
+            res.status(500).json({ error: 'Output audio file not generated.' });
         }
 
-        const cmd = `${EDGE_TTS_BIN} --voice "${selectedVoice}" -f "${tempTxtPath}" --rate="${rateVal}" --pitch="${pitchVal}" --volume="${volumeVal}" --write-media "${tempMp3Path}"`;
-
-        console.log(`Executing 100-Model Speech (${rawVoice} -> ${selectedVoice}): '${formattedText.substring(0, 60)}...'`);
-
-        exec(cmd, { encoding: 'utf-8', maxBuffer: 1024 * 1024 * 50 }, (error, stdout, stderr) => {
-            fs.unlink(tempTxtPath, () => {});
-
-            if (error) {
-                console.error('Edge-TTS Execution Error:', stderr || error.message);
-                return res.status(500).json({ error: 'TTS generation failed: ' + (stderr || error.message) });
-            }
-
-            if (fs.existsSync(tempMp3Path)) {
-                res.set({
-                    'Content-Type': 'audio/mpeg',
-                    'Content-Disposition': 'inline; filename="mahiti_chakra_speech.mp3"'
-                });
-
-                const stream = fs.createReadStream(tempMp3Path);
-                stream.pipe(res);
-
-                res.on('finish', () => {
-                    fs.unlink(tempMp3Path, () => {});
-                });
-            } else {
-                res.status(500).json({ error: 'Output audio file not generated.' });
-            }
-        });
-    });
+    } catch (err) {
+        console.error('Node Edge-TTS Synthesis Error:', err);
+        res.status(500).json({ error: 'TTS generation failed: ' + err.message });
+    }
 });
 
 app.listen(PORT, () => {
