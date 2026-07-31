@@ -22,13 +22,12 @@ html, body {
     width: 100%;
     max-width: 100vw;
     overflow-x: hidden;
+    overflow-y: auto !important;
     background: radial-gradient(circle at top center, #111827, #070913);
     color: var(--text-primary);
     min-height: 100vh;
     padding: 10px 8px;
     line-height: 1.4;
-    overscroll-behavior-y: contain !important;
-    touch-action: pan-x pan-y !important;
     -webkit-overflow-scrolling: touch !important;
 }
 
