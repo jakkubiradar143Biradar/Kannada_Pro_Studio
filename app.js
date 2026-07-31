@@ -274,7 +274,7 @@ function audioBufferToWav(buffer) {
     return new Blob([outBuffer], { type: 'audio/wav' });
 }
 
-// PRO SOCIAL MEDIA SHARING WITH SPECIFIC MAHITICHAKRA STUDIO URL
+// PRO SOCIAL MEDIA SHARING WITH 100% RELIABLE POPUP MODAL FALLBACK
 async function shareAudioFile() {
     const targetUrl = 'https://mahitichakra.in/kannada-ai-voice-studio/';
     const shareData = {
@@ -287,13 +287,27 @@ async function shareAudioFile() {
         try {
             await navigator.share(shareData);
         } catch (e) {
-            console.log('Share canceled', e);
+            openShareModal();
         }
     } else {
-        // Fallback: Copy direct URL to clipboard
-        navigator.clipboard.writeText(targetUrl);
-        alert(`🚀 Studio Link Copied!\n\n${targetUrl}\n\nShare this link with your friends on WhatsApp, Facebook & Telegram!`);
+        openShareModal();
     }
+}
+
+function openShareModal() {
+    const modal = document.getElementById('shareModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+function closeShareModal(e) {
+    const modal = document.getElementById('shareModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function copyShareLink() {
+    const targetUrl = 'https://mahitichakra.in/kannada-ai-voice-studio/';
+    navigator.clipboard.writeText(targetUrl);
+    alert(`📋 Studio Link Copied!\n\n${targetUrl}`);
 }
 
 // Generate Speech Function
@@ -362,7 +376,7 @@ async function generateProTTS() {
             player.play();
         }
 
-        // Enable All Pro Export & Share Buttons
+        // Enable All Pro Export Buttons
         const mp3Btn = document.getElementById('downloadMp3Btn');
         if (mp3Btn) {
             mp3Btn.href = audioUrl;

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio - 20 Pro HD AI Voices</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=15.0.0">
+    <link rel="stylesheet" href="style.css?v=16.0.0">
     <style>
     /* 100% BUTTER-SMOOTH LIQUID VERTICAL PAGE SCROLLING */
     html {
@@ -294,6 +294,88 @@
         pointer-events: none !important;
         filter: grayscale(80%) !important;
     }
+
+    /* SHARE MODAL POPUP STYLING */
+    .share-modal-overlay {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background: rgba(0, 0, 0, 0.75) !important;
+        backdrop-filter: blur(8px) !important;
+        z-index: 99999 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 16px !important;
+    }
+
+    .share-modal-card {
+        background: linear-gradient(145deg, #1e1b4b, #0f172a) !important;
+        border: 1px solid rgba(139, 92, 246, 0.5) !important;
+        border-radius: 20px !important;
+        padding: 20px !important;
+        width: 100% !important;
+        max-width: 400px !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important;
+        color: #ffffff !important;
+    }
+
+    .share-modal-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-bottom: 10px !important;
+    }
+
+    .share-modal-header h3 {
+        font-size: 1.1rem !important;
+        color: #f8fafc !important;
+    }
+
+    .close-modal-btn {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: none !important;
+        color: #ffffff !important;
+        width: 30px !important;
+        height: 30px !important;
+        border-radius: 50% !important;
+        cursor: pointer !important;
+        font-size: 1rem !important;
+    }
+
+    .share-modal-subtitle {
+        font-size: 0.85rem !important;
+        color: #94a3b8 !important;
+        margin-bottom: 14px !important;
+    }
+
+    .share-social-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    .share-btn {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 12px !important;
+        border-radius: 12px !important;
+        font-weight: 700 !important;
+        font-size: 0.85rem !important;
+        color: #ffffff !important;
+        text-decoration: none !important;
+        cursor: pointer !important;
+        border: none !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .share-wa { background: #25d366 !important; }
+    .share-tg { background: #0088cc !important; }
+    .share-fb { background: #1877f2 !important; }
+    .share-copy { background: #8b5cf6 !important; }
     </style>
 </head>
 <body>
@@ -520,7 +602,7 @@
                         <a id="downloadWavBtn" class="btn-export btn-wav disabled" download="mahiti_chakra_master.wav">
                             <span>🎵 Download Ultra WAV</span>
                         </a>
-                        <a id="downloadAppBtn" class="btn-export btn-app" href="https://www.webintoapp.com" target="_blank" rel="noopener noreferrer">
+                        <a id="downloadAppBtn" class="btn-export btn-app" href="https://mahitichakra.in/" target="_blank" rel="noopener noreferrer">
                             <span>📲 Download Mahiti Chakra App</span>
                         </a>
                         <button id="shareAudioBtn" class="btn-export btn-share" onclick="shareAudioFile()">
@@ -532,6 +614,31 @@
         </main>
     </div>
 
-    <script src="app.js?v=15.0.0"></script>
+    <!-- Sleek Social Media Share Modal Popup -->
+    <div id="shareModal" class="share-modal-overlay" style="display:none;" onclick="closeShareModal(event)">
+        <div class="share-modal-card" onclick="event.stopPropagation()">
+            <div class="share-modal-header">
+                <h3>🚀 Share Mahiti Chakra AI Studio</h3>
+                <button class="close-modal-btn" onclick="closeShareModal()">✖</button>
+            </div>
+            <p class="share-modal-subtitle">Share this HD AI Voice Studio on Social Media:</p>
+            <div class="share-social-grid">
+                <a href="https://api.whatsapp.com/send?text=%F0%9F%94%A5%20%E0%B2%95%E0%B2%A8%E0%B3%8D%E0%B2%A8%E0%B2%A1%E0%B2%A6%2020%20Pro%20HD%20AI%20%E0%B2%A7%E0%B3%8D%E0%B2%B5%E0%B2%A8%E0%B2%BF%E0%B2%97%E0%B2%B3%E0%B2%BF%E0%B2%97%E0%B2%BE%E0%B2%97%E0%B2%BF%20%E0%B2%87%E0%B2%A2%E0%B3%80%20%E0%B2%89%E0%B2%9A%E0%B2%BF%E0%B2%A4%20AI%20Voice%20Studio!%20%E0%B2%A8%E0%B3%8B%E0%B2%A1%E0%B2%BF:%20https://mahitichakra.in/kannada-ai-voice-studio/" target="_blank" class="share-btn share-wa">
+                    <span>💚 WhatsApp</span>
+                </a>
+                <a href="https://t.me/share/url?url=https://mahitichakra.in/kannada-ai-voice-studio/&text=%F0%9F%94%A5%20%E0%B2%95%E0%B2%A8%E0%B3%8D%E0%B2%A8%E0%B2%A1%E0%B2%A6%2020%20Pro%20HD%20AI%20Voice%20Studio" target="_blank" class="share-btn share-tg">
+                    <span>💙 Telegram</span>
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://mahitichakra.in/kannada-ai-voice-studio/" target="_blank" class="share-btn share-fb">
+                    <span>📘 Facebook</span>
+                </a>
+                <button onclick="copyShareLink()" class="share-btn share-copy">
+                    <span>📋 Copy Link</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=16.0.0"></script>
 </body>
 </html>
