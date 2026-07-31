@@ -3,10 +3,9 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 const { exec } = require('child_process');
-const multer = require('multer');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
@@ -20,7 +19,9 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-const EDGE_TTS_BIN = `"C:\\Users\\ADMIN\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\edge-tts.exe"`;
+const EDGE_TTS_BIN = process.platform === 'win32'
+    ? `"C:\\Users\\ADMIN\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\edge-tts.exe"`
+    : `edge-tts`;
 
 // Extensive Dictionary to convert English Words & Abbreviations into 100% Smooth Kannada Phonetics
 const ENGLISH_TO_KANNADA_PHONETICS = {
