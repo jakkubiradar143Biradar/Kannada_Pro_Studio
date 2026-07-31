@@ -759,3 +759,89 @@ input[type="range"] {
     pointer-events: none !important;
     filter: grayscale(80%) !important;
 }
+
+/* SHARE MODAL POPUP STYLING (HIDDEN BY DEFAULT, SHOWN WHEN ACTIVE) */
+.share-modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0, 0, 0, 0.75) !important;
+    backdrop-filter: blur(8px) !important;
+    z-index: 99999 !important;
+    display: none !important; /* HIDDEN BY DEFAULT */
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px !important;
+}
+
+.share-modal-overlay.active {
+    display: flex !important; /* SHOWN ONLY WHEN ACTIVE */
+}
+
+.share-modal-card {
+    background: linear-gradient(145deg, #1e1b4b, #0f172a) !important;
+    border: 1px solid rgba(139, 92, 246, 0.5) !important;
+    border-radius: 20px !important;
+    padding: 20px !important;
+    width: 100% !important;
+    max-width: 400px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important;
+    color: #ffffff !important;
+}
+
+.share-modal-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 10px !important;
+}
+
+.share-modal-header h3 {
+    font-size: 1.1rem !important;
+    color: #f8fafc !important;
+}
+
+.close-modal-btn {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: none !important;
+    color: #ffffff !important;
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    font-size: 1rem !important;
+}
+
+.share-modal-subtitle {
+    font-size: 0.85rem !important;
+    color: #94a3b8 !important;
+    margin-bottom: 14px !important;
+}
+
+.share-social-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+}
+
+.share-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 12px !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+.share-wa { background: #25d366 !important; }
+.share-tg { background: #0088cc !important; }
+.share-fb { background: #1877f2 !important; }
+.share-copy { background: #8b5cf6 !important; }

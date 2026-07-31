@@ -274,7 +274,7 @@ function audioBufferToWav(buffer) {
     return new Blob([outBuffer], { type: 'audio/wav' });
 }
 
-// PRO SOCIAL MEDIA SHARING WITH 100% RELIABLE POPUP MODAL FALLBACK
+// PRO SOCIAL MEDIA SHARING WITH TOGGLE CLASS
 async function shareAudioFile() {
     const targetUrl = 'https://mahitichakra.in/kannada-ai-voice-studio/';
     const shareData = {
@@ -296,12 +296,12 @@ async function shareAudioFile() {
 
 function openShareModal() {
     const modal = document.getElementById('shareModal');
-    if (modal) modal.style.display = 'flex';
+    if (modal) modal.classList.add('active');
 }
 
 function closeShareModal(e) {
     const modal = document.getElementById('shareModal');
-    if (modal) modal.style.display = 'none';
+    if (modal) modal.classList.remove('active');
 }
 
 function copyShareLink() {

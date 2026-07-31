@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio - 20 Pro HD AI Voices</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=16.0.0">
+    <link rel="stylesheet" href="style.css?v=17.0.0">
     <style>
     /* 100% BUTTER-SMOOTH LIQUID VERTICAL PAGE SCROLLING */
     html {
@@ -295,7 +295,7 @@
         filter: grayscale(80%) !important;
     }
 
-    /* SHARE MODAL POPUP STYLING */
+    /* SHARE MODAL POPUP STYLING (HIDDEN BY DEFAULT, SHOWN WHEN ACTIVE) */
     .share-modal-overlay {
         position: fixed !important;
         top: 0 !important;
@@ -305,10 +305,14 @@
         background: rgba(0, 0, 0, 0.75) !important;
         backdrop-filter: blur(8px) !important;
         z-index: 99999 !important;
-        display: flex !important;
+        display: none;
         align-items: center !important;
         justify-content: center !important;
         padding: 16px !important;
+    }
+
+    .share-modal-overlay.active {
+        display: flex !important;
     }
 
     .share-modal-card {
@@ -614,8 +618,8 @@
         </main>
     </div>
 
-    <!-- Sleek Social Media Share Modal Popup -->
-    <div id="shareModal" class="share-modal-overlay" style="display:none;" onclick="closeShareModal(event)">
+    <!-- Sleek Social Media Share Modal Popup (Hidden by default) -->
+    <div id="shareModal" class="share-modal-overlay" onclick="closeShareModal(event)">
         <div class="share-modal-card" onclick="event.stopPropagation()">
             <div class="share-modal-header">
                 <h3>🚀 Share Mahiti Chakra AI Studio</h3>
@@ -639,6 +643,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=16.0.0"></script>
+    <script src="app.js?v=17.0.0"></script>
 </body>
 </html>
