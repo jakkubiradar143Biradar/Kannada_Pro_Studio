@@ -6,6 +6,8 @@ let mediaRecorder = null;
 let audioChunks = [];
 let recordedAudioBlob = null;
 let isRecording = false;
+let recTimerInterval = null;
+let recSeconds = 0;
 
 // Kanglish Transliteration Dictionary
 const KANGLISH_DICTIONARY = {
@@ -319,7 +321,6 @@ function openVoiceChangerModal() {
     const modal = document.getElementById('voiceChangerModal');
     if (modal) {
         modal.classList.add('active');
-        // Scroll modal to top
         modal.scrollTop = 0;
     }
 }
@@ -329,7 +330,29 @@ function closeVoiceChangerModal(e) {
     if (modal) modal.classList.remove('active');
 }
 
-// Live Microphone Recording Toggle
+// Recording Timer Counter
+function startRecTimer() {
+    recSeconds = 0;
+    const timerText = document.getElementById('recTimerText');
+    const vis = document.getElementById('recVisualizer');
+    if (vis) vis.style.display = 'flex';
+    
+    if (recTimerInterval) clearInterval(recTimerInterval);
+    recTimerInterval = setInterval(() => {
+        recSeconds++;
+        const mins = String(Math.floor(recSeconds / 60)).padStart(2, '0');
+        const secs = String(recSeconds % 60).padStart(2, '0');
+        if (timerText) timerText.innerText = `${mins}:${secs}`;
+    }, 1000);
+}
+
+function stopRecTimer() {
+    if (recTimerInterval) clearInterval(recTimerInterval);
+    const vis = document.getElementById('recVisualizer');
+    if (vis) vis.style.display = 'none';
+}
+
+// Live Microphone Recording Toggle (Web + App Fallback)
 async function toggleRecording() {
     const recText = document.getElementById('recText');
     const recIcon = document.getElementById('recIcon');
@@ -347,19 +370,28 @@ async function toggleRecording() {
             };
 
             mediaRecorder.onstop = () => {
+                stopRecTimer();
                 recordedAudioBlob = new Blob(audioChunks, { type: 'audio/wav' });
                 if (recStatus) recStatus.innerText = "✅ Live Voice Recorded Successfully!";
             };
 
             mediaRecorder.start();
             isRecording = true;
+            startRecTimer();
             if (recText) recText.innerText = "Stop Recording";
             if (recIcon) recIcon.innerText = "⏹️";
             if (recBtn) recBtn.classList.add('recording');
-            if (recStatus) recStatus.innerText = "🎙️ Recording live voice... Speak now!";
+            if (recStatus) recStatus.innerText = "🔴 Live Voice Recording Active... Speak now!";
         } catch (err) {
             console.error("Microphone Access Error:", err);
-            alert("Microphone access is required to record voice. Please grant microphone permission.");
+            // Fallback for Android WebView App
+            const appMicInput = document.getElementById('appMicInput');
+            if (appMicInput) {
+                alert("Opening Android App Voice Recorder...");
+                appMicInput.click();
+            } else {
+                alert("Microphone access permission required.");
+            }
         }
     } else {
         if (mediaRecorder && mediaRecorder.state !== 'inactive') {
@@ -367,19 +399,20 @@ async function toggleRecording() {
             mediaRecorder.stream.getTracks().forEach(track => track.stop());
         }
         isRecording = false;
+        stopRecTimer();
         if (recText) recText.innerText = "Start Recording";
         if (recIcon) recIcon.innerText = "🎙️";
         if (recBtn) recBtn.classList.remove('recording');
     }
 }
 
-// Handle Audio File Upload
+// Handle Audio File Upload / App Recorder
 function handleAudioUpload(event) {
     const file = event.target.files[0];
     const recStatus = document.getElementById('recStatus');
     if (file) {
         recordedAudioBlob = file;
-        if (recStatus) recStatus.innerText = `✅ File Uploaded: ${file.name}`;
+        if (recStatus) recStatus.innerText = `✅ Voice Audio Input Ready: ${file.name}`;
     }
 }
 
@@ -444,7 +477,7 @@ async function processVoiceChanger() {
 
         let lastNode = source;
 
-        // 1. AI Noise Cleaner
+        // 1. AI Noise Cleaner Filters
         if (cleanNoise) {
             const hpFilter = offlineCtx.createBiquadFilter();
             hpFilter.type = "highpass";
@@ -470,9 +503,9 @@ async function processVoiceChanger() {
             lastNode = compressor;
         }
 
-        // 2. Formant Resonator & Gender Morphing Filter
+        // 2. Formant Resonator & Vocal Resonance Filter
         if (semitoneShift < -2) {
-            // Male Deep Voice Formant Filter
+            // Deep Male Voice Formant Resonator
             const formantFilter = offlineCtx.createBiquadFilter();
             formantFilter.type = "lowshelf";
             formantFilter.frequency.value = 240;
@@ -488,7 +521,7 @@ async function processVoiceChanger() {
             lastNode = subBass;
 
         } else if (semitoneShift > 2) {
-            // Female High Voice Formant Filter
+            // Female High Voice Formant Resonator
             const femaleFormant = offlineCtx.createBiquadFilter();
             femaleFormant.type = "highshelf";
             femaleFormant.frequency.value = 2800;

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio - 20 Pro HD AI Voices</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=20.0.0">
+    <link rel="stylesheet" href="style.css?v=21.0.0">
     <style>
     /* 100% BUTTER-SMOOTH LIQUID VERTICAL PAGE SCROLLING */
     html {
@@ -470,7 +470,7 @@
 
     .vc-btn-row {
         display: flex !important;
-        gap: 10px !important;
+        gap: 6px !important;
     }
 
     .btn-vc-act {
@@ -478,15 +478,16 @@
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        padding: 10px !important;
+        padding: 10px 6px !important;
         border-radius: 12px !important;
         font-weight: 700 !important;
-        font-size: 0.84rem !important;
+        font-size: 0.78rem !important;
         cursor: pointer !important;
         border: none !important;
         color: #ffffff !important;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
         transition: transform 0.15s ease !important;
+        text-align: center !important;
     }
 
     .btn-rec {
@@ -502,6 +503,10 @@
         to { transform: scale(1.05); box-shadow: 0 0 25px #ef4444; }
     }
 
+    .btn-app-mic {
+        background: linear-gradient(135deg, #10b981, #047857) !important;
+    }
+
     .btn-upload {
         background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
     }
@@ -511,6 +516,61 @@
         color: #38bdf8 !important;
         margin-top: 8px !important;
         font-weight: 600 !important;
+    }
+
+    /* LIVE SOUND WAVE VISUALIZER & TIMER */
+    .rec-visualizer-container {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 10px !important;
+        background: rgba(239, 68, 68, 0.15) !important;
+        border: 1px solid #ef4444 !important;
+        border-radius: 14px !important;
+        padding: 10px !important;
+        margin-top: 10px !important;
+    }
+
+    .rec-dot-pulse {
+        font-size: 1.1rem !important;
+        animation: pulseDot 0.8s infinite alternate !important;
+    }
+
+    @keyframes pulseDot {
+        from { opacity: 0.3; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1.2); }
+    }
+
+    .rec-timer {
+        font-family: 'Outfit', monospace !important;
+        font-size: 1.1rem !important;
+        font-weight: 800 !important;
+        color: #ef4444 !important;
+    }
+
+    .sound-wave-bars {
+        display: flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        height: 24px !important;
+    }
+
+    .sound-wave-bars .bar {
+        width: 4px !important;
+        background: #ef4444 !important;
+        border-radius: 4px !important;
+        animation: waveAnim 1s infinite ease-in-out alternate !important;
+    }
+
+    .sound-wave-bars .bar1 { height: 8px; animation-delay: 0.1s; }
+    .sound-wave-bars .bar2 { height: 18px; animation-delay: 0.3s; }
+    .sound-wave-bars .bar3 { height: 24px; animation-delay: 0.2s; }
+    .sound-wave-bars .bar4 { height: 14px; animation-delay: 0.4s; }
+    .sound-wave-bars .bar5 { height: 10px; animation-delay: 0.15s; }
+
+    @keyframes waveAnim {
+        0% { height: 4px; }
+        100% { height: 24px; }
     }
 
     .vc-options-grid {
@@ -811,17 +871,34 @@
             </div>
             <p class="vc-modal-subtitle">ನಿಮ್ಮ ಧ್ವನಿಯನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡಿ ಅಥವಾ ಆಡಿಯೋ ಫೈಲ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ — ಬ್ಯಾಕ್‌ಗ್ರೌಂಡ್ ನಾಯ್ಸ್ ಕ್ಲಿಯರ್ ಮಾಡಿ Pro AI Voices ಗೆ ಧ್ವನಿ ಬದಲಾಯಿಸಿ!</p>
 
-            <!-- Step 1: Input Audio -->
+            <!-- Step 1: Input Audio (Web Mic + App Native Mic + File Upload) -->
             <div class="vc-section">
                 <h4>1. Record Live Voice or Upload Audio File</h4>
                 <div class="vc-btn-row">
                     <button id="recordBtn" class="btn-vc-act btn-rec" onclick="toggleRecording()">
                         <span id="recIcon">🎙️</span> <span id="recText">Start Recording</span>
                     </button>
+                    <label class="btn-vc-act btn-app-mic">
+                        📱 App Mic <input type="file" id="appMicInput" accept="audio/*" capture="microphone" onchange="handleAudioUpload(event)" style="display:none;">
+                    </label>
                     <label class="btn-vc-act btn-upload">
-                        📁 Upload Audio <input type="file" id="audioFileInput" accept="audio/*" onchange="handleAudioUpload(event)" style="display:none;">
+                        📁 Upload <input type="file" id="audioFileInput" accept="audio/*" onchange="handleAudioUpload(event)" style="display:none;">
                     </label>
                 </div>
+
+                <!-- LIVE SOUND WAVE VISUALIZER & TIMER -->
+                <div id="recVisualizer" class="rec-visualizer-container" style="display:none;">
+                    <div class="rec-dot-pulse">🔴</div>
+                    <div class="rec-timer" id="recTimerText">00:00</div>
+                    <div class="sound-wave-bars">
+                        <span class="bar bar1"></span>
+                        <span class="bar bar2"></span>
+                        <span class="bar bar3"></span>
+                        <span class="bar bar4"></span>
+                        <span class="bar bar5"></span>
+                    </div>
+                </div>
+
                 <div id="recStatus" class="vc-status-text">Ready to record or upload...</div>
             </div>
 
@@ -883,6 +960,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=20.0.0"></script>
+    <script src="app.js?v=21.0.0"></script>
 </body>
 </html>
