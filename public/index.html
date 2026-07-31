@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="kn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio - 100% Free 100 HD AI Voices</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Top Navigation Bar -->
+        <nav class="top-nav">
+            <div class="brand-group">
+                <div class="brand-icon">📢</div>
+                <div>
+                    <h1 class="brand-name">ಮಾಹಿತಿ ಚಕ್ರ <span>Pro AI Voice Studio</span></h1>
+                    <p class="brand-tagline">⚡ 100% ಉಚಿತ! ಬ್ಲಾಗ್ ಲೇಖನ, ಯೂಟ್ಯೂಬ್, ಜಾಹೀರಾತು & ಸುದ್ದಿಗಳ 100 HD Pro AI ಧ್ವನಿಗಳ ಸಾಫ್ಟ್‌ವೇರ್</p>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <button class="btn-smart-pick" onclick="autoSelectMahitiChakra()">🌟 Mahiti Chakra Auto-Pick</button>
+                <div class="live-status"><span class="pulse-dot"></span> 100 Pro Models Ready</div>
+            </div>
+        </nav>
+
+        <!-- Main Studio Grid -->
+        <main class="studio-main">
+            <!-- Left Side: Voice Character Selection (Horizontal Swipe Square App Cards) -->
+            <section class="section-card left-section">
+                <div class="section-title-row">
+                    <div class="search-box">
+                        <span>🔍</span>
+                        <input type="text" id="voiceSearchInput" placeholder="🔍 Search 100 Pro AI Voice Models..." oninput="searchVoices(this.value)">
+                    </div>
+                </div>
+
+                <div class="voice-models-container" id="voiceGrid100">
+                    <!-- CATEGORY 1: PRO AI VOICES (1-10) -->
+                    <div class="model-card active" data-cat="mahiti" onclick="selectVoice('mahiti_job', this)">
+                        <div class="avatar">💼</div>
+                        <div class="details"><div class="model-name">1. ಉದ್ಯೋಗ ವರದಿಗಾರ</div><div class="model-desc">ಸರ್ಕಾರಿ ಉದ್ಯೋಗ ವರದಿಗಾರ (Govt Job Bulletin)</div></div>
+                        <span class="badge-tag">Blog Special</span>
+                    </div>
+                    <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_scheme', this)">
+                        <div class="avatar">📜</div>
+                        <div class="details"><div class="model-name">2. ಸರ್ಕಾರಿ ಯೋಜನೆಗಳ ಮಾರ್ಗದರ್ಶಿ</div><div class="model-desc">ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು (Govt Schemes)</div></div>
+                        <span class="badge-tag">Govt Schemes</span>
+                    </div>
+                    <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_scholarship', this)">
+                        <div class="avatar">🎓</div>
+                        <div class="details"><div class="model-name">3. ವಿದ್ಯಾರ್ಥಿವೇತನ ಮಾರ್ಗದರ್ಶಿ</div><div class="model-desc">ವಿದ್ಯಾರ್ಥಿವೇತನ (Scholarship Expert)</div></div>
+                        <span class="badge-tag">Education</span>
+                    </div>
+                    <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_farmer', this)">
+                        <div class="avatar">🌾</div>
+                        <div class="details"><div class="model-name">4. ರೈತ ಮಿತ್ರ ಕೃಷಿ ವಾಚಕ</div><div class="model-desc">ರೈತ ಮಿತ್ರ (Farmer Agriculture Host)</div></div>
+                        <span class="badge-tag">Farmers</span>
+                    </div>
+                    <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_senior', this)">
+                        <div class="avatar">👵</div>
+                        <div class="details"><div class="model-name">5. ಹಿರಿಯ ನಾಗರಿಕರ ಪಿಂಚಣಿ</div><div class="model-desc">ಪಿಂಚಣಿ ಗೈಡ್ (Senior Pension)</div></div>
+                        <span class="badge-tag">Pension</span>
+                    </div>
+                    <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_pension', this)">
+                        <div class="avatar">♿</div>
+                        <div class="details"><div class="model-name">6. ಅಂಗವಿಕಲ ವೇತನ ಸಹಾಯಕ</div><div class="model-desc">ವೇತನ ಸಹಾಯಕ (Disability Pension)</div></div>
+                        <span class="badge-tag">Welfare</span>
+                    </div>
+                    <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_dairy', this)">
+                        <div class="avatar">🐄</div>
+                        <div class="details"><div class="model-name">7. ಹೈನುಗಾರಿಕೆ ಸಬ್ಸಿಡಿ ಗೈಡ್</div><div class="model-desc">ಸಬ್ಸಿಡಿ ಗೈಡ್ (Dairy Subsidy Host)</div></div>
+                        <span class="badge-tag">Subsidy</span>
+                    </div>
+                    <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_women', this)">
+                        <div class="avatar">👩</div>
+                        <div class="details"><div class="model-name">8. ಮಹಿಳಾ ಸಮೃದ್ಧಿ ಯೋಜನೆ</div><div class="model-desc">ಮಹಿಳಾ ಯೋಜನೆ (Women Scheme Voice)</div></div>
+                        <span class="badge-tag">Women Welfare</span>
+                    </div>
+                    <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_result', this)">
+                        <div class="avatar">📋</div>
+                        <div class="details"><div class="model-name">9. ಪರೀಕ್ಷಾ ರಿಸಲ್ಟ್ ರಿಪೋರ್ಟರ್</div><div class="model-desc">ರಿಸಲ್ಟ್ ಲೈವ್ (Exam Result Reporter)</div></div>
+                        <span class="badge-tag">Results</span>
+                    </div>
+                    <div class="model-card" data-cat="mahiti" onclick="selectVoice('mahiti_health', this)">
+                        <div class="avatar">🏥</div>
+                        <div class="details"><div class="model-name">10. ಆರೋಗ್ಯ ಸಂಜೀವಿನಿ ಗೈಡ್</div><div class="model-desc">ಆರೋಗ್ಯ ಗೈಡ್ (Ayushman Health Host)</div></div>
+                        <span class="badge-tag">Health</span>
+                    </div>
+
+                    <!-- CATEGORY 2: AMAZON AFFILIATE & REVIEWS (11-20) -->
+                    <div class="model-card" data-cat="amazon" onclick="selectVoice('amazon_unboxing', this)">
+                        <div class="avatar">📦</div>
+                        <div class="details"><div class="model-name">11. Amazon Tech Unboxing</div><div class="model-desc">High Energy Product Reviewer</div></div>
+                        <span class="badge-tag aff">Amazon Deal</span>
+                    </div>
+                    <div class="model-card" data-cat="amazon" onclick="selectVoice('mobile_gadget', this)">
+                        <div class="avatar">📱</div>
+                        <div class="details"><div class="model-name">12. Smartphone Specs Specialist</div><div class="model-desc">Mobile Review Expert</div></div>
+                        <span class="badge-tag aff">Tech Review</span>
+                    </div>
+                    <div class="model-card" data-cat="amazon" onclick="selectVoice('home_kitchen', this)">
+                        <div class="avatar">🏠</div>
+                        <div class="details"><div class="model-name">13. Home & Kitchen Promoter</div><div class="model-desc">Household Product Guide</div></div>
+                        <span class="badge-tag aff">Home Deals</span>
+                    </div>
+                    <div class="model-card" data-cat="amazon" onclick="selectVoice('fashion_lifestyle', this)">
+                        <div class="avatar">👗</div>
+                        <div class="details"><div class="model-name">14. Fashion & Beauty Reviewer</div><div class="model-desc">Trendy Female Influencer</div></div>
+                        <span class="badge-tag aff">Fashion</span>
+                    </div>
+                    <div class="model-card" data-cat="amazon" onclick="selectVoice('flash_sale', this)">
+                        <div class="avatar">⚡</div>
+                        <div class="details"><div class="model-name">15. Flash Sale Today's Deal</div><div class="model-desc">Fast Urgency Deal Alert</div></div>
+                        <span class="badge-tag aff">Flash Sale</span>
+                    </div>
+                    <div class="model-card" data-cat="amazon" onclick="selectVoice('headphone_audio', this)">
+                        <div class="avatar">🎧</div>
+                        <div class="details"><div class="model-name">16. Audio & Headphone Specialist</div><div class="model-desc">Bass Sound Reviewer</div></div>
+                        <span class="badge-tag aff">Audio Review</span>
+                    </div>
+                    <div class="model-card" data-cat="amazon" onclick="selectVoice('car_accessory', this)">
+                        <div class="avatar">🚗</div>
+                        <div class="details"><div class="model-name">17. Car & Bike Accessories</div><div class="model-desc">Automotive Accessory Voice</div></div>
+                        <span class="badge-tag aff">Automotive</span>
+                    </div>
+                    <div class="model-card" data-cat="amazon" onclick="selectVoice('baby_kids', this)">
+                        <div class="avatar">👶</div>
+                        <div class="details"><div class="model-name">18. Baby Care & Kids Products</div><div class="model-desc">Gentle Caring Tone</div></div>
+                        <span class="badge-tag aff">Baby Products</span>
+                    </div>
+                    <div class="model-card" data-cat="amazon" onclick="selectVoice('fitness_health', this)">
+                        <div class="avatar">🏋️</div>
+                        <div class="details"><div class="model-name">19. Fitness & Gym Specialist</div><div class="model-desc">High Energy Health Reviewer</div></div>
+                        <span class="badge-tag aff">Fitness</span>
+                    </div>
+                    <div class="model-card" data-cat="amazon" onclick="selectVoice('laptop_pc', this)">
+                        <div class="avatar">💻</div>
+                        <div class="details"><div class="model-name">20. Gaming Laptop & PC Specialist</div><div class="model-desc">Pro Tech PC Reviewer</div></div>
+                        <span class="badge-tag aff">PC Tech</span>
+                    </div>
+
+                    <!-- CATEGORY 3: COMMERCIAL ADS & FM RADIO (21-30) -->
+                    <div class="model-card" data-cat="ads" onclick="selectVoice('fm_radio_ad', this)">
+                        <div class="avatar">🚀</div>
+                        <div class="details"><div class="model-name">21. FM Radio Commercial Host</div><div class="model-desc">Heavy Commercial Pitch</div></div>
+                        <span class="badge-tag">FM Radio</span>
+                    </div>
+                    <div class="model-card" data-cat="ads" onclick="selectVoice('luxury_brand', this)">
+                        <div class="avatar">💎</div>
+                        <div class="details"><div class="model-name">22. Luxury Brand Premium Voice</div><div class="model-desc">Smooth High-End Tone</div></div>
+                        <span class="badge-tag">Luxury</span>
+                    </div>
+                    <div class="model-card" data-cat="ads" onclick="selectVoice('supermarket_discount', this)">
+                        <div class="avatar">🛒</div>
+                        <div class="details"><div class="model-name">23. Supermarket Discount Mela</div><div class="model-desc">Retail Discount Alert</div></div>
+                        <span class="badge-tag">Discount</span>
+                    </div>
+                    <div class="model-card" data-cat="ads" onclick="selectVoice('travel_resort', this)">
+                        <div class="avatar">🏖️</div>
+                        <div class="details"><div class="model-name">24. Travel & Resort Promo Host</div><div class="model-desc">Relaxing Vacation Voice</div></div>
+                        <span class="badge-tag">Tourism</span>
+                    </div>
+                    <div class="model-card" data-cat="ads" onclick="selectVoice('app_launch', this)">
+                        <div class="avatar">📱</div>
+                        <div class="details"><div class="model-name">25. App & Startup Launch Host</div><div class="model-desc">Modern Tech Promo</div></div>
+                        <span class="badge-tag">Startup</span>
+                    </div>
+                    <div class="model-card" data-cat="ads" onclick="selectVoice('food_restaurant', this)">
+                        <div class="avatar">🍔</div>
+                        <div class="details"><div class="model-name">26. Food & Restaurant Ad Host</div><div class="model-desc">Mouth-Watering Commercial</div></div>
+                        <span class="badge-tag">Food</span>
+                    </div>
+                    <div class="model-card" data-cat="ads" onclick="selectVoice('bank_festival', this)">
+                        <div class="avatar">🏦</div>
+                        <div class="details"><div class="model-name">27. Bank & Gold Loan Festival</div><div class="model-desc">Trustworthy Financial Offer</div></div>
+                        <span class="badge-tag">Finance</span>
+                    </div>
+                    <div class="model-card" data-cat="ads" onclick="selectVoice('cinema_sponsor', this)">
+                        <div class="avatar">🎬</div>
+                        <div class="details"><div class="model-name">28. Cinema Theatre Screen Ad</div><div class="model-desc">Big Screen Ad Voice</div></div>
+                        <span class="badge-tag">Cinema Ad</span>
+                    </div>
+                    <div class="model-card" data-cat="ads" onclick="selectVoice('real_estate', this)">
+                        <div class="avatar">🏠</div>
+                        <div class="details"><div class="model-name">29. Real Estate Flat Promoter</div><div class="model-desc">Property Investment Guide</div></div>
+                        <span class="badge-tag">Property</span>
+                    </div>
+                    <div class="model-card" data-cat="ads" onclick="selectVoice('shopping_mall', this)">
+                        <div class="avatar">🛍️</div>
+                        <div class="details"><div class="model-name">30. Shopping Mall Mega Sale</div><div class="model-desc">Excited Mela Pitch</div></div>
+                        <span class="badge-tag">Shopping</span>
+                    </div>
+
+                    <!-- CATEGORY 4: SHORTS, REELS & VIRAL CONTENT (31-40) -->
+                    <div class="model-card" data-cat="reels" onclick="selectVoice('shorts_facts', this)">
+                        <div class="avatar">⚡</div>
+                        <div class="details"><div class="model-name">31. Shorts Top 5 Facts Host</div><div class="model-desc">Fast Gripping Facts Host</div></div>
+                        <span class="badge-tag">Shorts</span>
+                    </div>
+                    <div class="model-card" data-cat="reels" onclick="selectVoice('science_trivia', this)">
+                        <div class="avatar">🧠</div>
+                        <div class="details"><div class="model-name">32. Did You Know? Science</div><div class="model-desc">Intriguing Science Shorts</div></div>
+                        <span class="badge-tag">Science</span>
+                    </div>
+                    <div class="model-card" data-cat="reels" onclick="selectVoice('stock_money', this)">
+                        <div class="avatar">💰</div>
+                        <div class="details"><div class="model-name">33. Money & Stock Tips Host</div><div class="model-desc">Financial Advisor Voice</div></div>
+                        <span class="badge-tag">Stocks</span>
+                    </div>
+                    <div class="model-card" data-cat="reels" onclick="selectVoice('food_vlogger', this)">
+                        <div class="avatar">🍔</div>
+                        <div class="details"><div class="model-name">34. Street Food Vlogger</div><div class="model-desc">Exuberant Food Explorer</div></div>
+                        <span class="badge-tag">Food Vlogger</span>
+                    </div>
+                    <div class="model-card" data-cat="reels" onclick="selectVoice('travel_vlogger', this)">
+                        <div class="avatar">✈️</div>
+                        <div class="details"><div class="model-name">35. Travel Explorer Vlogger</div><div class="model-desc">Enthusiastic Traveler</div></div>
+                        <span class="badge-tag">Travel</span>
+                    </div>
+                    <div class="model-card" data-cat="reels" onclick="selectVoice('gaming_esports', this)">
+                        <div class="avatar">🎮</div>
+                        <div class="details"><div class="model-name">36. Esports & Gaming Host</div><div class="model-desc">High Energy Commentator</div></div>
+                        <span class="badge-tag">Gaming</span>
+                    </div>
+                    <div class="model-card" data-cat="reels" onclick="selectVoice('mystery_crime', this)">
+                        <div class="avatar">🕵️</div>
+                        <div class="details"><div class="model-name">37. Unsolved Mystery Crime</div><div class="model-desc">Suspense Thriller Voice</div></div>
+                        <span class="badge-tag">Thriller</span>
+                    </div>
+                    <div class="model-card" data-cat="reels" onclick="selectVoice('sports_match', this)">
+                        <div class="avatar">⚽</div>
+                        <div class="details"><div class="model-name">38. Sports Match Highlights</div><div class="model-desc">Fast Sports Anchor</div></div>
+                        <span class="badge-tag">Sports</span>
+                    </div>
+                    <div class="model-card" data-cat="reels" onclick="selectVoice('motivation_coach', this)">
+                        <div class="avatar">🥊</div>
+                        <div class="details"><div class="model-name">39. Motivational Energy Coach</div><div class="model-desc">Inspirational Speaker</div></div>
+                        <span class="badge-tag">Motivation</span>
+                    </div>
+                    <div class="model-card" data-cat="reels" onclick="selectVoice('ott_reviewer', this)">
+                        <div class="avatar">🍿</div>
+                        <div class="details"><div class="model-name">40. OTT Movie & Series Reviewer</div><div class="model-desc">Cinephile Review Host</div></div>
+                        <span class="badge-tag">OTT Review</span>
+                    </div>
+
+                    <!-- CATEGORY 5: NEWS & MEDIA ANCHORS (41-50) -->
+                    <div class="model-card" data-cat="news" onclick="selectVoice('kn-IN-SapnaNeural', this)">
+                        <div class="avatar">📰</div>
+                        <div class="details"><div class="model-name">41. Prime Time News (Sapna)</div><div class="model-desc">Crisp Newsroom Bulletin</div></div>
+                        <span class="badge-tag">TV News</span>
+                    </div>
+                    <div class="model-card" data-cat="news" onclick="selectVoice('kn-IN-GaganNeural', this)">
+                        <div class="avatar">👨‍💼</div>
+                        <div class="details"><div class="model-name">42. Prime Time News (Gagan)</div><div class="model-desc">Lead Newsroom Anchor</div></div>
+                        <span class="badge-tag">TV News</span>
+                    </div>
+                    <div class="model-card" data-cat="news" onclick="selectVoice('prajwal_news', this)">
+                        <div class="avatar">💥</div>
+                        <div class="details"><div class="model-name">43. Breaking News Live Reporter</div><div class="model-desc">Emergency Field Reporter</div></div>
+                        <span class="badge-tag">Live News</span>
+                    </div>
+                    <div class="model-card" data-cat="news" onclick="selectVoice('political_debate', this)">
+                        <div class="avatar">🗳️</div>
+                        <div class="details"><div class="model-name">44. Politics & Debate Host</div><div class="model-desc">Sharp Election Analyst</div></div>
+                        <span class="badge-tag">Politics</span>
+                    </div>
+                    <div class="model-card" data-cat="news" onclick="selectVoice('business_reporter', this)">
+                        <div class="avatar">📈</div>
+                        <div class="details"><div class="model-name">45. Business & Market Reporter</div><div class="model-desc">Stock Economy Reader</div></div>
+                        <span class="badge-tag">Market</span>
+                    </div>
+                    <div class="model-card" data-cat="news" onclick="selectVoice('weather_reader', this)">
+                        <div class="avatar">🌦️</div>
+                        <div class="details"><div class="model-name">46. Weather Forecast Reader</div><div class="model-desc">Pleasant Weather Host</div></div>
+                        <span class="badge-tag">Weather</span>
+                    </div>
+                    <div class="model-card" data-cat="news" onclick="selectVoice('crime_bulletin', this)">
+                        <div class="avatar">🚨</div>
+                        <div class="details"><div class="model-name">47. Crime Bulletin Reporter</div><div class="model-desc">Serious Investigation Reader</div></div>
+                        <span class="badge-tag">Crime</span>
+                    </div>
+                    <div class="model-card" data-cat="news" onclick="selectVoice('geo_news', this)">
+                        <div class="avatar">🌍</div>
+                        <div class="details"><div class="model-name">48. International Geo News</div><div class="model-desc">Global Affairs Reader</div></div>
+                        <span class="badge-tag">Global</span>
+                    </div>
+                    <div class="model-card" data-cat="news" onclick="selectVoice('podcast_interviewer', this)">
+                        <div class="avatar">🎙️</div>
+                        <div class="details"><div class="model-name">49. Studio Podcast Host</div><div class="model-desc">Warm Interviewer Voice</div></div>
+                        <span class="badge-tag">Podcast</span>
+                    </div>
+                    <div class="model-card" data-cat="news" onclick="selectVoice('editorial_reader', this)">
+                        <div class="avatar">📜</div>
+                        <div class="details"><div class="model-name">50. Newspaper Editorial Reader</div><div class="model-desc">Thoughtful Column Voice</div></div>
+                        <span class="badge-tag">Editorial</span>
+                    </div>
+
+                    <!-- CATEGORY 6: AUDIOBOOKS & NOVELS (51-60) -->
+                    <div class="model-card" data-cat="story" onclick="selectVoice('kavitha_grandma', this)">
+                        <div class="avatar">👵</div>
+                        <div class="details"><div class="model-name">51. Kavitha Grandma Story</div><div class="model-desc">Warm Traditional Fables</div></div>
+                        <span class="badge-tag">Fables</span>
+                    </div>
+                    <div class="model-card" data-cat="story" onclick="selectVoice('radhika_audiobook', this)">
+                        <div class="avatar">📖</div>
+                        <div class="details"><div class="model-name">52. Radhika Novel Reader</div><div class="model-desc">Soft Romantic Reader</div></div>
+                        <span class="badge-tag">Novel</span>
+                    </div>
+                    <div class="model-card" data-cat="story" onclick="selectVoice('dasara_purana', this)">
+                        <div class="avatar">📜</div>
+                        <div class="details"><div class="model-name">53. Purana & Harikathe Reciter</div><div class="model-desc">Devotional Story Reader</div></div>
+                        <span class="badge-tag">Devotional</span>
+                    </div>
+                    <div class="model-card" data-cat="story" onclick="selectVoice('fantasy_story', this)">
+                        <div class="avatar">🌌</div>
+                        <div class="details"><div class="model-name">54. Sci-Fi & Space Narrator</div><div class="model-desc">Immersive World Building</div></div>
+                        <span class="badge-tag">Sci-Fi</span>
+                    </div>
+                    <div class="model-card" data-cat="story" onclick="selectVoice('kids_animal_story', this)">
+                        <div class="avatar">👶</div>
+                        <div class="details"><div class="model-name">55. Children's Animal Fables</div><div class="model-desc">Playful Animated Reader</div></div>
+                        <span class="badge-tag">Kids Fables</span>
+                    </div>
+                    <div class="model-card" data-cat="story" onclick="selectVoice('horror_ghost', this)">
+                        <div class="avatar">🕯️</div>
+                        <div class="details"><div class="model-name">56. Horror & Ghost Story</div><div class="model-desc">Eerie Whispering Voice</div></div>
+                        <span class="badge-tag">Horror</span>
+                    </div>
+                    <div class="model-card" data-cat="story" onclick="selectVoice('history_epic', this)">
+                        <div class="avatar">📜</div>
+                        <div class="details"><div class="model-name">57. Historical Epic Reader</div><div class="model-desc">Deep History Book Reader</div></div>
+                        <span class="badge-tag">History</span>
+                    </div>
+                    <div class="model-card" data-cat="story" onclick="selectVoice('coastal_folk', this)">
+                        <div class="avatar">🌊</div>
+                        <div class="details"><div class="model-name">58. Coastal Karnataka Folk</div><div class="model-desc">Desi Coastal Accent</div></div>
+                        <span class="badge-tag">Coastal Folk</span>
+                    </div>
+                    <div class="model-card" data-cat="story" onclick="selectVoice('spiritual_gita', this)">
+                        <div class="avatar">🧘</div>
+                        <div class="details"><div class="model-name">59. Spiritual Philosophy Reader</div><div class="model-desc">Peaceful Sloka & Gita</div></div>
+                        <span class="badge-tag">Spiritual</span>
+                    </div>
+                    <div class="model-card" data-cat="story" onclick="selectVoice('kingdom_legend', this)">
+                        <div class="avatar">🏰</div>
+                        <div class="details"><div class="model-name">60. Kingdom Legend Reader</div><div class="model-desc">Royal Palace Legend</div></div>
+                        <span class="badge-tag">Royal Legend</span>
+                    </div>
+
+                    <!-- CATEGORY 7: EDUCATION & EXPLAINER GUIDES (61-70) -->
+                    <div class="model-card" data-cat="edu" onclick="selectVoice('suhas_teacher', this)">
+                        <div class="avatar">💡</div>
+                        <div class="details"><div class="model-name">61. Suhas School Teacher</div><div class="model-desc">Patient Classroom Educator</div></div>
+                        <span class="badge-tag">Teacher</span>
+                    </div>
+                    <div class="model-card" data-cat="edu" onclick="selectVoice('corporate_hr', this)">
+                        <div class="avatar">🏢</div>
+                        <div class="details"><div class="model-name">62. Corporate HR Trainer</div><div class="model-desc">Formal Business Trainer</div></div>
+                        <span class="badge-tag">Corporate</span>
+                    </div>
+                    <div class="model-card" data-cat="edu" onclick="selectVoice('aira_ai', this)">
+                        <div class="avatar">🤖</div>
+                        <div class="details"><div class="model-name">63. Aira AI Sci-Fi Guide</div><div class="model-desc">Crisp Software Tutorial</div></div>
+                        <span class="badge-tag">AI Guide</span>
+                    </div>
+                    <div class="model-card" data-cat="edu" onclick="selectVoice('doctor_health', this)">
+                        <div class="avatar">🩺</div>
+                        <div class="details"><div class="model-name">64. Doctor Health Guide</div><div class="model-desc">Calm Healthcare Advice</div></div>
+                        <span class="badge-tag">Health</span>
+                    </div>
+                    <div class="model-card" data-cat="edu" onclick="selectVoice('legal_policy', this)">
+                        <div class="avatar">⚖️</div>
+                        <div class="details"><div class="model-name">65. Legal Policy & Law Guide</div><div class="model-desc">Official Guidance Voice</div></div>
+                        <span class="badge-tag">Legal</span>
+                    </div>
+                    <div class="model-card" data-cat="edu" onclick="selectVoice('meditation_yoga', this)">
+                        <div class="avatar">🧘</div>
+                        <div class="details"><div class="model-name">66. Meditation & Yoga Master</div><div class="model-desc">Soothing Peaceful Tone</div></div>
+                        <span class="badge-tag">Yoga</span>
+                    </div>
+                    <div class="model-card" data-cat="edu" onclick="selectVoice('code_instructor', this)">
+                        <div class="avatar">💻</div>
+                        <div class="details"><div class="model-name">67. Coding & Software Instructor</div><div class="model-desc">Tech Coding Instructor</div></div>
+                        <span class="badge-tag">Coding</span>
+                    </div>
+                    <div class="model-card" data-cat="edu" onclick="selectVoice('cyber_security', this)">
+                        <div class="avatar">🛡️</div>
+                        <div class="details"><div class="model-name">68. Cyber Crime Warning Host</div><div class="model-desc">Serious Security Alert</div></div>
+                        <span class="badge-tag">Security</span>
+                    </div>
+                    <div class="model-card" data-cat="edu" onclick="selectVoice('gps_nav', this)">
+                        <div class="avatar">🚗</div>
+                        <div class="details"><div class="model-name">69. GPS Navigation Voice</div><div class="model-desc">Road Route Assistant</div></div>
+                        <span class="badge-tag">GPS Nav</span>
+                    </div>
+                    <div class="model-card" data-cat="edu" onclick="selectVoice('museum_guide', this)">
+                        <div class="avatar">🏛️</div>
+                        <div class="details"><div class="model-name">70. Museum Heritage Guide</div><div class="model-desc">Cultural Audio Guide</div></div>
+                        <span class="badge-tag">Museum</span>
+                    </div>
+
+                    <!-- CATEGORY 8: CINEMA, MASS & THEATRE (71-80) -->
+                    <div class="model-card" data-cat="cinema" onclick="selectVoice('vikram_deep', this)">
+                        <div class="avatar">🎬</div>
+                        <div class="details"><div class="model-name">71. Vikram Action Narrator</div><div class="model-desc">Heavy Action Movie Trailer</div></div>
+                        <span class="badge-tag">Movie Deep</span>
+                    </div>
+                    <div class="model-card" data-cat="cinema" onclick="selectVoice('drama_stage', this)">
+                        <div class="avatar">🎭</div>
+                        <div class="details"><div class="model-name">72. Drama Stage Actor</div><div class="model-desc">Expressive Theatre Actor</div></div>
+                        <span class="badge-tag">Theatre</span>
+                    </div>
+                    <div class="model-card" data-cat="cinema" onclick="selectVoice('movie_villain', this)">
+                        <div class="avatar">😈</div>
+                        <div class="details"><div class="model-name">73. Movie Villain Heavy Bass</div><div class="model-desc">Gritty Antagonist Voice</div></div>
+                        <span class="badge-tag">Villain</span>
+                    </div>
+                    <div class="model-card" data-cat="cinema" onclick="selectVoice('retro_hero', this)">
+                        <div class="avatar">🤠</div>
+                        <div class="details"><div class="model-name">74. Retro 70s Cinema Superstar</div><div class="model-desc">Classic Vintage Cinema</div></div>
+                        <span class="badge-tag">Retro Hero</span>
+                    </div>
+                    <div class="model-card" data-cat="cinema" onclick="selectVoice('royal_warrior', this)">
+                        <div class="avatar">🗡️</div>
+                        <div class="details"><div class="model-name">75. Kingdom Royal Warrior</div><div class="model-desc">Royal Proclamation Voice</div></div>
+                        <span class="badge-tag">Royal</span>
+                    </div>
+                    <div class="model-card" data-cat="cinema" onclick="selectVoice('docu_host', this)">
+                        <div class="avatar">🎥</div>
+                        <div class="details"><div class="model-name">76. NatGeo Documentary Host</div><div class="model-desc">Deep Nature Documentary</div></div>
+                        <span class="badge-tag">NatGeo</span>
+                    </div>
+                    <div class="model-card" data-cat="cinema" onclick="selectVoice('award_host', this)">
+                        <div class="avatar">🏆</div>
+                        <div class="details"><div class="model-name">77. Award Ceremony Host</div><div class="model-desc">Grand Announcement Host</div></div>
+                        <span class="badge-tag">Awards</span>
+                    </div>
+                    <div class="model-card" data-cat="cinema" onclick="selectVoice('wedding_mc', this)">
+                        <div class="avatar">💒</div>
+                        <div class="details"><div class="model-name">78. Grand Wedding Anchor MC</div><div class="model-desc">Festive Celebratory MC</div></div>
+                        <span class="badge-tag">Wedding MC</span>
+                    </div>
+                    <div class="model-card" data-cat="cinema" onclick="selectVoice('standup_comic', this)">
+                        <div class="avatar">🎤</div>
+                        <div class="details"><div class="model-name">79. Standup Comedy Presenter</div><div class="model-desc">Punchy Comic Delivery</div></div>
+                        <span class="badge-tag">Standup</span>
+                    </div>
+                    <div class="model-card" data-cat="cinema" onclick="selectVoice('maharaja_darbar', this)">
+                        <div class="avatar">👑</div>
+                        <div class="details"><div class="model-name">80. Royal Palace Maharaja</div><div class="model-desc">Grand Palace Proclamation</div></div>
+                        <span class="badge-tag">Maharaja</span>
+                    </div>
+
+                    <!-- CATEGORY 9: KIDS, CARTOONS & COMEDY (81-90) -->
+                    <div class="model-card" data-cat="kids" onclick="selectVoice('ananya_kid', this)">
+                        <div class="avatar">👧</div>
+                        <div class="details"><div class="model-name">81. Ananya Cute School Girl</div><div class="model-desc">Playful Young Student</div></div>
+                        <span class="badge-tag">Cute Girl</span>
+                    </div>
+                    <div class="model-card" data-cat="kids" onclick="selectVoice('chintu_boy', this)">
+                        <div class="avatar">👦</div>
+                        <div class="details"><div class="model-name">82. Chintu School Boy</div><div class="model-desc">Energetic Kid Voice</div></div>
+                        <span class="badge-tag">School Boy</span>
+                    </div>
+                    <div class="model-card" data-cat="kids" onclick="selectVoice('cartoon_kid', this)">
+                        <div class="avatar">🎭</div>
+                        <div class="details"><div class="model-name">83. Funny Cartoon Animal</div><div class="model-desc">High Pitch Comedy Duck</div></div>
+                        <span class="badge-tag">Cartoon</span>
+                    </div>
+                    <div class="model-card" data-cat="kids" onclick="selectVoice('circus_clown', this)">
+                        <div class="avatar">🤡</div>
+                        <div class="details"><div class="model-name">84. Circus Comedy Clown</div><div class="model-desc">Jovial Presenter</div></div>
+                        <span class="badge-tag">Clown</span>
+                    </div>
+                    <div class="model-card" data-cat="kids" onclick="selectVoice('toy_robot', this)">
+                        <div class="avatar">🤖</div>
+                        <div class="details"><div class="model-name">85. Toy Robot Character</div><div class="model-desc">Metallic Sci-Fi Voice</div></div>
+                        <span class="badge-tag">Toy Robot</span>
+                    </div>
+                    <div class="model-card" data-cat="kids" onclick="selectVoice('wizard_magic', this)">
+                        <div class="avatar">🧙</div>
+                        <div class="details"><div class="model-name">86. Fantasy Wizard Elder</div><div class="model-desc">Mystical Magic Spellcaster</div></div>
+                        <span class="badge-tag">Wizard</span>
+                    </div>
+                    <div class="model-card" data-cat="kids" onclick="selectVoice('talking_parrot', this)">
+                        <div class="avatar">🦜</div>
+                        <div class="details"><div class="model-name">87. Talking Parrot Character</div><div class="model-desc">Funny Mimic Bird</div></div>
+                        <span class="badge-tag">Parrot</span>
+                    </div>
+                    <div class="model-card" data-cat="kids" onclick="selectVoice('toddler_baby', this)">
+                        <div class="avatar">👶</div>
+                        <div class="details"><div class="model-name">88. Toddler Baby Cute Voice</div><div class="model-desc">Sweet Baby Pitch</div></div>
+                        <span class="badge-tag">Baby Voice</span>
+                    </div>
+                    <div class="model-card" data-cat="kids" onclick="selectVoice('teenager_boy', this)">
+                        <div class="avatar">🎒</div>
+                        <div class="details"><div class="model-name">89. High School Teenager</div><div class="model-desc">Youthful Student Voice</div></div>
+                        <span class="badge-tag">Teenager</span>
+                    </div>
+                    <div class="model-card" data-cat="kids" onclick="selectVoice('puppet_show', this)">
+                        <div class="avatar">🎪</div>
+                        <div class="details"><div class="model-name">90. Puppet Show Character</div><div class="model-desc">Comedy Puppet Voice</div></div>
+                        <span class="badge-tag">Puppet</span>
+                    </div>
+
+                    <!-- CATEGORY 10: TRANSPORT & SPECIAL FX (91-100) -->
+                    <div class="model-card" data-cat="special" onclick="selectVoice('announcer_public', this)">
+                        <div class="avatar">🚆</div>
+                        <div class="details"><div class="model-name">91. Bengaluru Railway Alert</div><div class="model-desc">Station Platform Alert</div></div>
+                        <span class="badge-tag">Railway</span>
+                    </div>
+                    <div class="model-card" data-cat="special" onclick="selectVoice('ksrtc_bus', this)">
+                        <div class="avatar">🚌</div>
+                        <div class="details"><div class="model-name">92. KSRTC Bus Stand Alert</div><div class="model-desc">Public Bus Alert</div></div>
+                        <span class="badge-tag">KSRTC</span>
+                    </div>
+                    <div class="model-card" data-cat="special" onclick="selectVoice('airport_flight', this)">
+                        <div class="avatar">✈️</div>
+                        <div class="details"><div class="model-name">93. Airport Flight Boarding</div><div class="model-desc">Polite Airline Host</div></div>
+                        <span class="badge-tag">Airport</span>
+                    </div>
+                    <div class="model-card" data-cat="special" onclick="selectVoice('traffic_safety', this)">
+                        <div class="avatar">🚨</div>
+                        <div class="details"><div class="model-name">94. Traffic Safety Warning</div><div class="model-desc">Public Safety Alert</div></div>
+                        <span class="badge-tag">Traffic</span>
+                    </div>
+                    <div class="model-card" data-cat="special" onclick="selectVoice('raghu_vintage', this)">
+                        <div class="avatar">📻</div>
+                        <div class="details"><div class="model-name">95. Old 80s AM Radio Host</div><div class="model-desc">Nostalgic Vintage Radio</div></div>
+                        <span class="badge-tag">80s Radio</span>
+                    </div>
+                    <div class="model-card" data-cat="special" onclick="selectVoice('mystic_spirit', this)">
+                        <div class="avatar">🔮</div>
+                        <div class="details"><div class="model-name">96. Mystical Spatial Echo</div><div class="model-desc">Ethereal Chamber Voice</div></div>
+                        <span class="badge-tag">Spatial Echo</span>
+                    </div>
+                    <div class="model-card" data-cat="special" onclick="selectVoice('walkie_talkie', this)">
+                        <div class="avatar">📻</div>
+                        <div class="details"><div class="model-name">97. Police Walkie-Talkie</div><div class="model-desc">Tactical Bandpass Radio</div></div>
+                        <span class="badge-tag">Police Radio</span>
+                    </div>
+                    <div class="model-card" data-cat="special" onclick="selectVoice('neumann_mic', this)">
+                        <div class="avatar">🎙️</div>
+                        <div class="details"><div class="model-name">98. Neumann $1000 Studio Mic</div><div class="model-desc">Studio Mic Warmth</div></div>
+                        <span class="badge-tag">Neumann Mic</span>
+                    </div>
+                    <div class="model-card" data-cat="special" onclick="selectVoice('shopping_mela', this)">
+                        <div class="avatar">🛍️</div>
+                        <div class="details"><div class="model-name">99. Festival Shopping Mela</div><div class="model-desc">Excited Offer Pitch</div></div>
+                        <span class="badge-tag">Mela Sale</span>
+                    </div>
+                    <div class="model-card" data-cat="special" onclick="selectVoice('coffee_chat', this)">
+                        <div class="avatar">☕</div>
+                        <div class="details"><div class="model-name">100. Coffee Shop Casual Chat</div><div class="model-desc">Friendly Relaxed Host</div></div>
+                        <span class="badge-tag">Coffee Chat</span>
+                    </div>
+                </div>
+
+                <!-- Pro Voice Modulator Customizer Panel -->
+                <div class="modulator-panel">
+                    <div class="modulator-header">
+                        <h3>🎛️ Pro Voice Modulator & Customizer</h3>
+                        <span class="mod-status">100% Dynamic Engine</span>
+                    </div>
+
+                    <div class="sliders-grid">
+                        <div class="slider-box">
+                            <div class="slider-label">
+                                <span>⚡ Fast Speed Pace</span>
+                                <strong id="rateVal">1.2x (Fast)</strong>
+                            </div>
+                            <input type="range" id="rateSlider" min="0.7" max="1.6" step="0.1" value="1.2" oninput="updateRateLabel(this.value)">
+                        </div>
+
+                        <div class="slider-box">
+                            <div class="slider-label">
+                                <span>🔊 Vocal Volume Boost</span>
+                                <strong id="volVal">+50% (Loud)</strong>
+                            </div>
+                            <input type="range" id="volSlider" min="0" max="100" step="10" value="50" oninput="updateVolLabel(this.value)">
+                        </div>
+
+                        <div class="slider-box">
+                            <div class="slider-label">
+                                <span>🎵 Pitch Tuning</span>
+                                <strong id="pitchVal">Normal (+0Hz)</strong>
+                            </div>
+                            <input type="range" id="pitchSlider" min="-12" max="12" step="2" value="0" oninput="updatePitchLabel(this.value)">
+                        </div>
+
+                        <div class="slider-box">
+                            <div class="slider-label">
+                                <span>🎧 Vocal EQ Warmth</span>
+                            </div>
+                            <select id="eqSelect" class="select-input">
+                                <option value="studio">✨ Studio HD Clarity (Default)</option>
+                                <option value="bass">🔊 Deep Bass Boost (+14dB)</option>
+                                <option value="radio">🎙️ Broadcast Radio RJ Warmth</option>
+                                <option value="bright">🌟 Treble High Clarity</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Side: Text Input, Speech Flow Presets & Audio Player -->
+            <section class="section-card right-section">
+                <h2>2. Enter Text (Unlimited Article Length)</h2>
+
+                <!-- PRO TIP BANNER -->
+                <div class="pro-tip-banner">
+                    <span class="tip-icon">💡</span>
+                    <div class="tip-text">
+                        <strong>ಪ್ರೊ ಟಿಪ್ (Pro Tip):</strong> ಉತ್ತಮ ಫಲಿತಾಂಶಕ್ಕಾಗಿ ಪಠ್ಯವನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಕನ್ನಡ ಅಕ್ಷರಗಳಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ ಅಥವಾ ಬ್ಲಾಗ್ ಲೇಖನವನ್ನು ಪೇಸ್ಟ್ ಮಾಡಿ. ಯಾವುದೇ 100 ಧ್ವನಿಯನ್ನು ಆಯ್ಕೆ ಮಾಡಿ 1-ಕ್ಲಿಕ್‌ನಲ್ಲಿ ಆಡಿಯೋ ಜನೆರೇಟ್ ಮಾಡಿ!
+                    </div>
+                </div>
+
+                <!-- Speech Intonation & Flow Style Presets -->
+                <div class="sample-pills-row">
+                    <button class="pill" onclick="applyFlowPreset('news', this)">⚡ ಸುದ್ದಿ ಶೈಲಿ (Newsroom Fast)</button>
+                    <button class="pill" onclick="applyFlowPreset('story', this)">📖 ಕಥೆಯ ಶೈಲಿ (Storytelling Cadence)</button>
+                    <button class="pill" onclick="applyFlowPreset('mass', this)">🎬 ಮಾಸ್ ಶೈಲಿ (Cinema Mass Energy)</button>
+                    <button class="pill pill-aff" onclick="applyFlowPreset('ad', this)">📢 ಜಾಹೀರಾತು ಶೈಲಿ (FM Radio Pitch)</button>
+                    <button class="pill" onclick="applyFlowPreset('edu', this)">💡 ಶಿಕ್ಷಣ ಶೈಲಿ (Teacher Calm)</button>
+                    <button class="pill pill-clear" onclick="clearText()">🧹 ಖಾಲಿ ಮಾಡಿ (Clear Text)</button>
+                </div>
+
+                <div class="input-container">
+                    <textarea id="ttsTextInput" placeholder="ಕನ್ನಡ ಅಕ್ಷರಗಳಲ್ಲಿ ಪಠ್ಯವನ್ನು ಇಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ ಅಥವಾ ಮಾಹಿತಿ ಚಕ್ರ (mahitichakra.in) ಬ್ಲಾಗ್ ಲೇಖನ, ಉದ್ಯೋಗ ವರದಿ, ಸರ್ಕಾರಿ ಯೋಜನೆ ಹಾಗೂ ಅಮೆಜಾನ್ ಡೀಲ್ ಪಠ್ಯವನ್ನು ಇಲ್ಲಿ ಪೇಸ್ಟ್ ಮಾಡಿ..." rows="12">ಕೇಂದ್ರ ಹಾಗೂ ರಾಜ್ಯ ಸರ್ಕಾರದ ನೂತನ ಸರ್ಕಾರಿ ಉದ್ಯೋಗ ಮಾಹಿತಿ : ಉದ್ಯೋಗ ಆಕಾಂಕ್ಷಿಗಳಿಗೆ ಸುವರ್ಣ ಅವಕಾಶ! ಪೋಲೀಸ್, ಕೆ ಪಿ ಎ ಸ್ಸಿ ಬ್ಯಾಂಕಿಂಗ್, ರೈಲ್ವೇಸ್ ಹಾಗೂ ರಾಜ್ಯದ ವಿವಿಧ ಇಲಾಖೆಗಳ ಖಾಲಿ ಹುದ್ದೆಗಳ ಸಂಪೂರ್ಣ ವಿವರಗಳು, ಶೈಕ್ಷಣಿಕ ಅರ್ಹತೆ ಮತ್ತು ಅರ್ಜಿ ಸಲ್ಲಿಸುವ ಉಚಿತ ಡೈರೆಕ್ಟ್ ಲಿಂಕ್ ಪಡೆಯಲು ಈಗಲೇ ನಮ್ಮ "ಮಾಹಿತಿ ಚಕ್ರ" ಡಾಟ್ ಇನ್ (mahitichakra.in) ವೆಬ್ಸೈಟ್ಗೆ ಭೇಟಿ ನೀಡಿ!</textarea>
+                </div>
+
+                <!-- Kanglish Helper Accordion -->
+                <div class="kanglish-accordion">
+                    <div class="accordion-header" onclick="toggleKanglish()">
+                        <span>🌐 Kanglish Transliteration Helper (Type English ➔ Get Kannada)</span>
+                        <span id="kangIcon">▼</span>
+                    </div>
+                    <div class="accordion-body" id="kangBody" style="display:none;">
+                        <input type="text" id="kangInput" placeholder="Type: namaskara, hegidira, kannada, mahiti..." oninput="convertKanglish(this.value)">
+                        <div class="kang-result" id="kangResult">Converted Kannada text will appear here...</div>
+                        <button class="btn-apply-kang" onclick="applyKanglish()">Apply to Main Box</button>
+                    </div>
+                </div>
+
+                <!-- Generate Speech Primary Button -->
+                <button class="btn-generate-speech" id="generateBtn" onclick="generateProTTS()">
+                    <span class="btn-icon">🔊</span>
+                    <span class="btn-text">Generate HD Pro Human Speech</span>
+                </button>
+
+                <!-- Studio Audio Player Card -->
+                <div class="player-card">
+                    <div class="player-header">
+                        <h3>🎧 Studio Output Audio Player</h3>
+                        <span class="player-status-badge" id="playerStatus">Ready</span>
+                    </div>
+
+                    <!-- Interactive Live Progress Bar & Timer Log -->
+                    <div class="progress-container" id="progressContainer" style="display:none;">
+                        <div class="progress-bar-fill" id="progressBarFill"></div>
+                    </div>
+                    <div class="timer-log" id="timerLog" style="display:none;">⏳ Processing HD Speech... 0.0s</div>
+
+                    <div class="audio-element-wrapper">
+                        <audio id="mainAudioPlayer" controls autoplay></audio>
+                    </div>
+
+                    <a id="downloadBtn" class="btn-download-mp3 disabled" download="mahiti_chakra_speech.mp3">
+                        <span>⬇️ Download Pro MP3 Audio</span>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Custom Glassmorphic Ultra-Premium Voice Selection Modal -->
+    <div id="voiceModal" class="voice-modal-overlay" onclick="closeVoiceModal(event)">
+        <div class="voice-modal-content" onclick="event.stopPropagation()">
+            <div class="voice-modal-header">
+                <h3>🎙️ Choose Voice Character (100 Models)</h3>
+                <button class="btn-close-modal" onclick="closeVoiceModal()">✕</button>
+            </div>
+            <div class="voice-modal-search">
+                <span>🔍</span>
+                <input type="text" id="modalSearchInput" placeholder="Search 100 models..." oninput="filterModalVoices(this.value)">
+            </div>
+            <div class="voice-modal-list" id="modalVoiceList">
+                <!-- 100 Glowing Premium Buttons Populated Dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
