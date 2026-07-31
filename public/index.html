@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio - 20 Pro HD AI Voices</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=5.0.0">
+    <link rel="stylesheet" href="style.css?v=6.0.0">
     <style>
     /* Clean Square App Cards & Horizontal Swipe Carousel */
     .voice-models-container {
@@ -103,30 +103,6 @@
         width: 100% !important;
     }
 
-    .filter-tabs-row {
-        display: flex !important;
-        gap: 8px !important;
-        margin-bottom: 10px !important;
-    }
-
-    .filter-tab {
-        background: rgba(255, 255, 255, 0.08) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        color: #e2e8f0 !important;
-        padding: 6px 14px !important;
-        border-radius: 20px !important;
-        font-size: 0.8rem !important;
-        font-weight: 700 !important;
-        cursor: pointer !important;
-        transition: all 0.2s ease !important;
-    }
-
-    .filter-tab.active, .filter-tab:hover {
-        background: linear-gradient(135deg, #7c3aed, #0284c7) !important;
-        border-color: #a78bfa !important;
-        color: #ffffff !important;
-    }
-
     /* Horizontal Scrollable Row for Intonation Style Pills */
     .sample-pills-row {
         display: flex !important;
@@ -203,6 +179,28 @@
         border-color: #ec4899 !important;
         box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 25px rgba(236, 72, 153, 0.5) !important;
     }
+
+    /* Select Option Dropdown Fix - Crystal Clear White Text on Dark Background */
+    #eqSelect, select {
+        background: linear-gradient(135deg, #1e1b4b, #311b92) !important;
+        border: 1px solid #8b5cf6 !important;
+        border-radius: 12px !important;
+        color: #ffffff !important;
+        padding: 10px 14px !important;
+        font-size: 0.9rem !important;
+        font-weight: 700 !important;
+        outline: none !important;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3) !important;
+        width: 100% !important;
+    }
+
+    #eqSelect option, select option {
+        background-color: #0f172a !important;
+        color: #ffffff !important;
+        padding: 12px !important;
+        font-size: 0.92rem !important;
+        font-weight: 600 !important;
+    }
     </style>
 </head>
 <body>
@@ -255,101 +253,91 @@
                 </div>
             </section>
 
-            <!-- 2. SECOND SECTION (BELOW TEXT): 20 Pro Voice Models Carousel -->
+            <!-- 2. SECOND SECTION (BELOW TEXT): 20 Pro Voice Models (Alternating 1 Male, 1 Female) -->
             <section class="section-card">
-                <div class="section-title-row" style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="section-title-row">
                     <h2>2. Select Voice Model (20 Pro Voices)</h2>
-                    
-                    <!-- Gender Filter Tabs -->
-                    <div class="filter-tabs-row">
-                        <button class="filter-tab active" onclick="filterGender('all', this)">🌟 All (20)</button>
-                        <button class="filter-tab" onclick="filterGender('male', this)">👨 10 Male</button>
-                        <button class="filter-tab" onclick="filterGender('female', this)">👩 10 Female</button>
-                    </div>
                 </div>
 
-                <!-- Horizontal Swipe Carousel (20 Square App Icon Cards) -->
+                <!-- Horizontal Swipe Carousel (20 Alternating Square App Cards) -->
                 <div class="voice-models-container" id="voiceGrid20">
-                    <!-- Male Voices (1 to 10) -->
-                    <div class="model-card active" data-gender="male" onclick="selectVoiceModel('m1', this)">
+                    <div class="model-card active" onclick="selectVoiceModel('m1', this)">
                         <div class="avatar">👨‍💼</div>
                         <div class="details"><div class="model-name">1. ಗಗನ್ ಆಂಕರ್</div></div>
                     </div>
-                    <div class="model-card" data-gender="male" onclick="selectVoiceModel('m2', this)">
-                        <div class="avatar">🎧</div>
-                        <div class="details"><div class="model-name">2. ರಾಜೇಶ್ RJ</div></div>
-                    </div>
-                    <div class="model-card" data-gender="male" onclick="selectVoiceModel('m3', this)">
-                        <div class="avatar">🎙️</div>
-                        <div class="details"><div class="model-name">3. ವಿಕ್ರಮ್ ನ್ಯೂಸ್</div></div>
-                    </div>
-                    <div class="model-card" data-gender="male" onclick="selectVoiceModel('m4', this)">
-                        <div class="avatar">🎬</div>
-                        <div class="details"><div class="model-name">4. ದೇವ್‌ ಮಾಸ್</div></div>
-                    </div>
-                    <div class="model-card" data-gender="male" onclick="selectVoiceModel('m5', this)">
-                        <div class="avatar">⚽</div>
-                        <div class="details"><div class="model-name">5. ಅರ್ಜುನ್ ಸ್ಪೋರ್ಟ್ಸ್</div></div>
-                    </div>
-                    <div class="model-card" data-gender="male" onclick="selectVoiceModel('m6', this)">
-                        <div class="avatar">💻</div>
-                        <div class="details"><div class="model-name">6. ಸೂರ್ಯ ಟೆಕ್</div></div>
-                    </div>
-                    <div class="model-card" data-gender="male" onclick="selectVoiceModel('m7', this)">
-                        <div class="avatar">🛕</div>
-                        <div class="details"><div class="model-name">7. ಗುರು ಭಕ್ತಿ</div></div>
-                    </div>
-                    <div class="model-card" data-gender="male" onclick="selectVoiceModel('m8', this)">
-                        <div class="avatar">📖</div>
-                        <div class="details"><div class="model-name">8. ಚೇತನ್ ಕಥೆ</div></div>
-                    </div>
-                    <div class="model-card" data-gender="male" onclick="selectVoiceModel('m9', this)">
-                        <div class="avatar">📢</div>
-                        <div class="details"><div class="model-name">9. ಕಿರಣ್ ಆಡ್</div></div>
-                    </div>
-                    <div class="model-card" data-gender="male" onclick="selectVoiceModel('m10', this)">
-                        <div class="avatar">🔥</div>
-                        <div class="details"><div class="model-name">10. ಧನಂಜಯ Pro</div></div>
-                    </div>
-
-                    <!-- Female Voices (11 to 20) -->
-                    <div class="model-card" data-gender="female" onclick="selectVoiceModel('f1', this)">
+                    <div class="model-card" onclick="selectVoiceModel('f1', this)">
                         <div class="avatar">👩‍💼</div>
-                        <div class="details"><div class="model-name">11. ಸಪ್ನಾ ಪ್ರೊ</div></div>
+                        <div class="details"><div class="model-name">2. ಸಪ್ನಾ ಪ್ರೊ</div></div>
                     </div>
-                    <div class="model-card" data-gender="female" onclick="selectVoiceModel('f2', this)">
+                    <div class="model-card" onclick="selectVoiceModel('m2', this)">
+                        <div class="avatar">🎧</div>
+                        <div class="details"><div class="model-name">3. ರಾಜೇಶ್ RJ</div></div>
+                    </div>
+                    <div class="model-card" onclick="selectVoiceModel('f2', this)">
                         <div class="avatar">🎙️</div>
-                        <div class="details"><div class="model-name">12. ರಶ್ಮಿ RJ</div></div>
+                        <div class="details"><div class="model-name">4. ರಶ್ಮಿ RJ</div></div>
                     </div>
-                    <div class="model-card" data-gender="female" onclick="selectVoiceModel('f3', this)">
+                    <div class="model-card" onclick="selectVoiceModel('m3', this)">
+                        <div class="avatar">🎙️</div>
+                        <div class="details"><div class="model-name">5. ವಿಕ್ರಮ್ ನ್ಯೂಸ್</div></div>
+                    </div>
+                    <div class="model-card" onclick="selectVoiceModel('f3', this)">
                         <div class="avatar">📰</div>
-                        <div class="details"><div class="model-name">13. ಪ್ರಿಯಾ ನ್ಯೂಸ್</div></div>
+                        <div class="details"><div class="model-name">6. ಪ್ರಿಯಾ ನ್ಯೂಸ್</div></div>
                     </div>
-                    <div class="model-card" data-gender="female" onclick="selectVoiceModel('f4', this)">
+                    <div class="model-card" onclick="selectVoiceModel('m4', this)">
+                        <div class="avatar">🎬</div>
+                        <div class="details"><div class="model-name">7. ದೇವ್‌ ಮಾಸ್</div></div>
+                    </div>
+                    <div class="model-card" onclick="selectVoiceModel('f4', this)">
                         <div class="avatar">✨</div>
-                        <div class="details"><div class="model-name">14. ಪೂಜಾ ಫ್ಯಾಶನ್</div></div>
+                        <div class="details"><div class="model-name">8. ಪೂಜಾ ಫ್ಯಾಶನ್</div></div>
                     </div>
-                    <div class="model-card" data-gender="female" onclick="selectVoiceModel('f5', this)">
+                    <div class="model-card" onclick="selectVoiceModel('m5', this)">
+                        <div class="avatar">⚽</div>
+                        <div class="details"><div class="model-name">9. ಅರ್ಜುನ್ ಸ್ಪೋರ್ಟ್ಸ್</div></div>
+                    </div>
+                    <div class="model-card" onclick="selectVoiceModel('f5', this)">
                         <div class="avatar">📚</div>
-                        <div class="details"><div class="model-name">15. ಅನನ್ಯ ಕಥೆ</div></div>
+                        <div class="details"><div class="model-name">10. ಅನನ್ಯ ಕಥೆ</div></div>
                     </div>
-                    <div class="model-card" data-gender="female" onclick="selectVoiceModel('f6', this)">
+                    <div class="model-card" onclick="selectVoiceModel('m6', this)">
+                        <div class="avatar">💻</div>
+                        <div class="details"><div class="model-name">11. ಸೂರ್ಯ ಟೆಕ್</div></div>
+                    </div>
+                    <div class="model-card" onclick="selectVoiceModel('f6', this)">
                         <div class="avatar">🛍️</div>
-                        <div class="details"><div class="model-name">16. ಕಾವ್ಯ ಆಡ್</div></div>
+                        <div class="details"><div class="model-name">12. ಕಾವ್ಯ ಆಡ್</div></div>
                     </div>
-                    <div class="model-card" data-gender="female" onclick="selectVoiceModel('f7', this)">
+                    <div class="model-card" onclick="selectVoiceModel('m7', this)">
+                        <div class="avatar">🛕</div>
+                        <div class="details"><div class="model-name">13. ಗುರು ಭಕ್ತಿ</div></div>
+                    </div>
+                    <div class="model-card" onclick="selectVoiceModel('f7', this)">
                         <div class="avatar">📻</div>
-                        <div class="details"><div class="model-name">17. ಸ್ನೇಹಾ FM</div></div>
+                        <div class="details"><div class="model-name">14. ಸ್ನೇಹಾ FM</div></div>
                     </div>
-                    <div class="model-card" data-gender="female" onclick="selectVoiceModel('f8', this)">
+                    <div class="model-card" onclick="selectVoiceModel('m8', this)">
+                        <div class="avatar">📖</div>
+                        <div class="details"><div class="model-name">15. ಚೇತನ್ ಕಥೆ</div></div>
+                    </div>
+                    <div class="model-card" onclick="selectVoiceModel('f8', this)">
                         <div class="avatar">🎓</div>
-                        <div class="details"><div class="model-name">18. ಶ್ರೇಯಾ ಎಡು</div></div>
+                        <div class="details"><div class="model-name">16. ಶ್ರೇಯಾ ಎಡು</div></div>
                     </div>
-                    <div class="model-card" data-gender="female" onclick="selectVoiceModel('f9', this)">
+                    <div class="model-card" onclick="selectVoiceModel('m9', this)">
+                        <div class="avatar">📢</div>
+                        <div class="details"><div class="model-name">17. ಕಿರಣ್ ಆಡ್</div></div>
+                    </div>
+                    <div class="model-card" onclick="selectVoiceModel('f9', this)">
                         <div class="avatar">🌸</div>
-                        <div class="details"><div class="model-name">19. ಮೌಲ್ಯ ಶಾಂತ</div></div>
+                        <div class="details"><div class="model-name">18. ಮೌಲ್ಯ ಶಾಂತ</div></div>
                     </div>
-                    <div class="model-card" data-gender="female" onclick="selectVoiceModel('f10', this)">
+                    <div class="model-card" onclick="selectVoiceModel('m10', this)">
+                        <div class="avatar">🔥</div>
+                        <div class="details"><div class="model-name">19. ಧನಂಜಯ Pro</div></div>
+                    </div>
+                    <div class="model-card" onclick="selectVoiceModel('f10', this)">
                         <div class="avatar">💎</div>
                         <div class="details"><div class="model-name">20. ಸ್ಪಂದನಾ Pro</div></div>
                     </div>
@@ -437,6 +425,6 @@
         </main>
     </div>
 
-    <script src="app.js?v=5.0.0"></script>
+    <script src="app.js?v=6.0.0"></script>
 </body>
 </html>
