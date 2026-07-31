@@ -27,6 +27,9 @@ html, body {
     min-height: 100vh;
     padding: 10px 8px;
     line-height: 1.4;
+    overscroll-behavior-y: contain !important;
+    touch-action: pan-x pan-y !important;
+    -webkit-overflow-scrolling: touch !important;
 }
 
 .studio-container, .app-wrapper {

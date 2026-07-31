@@ -2,11 +2,18 @@
 <html lang="kn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio - 20 Pro HD AI Voices</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=6.0.0">
+    <link rel="stylesheet" href="style.css?v=7.0.0">
     <style>
+    /* PREVENT ACCIDENTAL MOBILE PULL-TO-REFRESH SPINNER */
+    html, body {
+        overscroll-behavior-y: contain !important;
+        touch-action: pan-x pan-y !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
     /* Clean Square App Cards & Horizontal Swipe Carousel */
     .voice-models-container {
         display: flex !important;
@@ -17,6 +24,8 @@
         gap: 12px !important;
         padding: 10px 4px 16px 4px !important;
         scroll-snap-type: x mandatory !important;
+        overscroll-behavior-x: contain !important;
+        touch-action: pan-x !important;
         -webkit-overflow-scrolling: touch !important;
         width: 100% !important;
         box-sizing: border-box !important;
@@ -114,6 +123,8 @@
         padding: 4px 2px 10px 2px !important;
         margin-bottom: 12px !important;
         scroll-snap-type: x mandatory !important;
+        overscroll-behavior-x: contain !important;
+        touch-action: pan-x !important;
         -webkit-overflow-scrolling: touch !important;
         width: 100% !important;
         box-sizing: border-box !important;
@@ -425,6 +436,6 @@
         </main>
     </div>
 
-    <script src="app.js?v=6.0.0"></script>
+    <script src="app.js?v=7.0.0"></script>
 </body>
 </html>
