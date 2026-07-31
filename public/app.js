@@ -274,41 +274,39 @@ function audioBufferToWav(buffer) {
     return new Blob([outBuffer], { type: 'audio/wav' });
 }
 
-// PRO SOCIAL MEDIA SHARING WITH TOGGLE CLASS
-async function shareAudioFile() {
-    const targetUrl = 'https://mahitichakra.in/kannada-ai-voice-studio/';
-    const shareData = {
-        title: 'ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio',
-        text: '🔥 ಕನ್ನಡದ 20 Ultra-HD AI ಧ್ವನಿಗಳ ಉಚಿತ AI Voice Studio! ನಿಮ್ಮ ಪಠ್ಯವನ್ನು 100% HD ಮಾನವ ಧ್ವನಿಗೆ ಉಚಿತವಾಗಿ ಬದಲಾಯಿಸಿ:',
-        url: targetUrl
-    };
-
-    if (navigator.share) {
-        try {
-            await navigator.share(shareData);
-        } catch (e) {
-            openShareModal();
-        }
-    } else {
-        openShareModal();
+// COMPACT FLOATING SHARE POPOVER TOGGLE (RIGHT ABOVE BUTTON)
+function toggleSharePopover(e) {
+    if (e) e.stopPropagation();
+    const popover = document.getElementById('sharePopover');
+    if (popover) {
+        popover.classList.toggle('active');
     }
 }
 
-function openShareModal() {
-    const modal = document.getElementById('shareModal');
-    if (modal) modal.classList.add('active');
-}
-
-function closeShareModal(e) {
-    const modal = document.getElementById('shareModal');
-    if (modal) modal.classList.remove('active');
+function closeSharePopover() {
+    const popover = document.getElementById('sharePopover');
+    if (popover) {
+        popover.classList.remove('active');
+    }
 }
 
 function copyShareLink() {
     const targetUrl = 'https://mahitichakra.in/kannada-ai-voice-studio/';
     navigator.clipboard.writeText(targetUrl);
     alert(`📋 Studio Link Copied!\n\n${targetUrl}`);
+    closeSharePopover();
 }
+
+// Close popover when clicking anywhere outside
+document.addEventListener('click', function(e) {
+    const popover = document.getElementById('sharePopover');
+    const shareBtn = document.getElementById('shareAudioBtn');
+    if (popover && popover.classList.contains('active')) {
+        if (!popover.contains(e.target) && e.target !== shareBtn && (!shareBtn || !shareBtn.contains(e.target))) {
+            popover.classList.remove('active');
+        }
+    }
+});
 
 // Generate Speech Function
 async function generateProTTS() {
