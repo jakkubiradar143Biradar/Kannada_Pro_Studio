@@ -5,7 +5,6 @@ let selectedVoice = 'm1';
 let mediaRecorder = null;
 let audioChunks = [];
 let recordedAudioBlob = null;
-let uploadedAudioBuffer = null;
 let isRecording = false;
 
 // Kanglish Transliteration Dictionary
@@ -315,10 +314,14 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// 🎙️ PRO VOICE CHANGER & AI NOISE CLEANER MODAL & ENGINE
+// 🎙️ PRO VOICE CHANGER & AI NOISE CLEANER MODAL & ADVANCED ENGINE
 function openVoiceChangerModal() {
     const modal = document.getElementById('voiceChangerModal');
-    if (modal) modal.classList.add('active');
+    if (modal) {
+        modal.classList.add('active');
+        // Scroll modal to top
+        modal.scrollTop = 0;
+    }
 }
 
 function closeVoiceChangerModal(e) {
@@ -380,19 +383,35 @@ function handleAudioUpload(event) {
     }
 }
 
-// Process Audio (AI Noise Cleaner + Voice Changer)
+// Update VC Sliders Labels
+function updateVcPitchLabel(val) {
+    const el = document.getElementById('vcPitchVal');
+    if (el) {
+        const v = parseInt(val);
+        el.innerText = v > 0 ? `+${v} Semitones` : `${v} Semitones`;
+    }
+}
+
+function updateVcSpeedLabel(val) {
+    const el = document.getElementById('vcSpeedVal');
+    if (el) el.innerText = `${val}x`;
+}
+
+// Process Audio (Advanced Pitch Shift + Formant Morphing + AI Noise Cleaner)
 async function processVoiceChanger() {
     const recStatus = document.getElementById('recStatus');
     const processBtn = document.getElementById('processVcBtn');
     const targetVoice = document.getElementById('vcTargetVoice').value;
     const cleanNoise = document.getElementById('noiseCleanCheck').checked;
+    const customPitchSemis = parseFloat(document.getElementById('vcPitchSlider').value);
+    const customSpeed = parseFloat(document.getElementById('vcSpeedSlider').value);
 
     if (!recordedAudioBlob) {
         alert("Please record your voice or upload an audio file first!");
         return;
     }
 
-    if (recStatus) recStatus.innerText = "⏳ Processing AI Noise Cleaner & Voice Changer...";
+    if (recStatus) recStatus.innerText = "⏳ Morphing Voice & Cleaning Background Noise...";
     if (processBtn) processBtn.innerText = "⚡ Processing...";
 
     try {
@@ -400,13 +419,19 @@ async function processVoiceChanger() {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const decodedData = await audioCtx.decodeAudioData(arrayBuffer);
 
-        let pitchShiftRatio = 1.0;
-        if (targetVoice === 'male_deep') pitchShiftRatio = 0.75;
-        else if (targetVoice === 'female_high') pitchShiftRatio = 1.35;
-        else if (targetVoice === 'robot') pitchShiftRatio = 0.9;
-        else if (targetVoice === 'radio') pitchShiftRatio = 1.05;
+        let semitoneShift = customPitchSemis;
+        
+        if (targetVoice === 'gagan') semitoneShift = -5;
+        else if (targetVoice === 'sapna') semitoneShift = 6;
+        else if (targetVoice === 'rajesh') semitoneShift = -7;
+        else if (targetVoice === 'rashmi') semitoneShift = 5;
+        else if (targetVoice === 'dev_mass') semitoneShift = -9;
+        else if (targetVoice === 'child') semitoneShift = 10;
+        else if (targetVoice === 'robot') semitoneShift = -2;
 
-        const renderDuration = decodedData.duration / pitchShiftRatio;
+        const pitchRatio = Math.pow(2, semitoneShift / 12.0) * customSpeed;
+        const renderDuration = decodedData.duration / pitchRatio;
+
         const offlineCtx = new OfflineAudioContext(
             decodedData.numberOfChannels,
             Math.ceil(renderDuration * decodedData.sampleRate),
@@ -415,29 +440,25 @@ async function processVoiceChanger() {
 
         const source = offlineCtx.createBufferSource();
         source.buffer = decodedData;
-        source.playbackRate.value = pitchShiftRatio;
+        source.playbackRate.value = pitchRatio;
 
         let lastNode = source;
 
-        // AI Noise Cleaning Filters
+        // 1. AI Noise Cleaner
         if (cleanNoise) {
-            // High-pass filter to eliminate background rumble & low wind noise
             const hpFilter = offlineCtx.createBiquadFilter();
             hpFilter.type = "highpass";
-            hpFilter.frequency.value = 130;
+            hpFilter.frequency.value = 135;
 
-            // Notch filter to remove AC mains hum (50Hz / 60Hz)
             const notchFilter = offlineCtx.createBiquadFilter();
             notchFilter.type = "peaking";
             notchFilter.frequency.value = 60;
             notchFilter.gain.value = -24;
 
-            // Low-pass filter to remove background hiss
             const lpFilter = offlineCtx.createBiquadFilter();
             lpFilter.type = "lowpass";
-            lpFilter.frequency.value = 9000;
+            lpFilter.frequency.value = 8500;
 
-            // Studio Compressor
             const compressor = offlineCtx.createDynamicsCompressor();
             compressor.threshold.value = -22;
             compressor.ratio.value = 6;
@@ -449,28 +470,47 @@ async function processVoiceChanger() {
             lastNode = compressor;
         }
 
-        // Voice Type Modifications
-        if (targetVoice === 'male_deep') {
-            const deepEq = offlineCtx.createBiquadFilter();
-            deepEq.type = "lowshelf";
-            deepEq.frequency.value = 200;
-            deepEq.gain.value = 12;
-            lastNode.connect(deepEq);
-            lastNode = deepEq;
-        } else if (targetVoice === 'female_high') {
-            const highEq = offlineCtx.createBiquadFilter();
-            highEq.type = "highshelf";
-            highEq.frequency.value = 3000;
-            highEq.gain.value = 10;
-            lastNode.connect(highEq);
-            lastNode = highEq;
-        } else if (targetVoice === 'radio') {
-            const bpFilter = offlineCtx.createBiquadFilter();
-            bpFilter.type = "bandpass";
-            bpFilter.frequency.value = 2200;
-            bpFilter.Q.value = 1.5;
-            lastNode.connect(bpFilter);
-            lastNode = bpFilter;
+        // 2. Formant Resonator & Gender Morphing Filter
+        if (semitoneShift < -2) {
+            // Male Deep Voice Formant Filter
+            const formantFilter = offlineCtx.createBiquadFilter();
+            formantFilter.type = "lowshelf";
+            formantFilter.frequency.value = 240;
+            formantFilter.gain.value = 14;
+
+            const subBass = offlineCtx.createBiquadFilter();
+            subBass.type = "peaking";
+            subBass.frequency.value = 100;
+            subBass.gain.value = 8;
+
+            lastNode.connect(formantFilter);
+            formantFilter.connect(subBass);
+            lastNode = subBass;
+
+        } else if (semitoneShift > 2) {
+            // Female High Voice Formant Filter
+            const femaleFormant = offlineCtx.createBiquadFilter();
+            femaleFormant.type = "highshelf";
+            femaleFormant.frequency.value = 2800;
+            femaleFormant.gain.value = 12;
+
+            const presence = offlineCtx.createBiquadFilter();
+            presence.type = "peaking";
+            presence.frequency.value = 4000;
+            presence.gain.value = 6;
+
+            lastNode.connect(femaleFormant);
+            femaleFormant.connect(presence);
+            lastNode = presence;
+        }
+
+        if (targetVoice === 'robot') {
+            const bp = offlineCtx.createBiquadFilter();
+            bp.type = "bandpass";
+            bp.frequency.value = 1500;
+            bp.Q.value = 3.5;
+            lastNode.connect(bp);
+            lastNode = bp;
         }
 
         lastNode.connect(offlineCtx.destination);
@@ -495,13 +535,13 @@ async function processVoiceChanger() {
             vcDlBtn.classList.remove('disabled');
         }
 
-        if (recStatus) recStatus.innerText = "✅ Audio Cleaned & Voice Transformed!";
-        if (processBtn) processBtn.innerText = "⚡ Process & Clear Audio";
+        if (recStatus) recStatus.innerText = "✅ AI Voice Morphing & Background Noise Cleared!";
+        if (processBtn) processBtn.innerText = "⚡ Process & Transform Voice";
 
     } catch (err) {
         console.error(err);
         if (recStatus) recStatus.innerText = "❌ Error processing audio. Try again.";
-        if (processBtn) processBtn.innerText = "⚡ Process & Clear Audio";
+        if (processBtn) processBtn.innerText = "⚡ Process & Transform Voice";
     }
 }
 

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio - 20 Pro HD AI Voices</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=19.0.0">
+    <link rel="stylesheet" href="style.css?v=20.0.0">
     <style>
     /* 100% BUTTER-SMOOTH LIQUID VERTICAL PAGE SCROLLING */
     html {
@@ -399,7 +399,28 @@
     .pop-fb { background: #1877f2 !important; }
     .pop-copy { background: #8b5cf6 !important; }
 
-    /* PRO VOICE CHANGER MODAL STYLING */
+    /* PRO VOICE CHANGER MODAL STYLING (TOP ALIGNED AT TOP OF SCREEN) */
+    .share-modal-overlay {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background: rgba(0, 0, 0, 0.82) !important;
+        backdrop-filter: blur(10px) !important;
+        z-index: 999999 !important;
+        display: none;
+        align-items: flex-start !important; /* Top aligned so it opens right at top! */
+        justify-content: center !important;
+        padding: 10px 10px 30px 10px !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .share-modal-overlay.active {
+        display: flex !important;
+    }
+
     .vc-modal-card {
         background: linear-gradient(145deg, #1e1b4b, #0f172a) !important;
         border: 1px solid rgba(236, 72, 153, 0.6) !important;
@@ -407,8 +428,11 @@
         padding: 20px !important;
         width: 100% !important;
         max-width: 480px !important;
+        margin-top: 10px !important;
         box-shadow: 0 10px 35px rgba(0, 0, 0, 0.85) !important;
         color: #ffffff !important;
+        max-height: 92vh !important;
+        overflow-y: auto !important;
     }
 
     .vc-modal-header {
@@ -509,6 +533,13 @@
         color: #94a3b8 !important;
         display: block !important;
         margin-bottom: 4px !important;
+    }
+
+    .vc-sliders-row {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        margin-top: 10px !important;
     }
     </style>
 </head>
@@ -771,18 +802,18 @@
         </main>
     </div>
 
-    <!-- PRO VOICE CHANGER & AI NOISE CLEANER STUDIO MODAL -->
+    <!-- PRO VOICE CHANGER & AI NOISE CLEANER STUDIO MODAL (TOP ALIGNED) -->
     <div id="voiceChangerModal" class="share-modal-overlay" onclick="closeVoiceChangerModal(event)">
         <div class="vc-modal-card" onclick="event.stopPropagation()">
             <div class="vc-modal-header">
                 <h3>🎙️ Pro Record, Noise Cleaner & Voice Changer</h3>
                 <button class="close-modal-btn" onclick="closeVoiceChangerModal()">✖</button>
             </div>
-            <p class="vc-modal-subtitle">ನಿಮ್ಮ ಧ್ವನಿಯನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡಿ ಅಥವಾ ಆಡಿಯೋ ಫೈಲ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ — ಬ್ಯಾಕ್‌ಗ್ರೌಂಡ್ ನಾಯ್ಸ್ ಕ್ಲಿಯರ್ ಮಾಡಿ Pro Voices ಗೆ ಧ್ವನಿ ಬದಲಾಯಿಸಿ!</p>
+            <p class="vc-modal-subtitle">ನಿಮ್ಮ ಧ್ವನಿಯನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡಿ ಅಥವಾ ಆಡಿಯೋ ಫೈಲ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ — ಬ್ಯಾಕ್‌ಗ್ರೌಂಡ್ ನಾಯ್ಸ್ ಕ್ಲಿಯರ್ ಮಾಡಿ Pro AI Voices ಗೆ ಧ್ವನಿ ಬದಲಾಯಿಸಿ!</p>
 
             <!-- Step 1: Input Audio -->
             <div class="vc-section">
-                <h4>1. Record Voice or Upload Audio File</h4>
+                <h4>1. Record Live Voice or Upload Audio File</h4>
                 <div class="vc-btn-row">
                     <button id="recordBtn" class="btn-vc-act btn-rec" onclick="toggleRecording()">
                         <span id="recIcon">🎙️</span> <span id="recText">Start Recording</span>
@@ -794,9 +825,9 @@
                 <div id="recStatus" class="vc-status-text">Ready to record or upload...</div>
             </div>
 
-            <!-- Step 2: Pro Filters & Voice Models -->
+            <!-- Step 2: Pro Filters & 8 Voice Transformer Models -->
             <div class="vc-section">
-                <h4>2. Select AI Filter & Voice Target</h4>
+                <h4>2. Select AI Voice Transformer Model</h4>
                 <div class="vc-options-grid">
                     <label class="vc-toggle">
                         <input type="checkbox" id="noiseCleanCheck" checked> 🧹 Remove Background Noise (AI Noise Cleaner)
@@ -804,12 +835,33 @@
                     <div class="vc-select-group">
                         <label>🎭 Transform Voice To:</label>
                         <select id="vcTargetVoice" class="select-input">
-                            <option value="male_deep">👨 Deep Male Voice (-6 Semitones)</option>
-                            <option value="female_high">👩 High Female Voice (+5 Semitones)</option>
-                            <option value="robot">🤖 AI Cyber Robot</option>
-                            <option value="radio">📻 Broadcast Radio RJ</option>
-                            <option value="studio_clean">✨ Clean Studio Master (Original Voice + Noise Clean)</option>
+                            <option value="gagan">👨‍💼 1. ಗಗನ್ ಆಂಕರ್ (Deep News Anchor Voice)</option>
+                            <option value="sapna">👩‍💼 2. ಸಪ್ನಾ ಪ್ರೊ (Crystal Clear Female Voice)</option>
+                            <option value="rajesh">🎧 3. ರಾಜೇಶ್ RJ (Heavy Bass Broadcast Voice)</option>
+                            <option value="rashmi">🎙️ 4. ರಶ್ಮಿ RJ (Friendly Sweet Female Voice)</option>
+                            <option value="dev_mass">🎬 7. ದೇವ್‌ ಮಾಸ್ (Cinematic Action Hero Voice)</option>
+                            <option value="child">👶 8. Child / Cartoon Voice (Cute High Pitch)</option>
+                            <option value="robot">🤖 9. AI Cyber Synth (Futuristic Robot)</option>
+                            <option value="studio_clean">✨ 10. Clean Studio Master (Original Voice + AI Noise Clean)</option>
                         </select>
+                    </div>
+
+                    <!-- Pro Sliders inside Modal -->
+                    <div class="vc-sliders-row">
+                        <div class="slider-box">
+                            <div class="slider-label">
+                                <span>🎚️ Pitch Tuning</span>
+                                <strong id="vcPitchVal">0 Semitones</strong>
+                            </div>
+                            <input type="range" id="vcPitchSlider" min="-12" max="12" step="1" value="0" oninput="updateVcPitchLabel(this.value)">
+                        </div>
+                        <div class="slider-box">
+                            <div class="slider-label">
+                                <span>⚡ Speed Pace</span>
+                                <strong id="vcSpeedVal">1.0x</strong>
+                            </div>
+                            <input type="range" id="vcSpeedSlider" min="0.7" max="1.5" step="0.1" value="1.0" oninput="updateVcSpeedLabel(this.value)">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -817,20 +869,20 @@
             <!-- Step 3: Action & Output Player -->
             <div class="vc-section">
                 <button class="btn-generate-speech" id="processVcBtn" onclick="processVoiceChanger()" style="margin-bottom:12px;">
-                    ⚡ Process & Clear Audio
+                    ⚡ Process & Transform Voice
                 </button>
 
                 <div class="audio-element-wrapper" id="vcAudioWrapper" style="display:none;">
                     <audio id="vcAudioPlayer" controls></audio>
                 </div>
                 
-                <a id="vcDownloadBtn" class="btn-export btn-mp3 disabled" style="margin-top:10px;" download="mahiti_chakra_clean_voice.wav">
-                    📥 Download Cleaned & Changed Audio
+                <a id="vcDownloadBtn" class="btn-export btn-mp3 disabled" style="margin-top:10px;" download="mahiti_chakra_transformed_voice.wav">
+                    📥 Download Transformed Audio
                 </a>
             </div>
         </div>
     </div>
 
-    <script src="app.js?v=19.0.0"></script>
+    <script src="app.js?v=20.0.0"></script>
 </body>
 </html>
