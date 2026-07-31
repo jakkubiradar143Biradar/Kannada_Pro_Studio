@@ -6,6 +6,107 @@
     <title>ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio - 100% Free 100 HD AI Voices</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=3.0.0">
+    <style>
+    /* HORIZONTAL SWIPE CAROUSEL FOR 100 MODEL CARDS (INLINE OVERRIDE) */
+    .voice-models-container {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        gap: 12px !important;
+        padding: 8px 4px 14px 4px !important;
+        scroll-snap-type: x mandatory !important;
+        -webkit-overflow-scrolling: touch !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .voice-models-container::-webkit-scrollbar {
+        height: 6px !important;
+    }
+    .voice-models-container::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.3) !important;
+        border-radius: 10px !important;
+    }
+    .voice-models-container::-webkit-scrollbar-thumb {
+        background: linear-gradient(90deg, #ec4899, #8b5cf6) !important;
+        border-radius: 10px !important;
+    }
+
+    .model-card, .voice-card {
+        width: 105px !important;
+        height: 110px !important;
+        min-width: 105px !important;
+        flex: 0 0 105px !important;
+        scroll-snap-align: start !important;
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.9)) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 18px !important;
+        padding: 10px 6px !important;
+        cursor: pointer !important;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .model-card:hover {
+        transform: translateY(-4px) scale(1.03) !important;
+        background: linear-gradient(135deg, rgba(51, 65, 85, 0.85), rgba(30, 41, 59, 0.98)) !important;
+        border-color: rgba(168, 85, 247, 0.6) !important;
+    }
+
+    .model-card.active, .voice-card.selected {
+        background: linear-gradient(135deg, #7c3aed, #db2777) !important;
+        border-color: #f472b6 !important;
+        box-shadow: 0 8px 25px rgba(236, 72, 153, 0.6) !important;
+    }
+
+    .avatar, .voice-icon {
+        font-size: 24px !important;
+        width: 44px !important;
+        height: 44px !important;
+        background: rgba(255, 255, 255, 0.12) !important;
+        border-radius: 14px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin-bottom: 6px !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25) !important;
+        flex-shrink: 0 !important;
+    }
+
+    .details, .voice-info {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+        width: 100% !important;
+    }
+
+    .model-name, .voice-name {
+        font-size: 0.74rem !important;
+        font-weight: 800 !important;
+        color: #ffffff !important;
+        line-height: 1.15 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        text-align: center !important;
+        width: 100% !important;
+    }
+
+    .model-desc, .voice-tag, .badge-tag {
+        display: none !important;
+    }
+    </style>
 </head>
 <body>
     <div class="app-wrapper">
