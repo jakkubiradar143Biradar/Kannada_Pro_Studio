@@ -2,23 +2,28 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
-const { EdgeTTS } = require('node-edge-tts');
+const { exec } = require('child_process');
+const multer = require('multer');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, 'public')));
 
+// Upload & Temp storage
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
+const EDGE_TTS_BIN = `"C:\\Users\\ADMIN\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\edge-tts.exe"`;
+
 // Extensive Dictionary to convert English Words & Abbreviations into 100% Smooth Kannada Phonetics
 const ENGLISH_TO_KANNADA_PHONETICS = {
+    // Acronyms & Abbreviations
     "kpsc": "ಕೆ.ಪಿ.ಎಸ್.ಸಿ",
     "ksp": "ಕೆ.ಎಸ್.ಪಿ",
     "kas": "ಕೆ.ಎ.ಎಸ್",
@@ -47,6 +52,8 @@ const ENGLISH_TO_KANNADA_PHONETICS = {
     "kea": "ಕೆ.ಇ.ಎ",
     "puc": "ಪಿ.ಯು.ಸಿ",
     "sslc": "ಎಸ್.ಎಸ್.ಎಲ್.ಸಿ",
+
+    // Common Web & Tech Words
     "pro": "ಪ್ರೋ",
     "text": "ಟೆಕ್ಸ್ಟ್",
     "voice": "ವಾಯ್ಸ್",
@@ -99,6 +106,7 @@ const ENGLISH_TO_KANNADA_PHONETICS = {
     "scheme": "ಯೋಜನೆ"
 };
 
+// Single English Capital Letters Map for fallback transliteration
 const LETTER_MAP = {
     'A': 'ಎ', 'B': 'ಬಿ', 'C': 'ಸಿ', 'D': 'ಡಿ', 'E': 'ಇ', 'F': 'ಎಫ್',
     'G': 'ಜಿ', 'H': 'ಹೆಚ್', 'I': 'ಐ', 'J': 'ಜೆ', 'K': 'ಕೆ', 'L': 'ಎಲ್',
@@ -107,6 +115,7 @@ const LETTER_MAP = {
     'Y': 'ವೈ', 'Z': 'ಝೆಡ್'
 };
 
+// Preprocess text: Strip bracket contents (...) & convert English words/letters
 function formatHumanFlow(text) {
     let t = text.trim();
 
@@ -115,15 +124,18 @@ function formatHumanFlow(text) {
     t = t.replace(/\[.*?\]/g, '');
     t = t.replace(/\{.*?\}/g, '');
 
+    // Replace English dictionary words
     Object.keys(ENGLISH_TO_KANNADA_PHONETICS).forEach(engWord => {
         const regex = new RegExp(`\\b${engWord}\\b`, 'gi');
         t = t.replace(regex, ENGLISH_TO_KANNADA_PHONETICS[engWord]);
     });
 
+    // Fallback: Convert standalone English capital letter acronyms (e.g. KPSC -> ಕೆ.ಪಿ.ಎಸ್.ಸಿ)
     t = t.replace(/\b[A-Z]{2,6}\b/g, (match) => {
         return match.split('').map(letter => LETTER_MAP[letter] || letter).join('.');
     });
 
+    // Add natural rhythm pauses for punctuation
     t = t.replace(/,\s*/g, ', ');
     t = t.replace(/\.\s*/g, '. ');
     t = t.replace(/\?\s*/g, '? ');
@@ -131,6 +143,7 @@ function formatHumanFlow(text) {
     return t;
 }
 
+// Map 100 Models to Neural Engines & Base Acoustic Presets
 function getModelPreset(rawVoice) {
     let selectedVoice = 'kn-IN-SapnaNeural';
     let basePitch = 0;
@@ -191,7 +204,8 @@ function getModelPreset(rawVoice) {
     return { selectedVoice, basePitch };
 }
 
-app.post('/api/generate-tts', async (req, res) => {
+// Route: Generate Pro Kannada Speech (Bracket Ignore Engine Enabled)
+app.post('/api/generate-tts', (req, res) => {
     let { text, voice, pitch, rate, volume } = req.body;
     if (!text || !text.trim()) {
         return res.status(400).json({ error: 'Text parameter is required' });
@@ -208,59 +222,52 @@ app.post('/api/generate-tts', async (req, res) => {
     let volumeVal = volume || '+50%';
 
     const uniqueId = `${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    const tempTxtPath = path.join(uploadDir, `input_${uniqueId}.txt`);
     const tempMp3Path = path.join(uploadDir, `speech_${uniqueId}.mp3`);
 
     let formattedText = formatHumanFlow(text);
-
-    try {
-        console.log(`Executing 100-Model Node Edge-TTS (${rawVoice} -> ${selectedVoice}): '${formattedText.substring(0, 60)}...'`);
-
-        const tts = new EdgeTTS({
-            voice: selectedVoice,
-            lang: 'kn-IN',
-            outputFormat: 'audio-24khz-48kbitrate-mono-mp3',
-            pitch: pitchVal,
-            rate: rateVal,
-            volume: volumeVal
-        });
-
-        await tts.ttsPromise(formattedText, tempMp3Path);
-
-        if (fs.existsSync(tempMp3Path)) {
-            res.set({
-                'Content-Type': 'audio/mpeg',
-                'Content-Disposition': 'inline; filename="mahiti_chakra_speech.mp3"'
-            });
-
-            const stream = fs.createReadStream(tempMp3Path);
-            stream.pipe(res);
-
-            res.on('finish', () => {
-                fs.unlink(tempMp3Path, () => {});
-            });
-        } else {
-            res.status(500).json({ error: 'Output audio file not generated.' });
+    
+    fs.writeFile(tempTxtPath, formattedText, 'utf8', (writeErr) => {
+        if (writeErr) {
+            console.error('Error writing temp file:', writeErr);
+            return res.status(500).json({ error: 'Failed to prepare input text file.' });
         }
 
-    } catch (err) {
-        console.error('Node Edge-TTS Synthesis Error:', err);
-        res.status(500).json({ error: 'TTS generation failed: ' + err.message });
-    }
+        const cmd = `${EDGE_TTS_BIN} --voice "${selectedVoice}" -f "${tempTxtPath}" --rate="${rateVal}" --pitch="${pitchVal}" --volume="${volumeVal}" --write-media "${tempMp3Path}"`;
+
+        console.log(`Executing 100-Model Speech (Ignore Brackets) (${rawVoice} -> ${selectedVoice}): '${formattedText.substring(0, 70)}...'`);
+
+        exec(cmd, { encoding: 'utf-8', maxBuffer: 1024 * 1024 * 50 }, (error, stdout, stderr) => {
+            fs.unlink(tempTxtPath, () => {});
+
+            if (error) {
+                console.error('Edge-TTS Execution Error:', stderr || error.message);
+                return res.status(500).json({ error: 'TTS generation failed: ' + (stderr || error.message) });
+            }
+
+            if (fs.existsSync(tempMp3Path)) {
+                res.set({
+                    'Content-Type': 'audio/mpeg',
+                    'Content-Disposition': 'inline; filename="mahiti_chakra_100models_speech.mp3"'
+                });
+
+                const stream = fs.createReadStream(tempMp3Path);
+                stream.pipe(res);
+
+                res.on('finish', () => {
+                    fs.unlink(tempMp3Path, () => {});
+                });
+            } else {
+                res.status(500).json({ error: 'Output audio file not generated.' });
+            }
+        });
+    });
 });
 
-app.get('/ping', (req, res) => {
-    res.status(200).send('PONG - Kannada Pro AI Voice Studio Server Active 24/7');
-});
+app.use('/uploads', express.static(uploadDir));
 
-const serverInstance = app.listen(PORT, () => {
-    console.log(`🚀 Kannada Pro AI Voice Studio running on port ${PORT}`);
-    
-    // Internal Self-Ping Keeping Render Server 100% Warm & Instant 24/7
-    setInterval(() => {
-        try {
-            const https = require('https');
-            https.get('https://kannada-pro-studio.onrender.com/ping', () => {}).on('error', () => {});
-        } catch (e) {}
-    }, 3 * 60 * 1000); // Pings every 3 minutes
+app.listen(PORT, () => {
+    console.log("========================================================");
+    console.log(`🚀 Kannada Pro Voice Studio running on http://127.0.0.1:${PORT}`);
+    console.log("========================================================");
 });
-
