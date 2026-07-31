@@ -1,6 +1,13 @@
 // Mahiti Chakra 20 Pro Voices State
 let selectedVoice = 'm1';
 
+// Voice Changer & Recorder State
+let mediaRecorder = null;
+let audioChunks = [];
+let recordedAudioBlob = null;
+let uploadedAudioBuffer = null;
+let isRecording = false;
+
 // Kanglish Transliteration Dictionary
 const KANGLISH_DICTIONARY = {
     "namaskara": "ನಮಸ್ಕಾರ",
@@ -307,6 +314,196 @@ document.addEventListener('click', function(e) {
         }
     }
 });
+
+// 🎙️ PRO VOICE CHANGER & AI NOISE CLEANER MODAL & ENGINE
+function openVoiceChangerModal() {
+    const modal = document.getElementById('voiceChangerModal');
+    if (modal) modal.classList.add('active');
+}
+
+function closeVoiceChangerModal(e) {
+    const modal = document.getElementById('voiceChangerModal');
+    if (modal) modal.classList.remove('active');
+}
+
+// Live Microphone Recording Toggle
+async function toggleRecording() {
+    const recText = document.getElementById('recText');
+    const recIcon = document.getElementById('recIcon');
+    const recStatus = document.getElementById('recStatus');
+    const recBtn = document.getElementById('recordBtn');
+
+    if (!isRecording) {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            audioChunks = [];
+            mediaRecorder = new MediaRecorder(stream);
+            
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                recordedAudioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                if (recStatus) recStatus.innerText = "✅ Live Voice Recorded Successfully!";
+            };
+
+            mediaRecorder.start();
+            isRecording = true;
+            if (recText) recText.innerText = "Stop Recording";
+            if (recIcon) recIcon.innerText = "⏹️";
+            if (recBtn) recBtn.classList.add('recording');
+            if (recStatus) recStatus.innerText = "🎙️ Recording live voice... Speak now!";
+        } catch (err) {
+            console.error("Microphone Access Error:", err);
+            alert("Microphone access is required to record voice. Please grant microphone permission.");
+        }
+    } else {
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+            mediaRecorder.stop();
+            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        }
+        isRecording = false;
+        if (recText) recText.innerText = "Start Recording";
+        if (recIcon) recIcon.innerText = "🎙️";
+        if (recBtn) recBtn.classList.remove('recording');
+    }
+}
+
+// Handle Audio File Upload
+function handleAudioUpload(event) {
+    const file = event.target.files[0];
+    const recStatus = document.getElementById('recStatus');
+    if (file) {
+        recordedAudioBlob = file;
+        if (recStatus) recStatus.innerText = `✅ File Uploaded: ${file.name}`;
+    }
+}
+
+// Process Audio (AI Noise Cleaner + Voice Changer)
+async function processVoiceChanger() {
+    const recStatus = document.getElementById('recStatus');
+    const processBtn = document.getElementById('processVcBtn');
+    const targetVoice = document.getElementById('vcTargetVoice').value;
+    const cleanNoise = document.getElementById('noiseCleanCheck').checked;
+
+    if (!recordedAudioBlob) {
+        alert("Please record your voice or upload an audio file first!");
+        return;
+    }
+
+    if (recStatus) recStatus.innerText = "⏳ Processing AI Noise Cleaner & Voice Changer...";
+    if (processBtn) processBtn.innerText = "⚡ Processing...";
+
+    try {
+        const arrayBuffer = await recordedAudioBlob.arrayBuffer();
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const decodedData = await audioCtx.decodeAudioData(arrayBuffer);
+
+        let pitchShiftRatio = 1.0;
+        if (targetVoice === 'male_deep') pitchShiftRatio = 0.75;
+        else if (targetVoice === 'female_high') pitchShiftRatio = 1.35;
+        else if (targetVoice === 'robot') pitchShiftRatio = 0.9;
+        else if (targetVoice === 'radio') pitchShiftRatio = 1.05;
+
+        const renderDuration = decodedData.duration / pitchShiftRatio;
+        const offlineCtx = new OfflineAudioContext(
+            decodedData.numberOfChannels,
+            Math.ceil(renderDuration * decodedData.sampleRate),
+            decodedData.sampleRate
+        );
+
+        const source = offlineCtx.createBufferSource();
+        source.buffer = decodedData;
+        source.playbackRate.value = pitchShiftRatio;
+
+        let lastNode = source;
+
+        // AI Noise Cleaning Filters
+        if (cleanNoise) {
+            // High-pass filter to eliminate background rumble & low wind noise
+            const hpFilter = offlineCtx.createBiquadFilter();
+            hpFilter.type = "highpass";
+            hpFilter.frequency.value = 130;
+
+            // Notch filter to remove AC mains hum (50Hz / 60Hz)
+            const notchFilter = offlineCtx.createBiquadFilter();
+            notchFilter.type = "peaking";
+            notchFilter.frequency.value = 60;
+            notchFilter.gain.value = -24;
+
+            // Low-pass filter to remove background hiss
+            const lpFilter = offlineCtx.createBiquadFilter();
+            lpFilter.type = "lowpass";
+            lpFilter.frequency.value = 9000;
+
+            // Studio Compressor
+            const compressor = offlineCtx.createDynamicsCompressor();
+            compressor.threshold.value = -22;
+            compressor.ratio.value = 6;
+
+            lastNode.connect(hpFilter);
+            hpFilter.connect(notchFilter);
+            notchFilter.connect(lpFilter);
+            lpFilter.connect(compressor);
+            lastNode = compressor;
+        }
+
+        // Voice Type Modifications
+        if (targetVoice === 'male_deep') {
+            const deepEq = offlineCtx.createBiquadFilter();
+            deepEq.type = "lowshelf";
+            deepEq.frequency.value = 200;
+            deepEq.gain.value = 12;
+            lastNode.connect(deepEq);
+            lastNode = deepEq;
+        } else if (targetVoice === 'female_high') {
+            const highEq = offlineCtx.createBiquadFilter();
+            highEq.type = "highshelf";
+            highEq.frequency.value = 3000;
+            highEq.gain.value = 10;
+            lastNode.connect(highEq);
+            lastNode = highEq;
+        } else if (targetVoice === 'radio') {
+            const bpFilter = offlineCtx.createBiquadFilter();
+            bpFilter.type = "bandpass";
+            bpFilter.frequency.value = 2200;
+            bpFilter.Q.value = 1.5;
+            lastNode.connect(bpFilter);
+            lastNode = bpFilter;
+        }
+
+        lastNode.connect(offlineCtx.destination);
+        source.start(0);
+
+        const renderedBuffer = await offlineCtx.startRendering();
+        const processedWavBlob = audioBufferToWav(renderedBuffer);
+        const processedUrl = URL.createObjectURL(processedWavBlob);
+
+        const vcPlayer = document.getElementById('vcAudioPlayer');
+        const vcWrapper = document.getElementById('vcAudioWrapper');
+        const vcDlBtn = document.getElementById('vcDownloadBtn');
+
+        if (vcPlayer && vcWrapper) {
+            vcPlayer.src = processedUrl;
+            vcWrapper.style.display = 'block';
+            vcPlayer.play();
+        }
+
+        if (vcDlBtn) {
+            vcDlBtn.href = processedUrl;
+            vcDlBtn.classList.remove('disabled');
+        }
+
+        if (recStatus) recStatus.innerText = "✅ Audio Cleaned & Voice Transformed!";
+        if (processBtn) processBtn.innerText = "⚡ Process & Clear Audio";
+
+    } catch (err) {
+        console.error(err);
+        if (recStatus) recStatus.innerText = "❌ Error processing audio. Try again.";
+        if (processBtn) processBtn.innerText = "⚡ Process & Clear Audio";
+    }
+}
 
 // Generate Speech Function
 async function generateProTTS() {

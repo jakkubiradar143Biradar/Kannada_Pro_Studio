@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio - 20 Pro HD AI Voices</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=18.0.0">
+    <link rel="stylesheet" href="style.css?v=19.0.0">
     <style>
     /* 100% BUTTER-SMOOTH LIQUID VERTICAL PAGE SCROLLING */
     html {
@@ -34,6 +34,30 @@
     .app-wrapper, .studio-main {
         height: auto !important;
         overflow-x: hidden !important;
+    }
+
+    .nav-actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .btn-voice-changer-nav {
+        background: linear-gradient(135deg, #ec4899, #8b5cf6) !important;
+        border: 1px solid #f472b6 !important;
+        color: #ffffff !important;
+        border-radius: 12px !important;
+        padding: 6px 12px !important;
+        font-size: 0.8rem !important;
+        font-weight: 800 !important;
+        cursor: pointer !important;
+        box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4) !important;
+        transition: transform 0.2s ease !important;
+    }
+
+    .btn-voice-changer-nav:hover {
+        transform: scale(1.04) !important;
     }
 
     /* Clean Square App Cards & Horizontal Swipe Carousel */
@@ -374,6 +398,118 @@
     .pop-tg { background: #0088cc !important; }
     .pop-fb { background: #1877f2 !important; }
     .pop-copy { background: #8b5cf6 !important; }
+
+    /* PRO VOICE CHANGER MODAL STYLING */
+    .vc-modal-card {
+        background: linear-gradient(145deg, #1e1b4b, #0f172a) !important;
+        border: 1px solid rgba(236, 72, 153, 0.6) !important;
+        border-radius: 20px !important;
+        padding: 20px !important;
+        width: 100% !important;
+        max-width: 480px !important;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.85) !important;
+        color: #ffffff !important;
+    }
+
+    .vc-modal-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-bottom: 8px !important;
+    }
+
+    .vc-modal-header h3 {
+        font-size: 1.1rem !important;
+        color: #f472b6 !important;
+    }
+
+    .vc-modal-subtitle {
+        font-size: 0.84rem !important;
+        color: #cbd5e1 !important;
+        margin-bottom: 16px !important;
+        line-height: 1.5 !important;
+    }
+
+    .vc-section {
+        background: rgba(15, 23, 42, 0.6) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 14px !important;
+        padding: 12px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .vc-section h4 {
+        font-size: 0.88rem !important;
+        color: #a78bfa !important;
+        margin-bottom: 10px !important;
+    }
+
+    .vc-btn-row {
+        display: flex !important;
+        gap: 10px !important;
+    }
+
+    .btn-vc-act {
+        flex: 1 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 10px !important;
+        border-radius: 12px !important;
+        font-weight: 700 !important;
+        font-size: 0.84rem !important;
+        cursor: pointer !important;
+        border: none !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+        transition: transform 0.15s ease !important;
+    }
+
+    .btn-rec {
+        background: linear-gradient(135deg, #ef4444, #b91c1c) !important;
+    }
+
+    .btn-rec.recording {
+        animation: pulseRec 1s infinite alternate !important;
+    }
+
+    @keyframes pulseRec {
+        from { transform: scale(1); box-shadow: 0 0 10px #ef4444; }
+        to { transform: scale(1.05); box-shadow: 0 0 25px #ef4444; }
+    }
+
+    .btn-upload {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+    }
+
+    .vc-status-text {
+        font-size: 0.8rem !important;
+        color: #38bdf8 !important;
+        margin-top: 8px !important;
+        font-weight: 600 !important;
+    }
+
+    .vc-options-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    .vc-toggle {
+        font-size: 0.84rem !important;
+        color: #f1f5f9 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        cursor: pointer !important;
+    }
+
+    .vc-select-group label {
+        font-size: 0.82rem !important;
+        color: #94a3b8 !important;
+        display: block !important;
+        margin-bottom: 4px !important;
+    }
     </style>
 </head>
 <body>
@@ -388,7 +524,8 @@
                 </div>
             </div>
             <div class="nav-actions">
-                <div class="live-status"><span class="pulse-dot"></span> 20 Pro Voices Ready</div>
+                <div class="live-status"><span class="pulse-dot"></span> 20 Pro Text to Audio</div>
+                <button class="btn-voice-changer-nav" onclick="openVoiceChangerModal()">🎙️ Record & Voice Changer</button>
             </div>
         </nav>
 
@@ -634,6 +771,66 @@
         </main>
     </div>
 
-    <script src="app.js?v=18.0.0"></script>
+    <!-- PRO VOICE CHANGER & AI NOISE CLEANER STUDIO MODAL -->
+    <div id="voiceChangerModal" class="share-modal-overlay" onclick="closeVoiceChangerModal(event)">
+        <div class="vc-modal-card" onclick="event.stopPropagation()">
+            <div class="vc-modal-header">
+                <h3>🎙️ Pro Record, Noise Cleaner & Voice Changer</h3>
+                <button class="close-modal-btn" onclick="closeVoiceChangerModal()">✖</button>
+            </div>
+            <p class="vc-modal-subtitle">ನಿಮ್ಮ ಧ್ವನಿಯನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡಿ ಅಥವಾ ಆಡಿಯೋ ಫೈಲ್ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ — ಬ್ಯಾಕ್‌ಗ್ರೌಂಡ್ ನಾಯ್ಸ್ ಕ್ಲಿಯರ್ ಮಾಡಿ Pro Voices ಗೆ ಧ್ವನಿ ಬದಲಾಯಿಸಿ!</p>
+
+            <!-- Step 1: Input Audio -->
+            <div class="vc-section">
+                <h4>1. Record Voice or Upload Audio File</h4>
+                <div class="vc-btn-row">
+                    <button id="recordBtn" class="btn-vc-act btn-rec" onclick="toggleRecording()">
+                        <span id="recIcon">🎙️</span> <span id="recText">Start Recording</span>
+                    </button>
+                    <label class="btn-vc-act btn-upload">
+                        📁 Upload Audio <input type="file" id="audioFileInput" accept="audio/*" onchange="handleAudioUpload(event)" style="display:none;">
+                    </label>
+                </div>
+                <div id="recStatus" class="vc-status-text">Ready to record or upload...</div>
+            </div>
+
+            <!-- Step 2: Pro Filters & Voice Models -->
+            <div class="vc-section">
+                <h4>2. Select AI Filter & Voice Target</h4>
+                <div class="vc-options-grid">
+                    <label class="vc-toggle">
+                        <input type="checkbox" id="noiseCleanCheck" checked> 🧹 Remove Background Noise (AI Noise Cleaner)
+                    </label>
+                    <div class="vc-select-group">
+                        <label>🎭 Transform Voice To:</label>
+                        <select id="vcTargetVoice" class="select-input">
+                            <option value="male_deep">👨 Deep Male Voice (-6 Semitones)</option>
+                            <option value="female_high">👩 High Female Voice (+5 Semitones)</option>
+                            <option value="robot">🤖 AI Cyber Robot</option>
+                            <option value="radio">📻 Broadcast Radio RJ</option>
+                            <option value="studio_clean">✨ Clean Studio Master (Original Voice + Noise Clean)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Action & Output Player -->
+            <div class="vc-section">
+                <button class="btn-generate-speech" id="processVcBtn" onclick="processVoiceChanger()" style="margin-bottom:12px;">
+                    ⚡ Process & Clear Audio
+                </button>
+
+                <div class="audio-element-wrapper" id="vcAudioWrapper" style="display:none;">
+                    <audio id="vcAudioPlayer" controls></audio>
+                </div>
+                
+                <a id="vcDownloadBtn" class="btn-export btn-mp3 disabled" style="margin-top:10px;" download="mahiti_chakra_clean_voice.wav">
+                    📥 Download Cleaned & Changed Audio
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=19.0.0"></script>
 </body>
 </html>
