@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio - 20 Pro HD AI Voices</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Kannada:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=4.0.0">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=5.0.0">
     <style>
     /* Clean Square App Cards & Horizontal Swipe Carousel */
     .voice-models-container {
@@ -126,6 +126,83 @@
         border-color: #a78bfa !important;
         color: #ffffff !important;
     }
+
+    /* Horizontal Scrollable Row for Intonation Style Pills */
+    .sample-pills-row {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        gap: 8px !important;
+        padding: 4px 2px 10px 2px !important;
+        margin-bottom: 12px !important;
+        scroll-snap-type: x mandatory !important;
+        -webkit-overflow-scrolling: touch !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .sample-pills-row::-webkit-scrollbar {
+        height: 4px !important;
+    }
+    .sample-pills-row::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.3) !important;
+    }
+    .sample-pills-row::-webkit-scrollbar-thumb {
+        background: linear-gradient(90deg, #ec4899, #8b5cf6) !important;
+        border-radius: 10px !important;
+    }
+
+    .sample-pills-row .pill {
+        flex: 0 0 auto !important;
+        white-space: nowrap !important;
+        scroll-snap-align: start !important;
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95)) !important;
+        border: 1px solid rgba(139, 92, 246, 0.35) !important;
+        border-radius: 20px !important;
+        color: #f1f5f9 !important;
+        padding: 7px 14px !important;
+        font-size: 0.82rem !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .sample-pills-row .pill:hover, .sample-pills-row .pill.active {
+        background: linear-gradient(135deg, #7c3aed, #0284c7) !important;
+        border-color: #a78bfa !important;
+        color: #ffffff !important;
+    }
+
+    /* Premium Kannada Typography Textarea */
+    .input-container textarea, #ttsTextInput {
+        width: 100% !important;
+        min-height: 150px !important;
+        background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.98)) !important;
+        border: 1px solid rgba(139, 92, 246, 0.45) !important;
+        border-radius: 16px !important;
+        padding: 16px !important;
+        color: #ffffff !important;
+        font-family: 'Noto Sans Kannada', 'Outfit', sans-serif !important;
+        font-size: 1.02rem !important;
+        font-weight: 500 !important;
+        line-height: 1.75 !important;
+        resize: vertical !important;
+        outline: none !important;
+        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 20px rgba(124, 58, 237, 0.2) !important;
+        box-sizing: border-box !important;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+    }
+
+    .input-container textarea:focus, #ttsTextInput:focus {
+        border-color: #ec4899 !important;
+        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 25px rgba(236, 72, 153, 0.5) !important;
+    }
     </style>
 </head>
 <body>
@@ -147,22 +224,22 @@
         <!-- Main Studio Layout -->
         <main class="studio-main">
             
-            <!-- 1. TOP SECTION: Text Input & Intonation Presets -->
+            <!-- 1. TOP SECTION: Text Input & Horizontal Intonation Presets Carousel -->
             <section class="section-card">
                 <h2>1. Enter Text (ಕನ್ನಡದಲ್ಲಿ ಪಠ್ಯ ಟೈಪ್ ಮಾಡಿ)</h2>
 
-                <!-- Speech Intonation & Flow Style Presets -->
+                <!-- Horizontal Scrollable Intonation Style Pills -->
                 <div class="sample-pills-row">
-                    <button class="pill" onclick="applyFlowPreset('news', this)">📰 ಸುದ್ದಿ ಶೈಲಿ (Newsroom Fast)</button>
-                    <button class="pill" onclick="applyFlowPreset('story', this)">📖 ಕಥೆ ಶೈಲಿ (Storytelling Cadence)</button>
-                    <button class="pill" onclick="applyFlowPreset('mass', this)">🎬 ಮಾಸ್ ಶೈಲಿ (Cinema Mass Energy)</button>
-                    <button class="pill pill-aff" onclick="applyFlowPreset('ad', this)">📢 ಜಾಹೀರಾತು (FM Radio Pitch)</button>
+                    <button class="pill active" onclick="applyFlowPreset('news', this)">📰 ಸುದ್ದಿ ಶೈಲಿ (Newsroom)</button>
+                    <button class="pill" onclick="applyFlowPreset('story', this)">📖 ಕಥೆ ಶೈಲಿ (Storytelling)</button>
+                    <button class="pill" onclick="applyFlowPreset('mass', this)">🎬 ಮಾಸ್ ಶೈಲಿ (Cinema Mass)</button>
+                    <button class="pill pill-aff" onclick="applyFlowPreset('ad', this)">📢 ಜಾಹೀರಾತು (FM Radio)</button>
                     <button class="pill" onclick="applyFlowPreset('edu', this)">🎓 ಶಿಕ್ಷಣ ಶೈಲಿ (Teacher Calm)</button>
                     <button class="pill pill-clear" onclick="clearText()">🗑️ ಖಾಲಿ ಮಾಡಿ (Clear Text)</button>
                 </div>
 
                 <div class="input-container">
-                    <textarea id="ttsTextInput" placeholder="ಇಲ್ಲಿ ಉಚಿತವಾಗಿ ಕನ್ನಡ ಅಕ್ಷರಗಳಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ ಅಥವಾ ಬ್ಲಾಗ್ ಲೇಖನವನ್ನು ಪೇಸ್ಟ್ ಮಾಡಿ..." rows="8">ಬೃಹತ್ ಶಾಪಿಂಗ್ ಮೇಳಾರಂಭ! ದೀಪಾವಳಿ ಧಮಾಕಾ ಆಫರ್‌ನಲ್ಲಿ 50% ರಿಯಾಯಿತಿಯಲ್ಲಿ ಎಲ್ಲಾ ಸಾಮಗ್ರಿಗಳನ್ನು ಪಡೆಯಿರಿ!</textarea>
+                    <textarea id="ttsTextInput" placeholder="ಇಲ್ಲಿ ಉಚಿತವಾಗಿ ಕನ್ನಡ ಅಕ್ಷರಗಳಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ ಅಥವಾ ಬ್ಲಾಗ್ ಲೇಖನವನ್ನು ಪೇಸ್ಟ್ ಮಾಡಿ..." rows="8">ರಾಜ್ಯದಾದ್ಯಂತ ಕೃಷಿ ಮತ್ತು ಶೈಕ್ಷಣಿಕ ವಲಯಕ್ಕೆ ಸರ್ಕಾರದ ಕಡೆಯಿಂದ ಭಾರಿ ಅನುದಾನ ಬಿಡುಗಡೆಯಾಗಿದೆ. ಅರ್ಹ ಫಲಾನುಭವಿಗಳು ತಕ್ಷಣವೇ ಆನ್‌ಲೈನ್ ಮೂಲಕ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ ಸೌಲಭ್ಯ ಪಡೆಯಿರಿ.</textarea>
                 </div>
 
                 <!-- Kanglish Helper Accordion -->
@@ -291,9 +368,9 @@
                         <div class="slider-box">
                             <div class="slider-label">
                                 <span>⚡ Fast Speed Pace</span>
-                                <strong id="rateVal">1.1x (Fast)</strong>
+                                <strong id="rateVal">1.2x (Fast)</strong>
                             </div>
-                            <input type="range" id="rateSlider" min="0.7" max="1.6" step="0.1" value="1.1" oninput="updateRateLabel(this.value)">
+                            <input type="range" id="rateSlider" min="0.7" max="1.6" step="0.1" value="1.2" oninput="updateRateLabel(this.value)">
                         </div>
 
                         <div class="slider-box">
@@ -360,6 +437,6 @@
         </main>
     </div>
 
-    <script src="app.js?v=4.0.0"></script>
+    <script src="app.js?v=5.0.0"></script>
 </body>
 </html>
