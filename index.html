@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio - 20 Pro HD AI Voices</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=12.0.0">
+    <link rel="stylesheet" href="style.css?v=13.0.0">
     <style>
     /* 100% BUTTER-SMOOTH LIQUID VERTICAL PAGE SCROLLING */
     html {
@@ -271,11 +271,11 @@
         transform: translateY(-2px) !important;
     }
 
-    .btn-copy {
+    .btn-app {
         background: linear-gradient(135deg, #0284c7, #0369a1) !important;
         border-color: #38bdf8 !important;
     }
-    .btn-copy:hover {
+    .btn-app:hover {
         box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5) !important;
         transform: translateY(-2px) !important;
     }
@@ -512,17 +512,17 @@
                         <audio id="mainAudioPlayer" controls autoplay></audio>
                     </div>
 
-                    <!-- 4 PRO AUDIO EXPORT & UTILITY BUTTONS -->
+                    <!-- 4 PRO AUDIO EXPORT & APP DOWNLOAD BUTTONS -->
                     <div class="pro-export-grid">
                         <a id="downloadMp3Btn" class="btn-export btn-mp3 disabled" download="mahiti_chakra_speech.mp3">
-                            <span>📥 Download Studio MP3 (320kbps)</span>
+                            <span>📥 Download Studio MP3</span>
                         </a>
                         <a id="downloadWavBtn" class="btn-export btn-wav disabled" download="mahiti_chakra_master.wav">
-                            <span>🎵 Download Ultra WAV (Studio Master)</span>
+                            <span>🎵 Download Ultra WAV</span>
                         </a>
-                        <button id="copyAudioLinkBtn" class="btn-export btn-copy disabled" onclick="copyAudioUrl()">
-                            <span>📋 Copy Audio Link</span>
-                        </button>
+                        <a id="downloadAppBtn" class="btn-export btn-app" href="https://mahitichakra.in/app.apk" target="_blank" download="Kannada_Pro_AI_Studio.apk">
+                            <span>📲 Download Pro AI Studio App</span>
+                        </a>
                         <button id="shareAudioBtn" class="btn-export btn-share disabled" onclick="shareAudioFile()">
                             <span>🚀 Share Pro Audio</span>
                         </button>
@@ -532,6 +532,6 @@
         </main>
     </div>
 
-    <script src="app.js?v=12.0.0"></script>
+    <script src="app.js?v=13.0.0"></script>
 </body>
 </html>
