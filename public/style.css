@@ -389,27 +389,53 @@ input[type="range"] {
     width: 100% !important;
 }
 
-/* Sample Flow Pills Row */
+/* Sample Flow Pills Row - Butter Smooth Momentum Touch Scroll */
 .sample-pills-row {
     display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 6px !important;
-    margin-bottom: 10px !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    gap: 8px !important;
+    padding: 6px 4px 12px 4px !important;
+    margin-bottom: 12px !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-behavior: smooth !important;
+    touch-action: pan-x !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.sample-pills-row::-webkit-scrollbar {
+    height: 4px !important;
+}
+.sample-pills-row::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 10px !important;
+}
+.sample-pills-row::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #ec4899, #8b5cf6) !important;
+    border-radius: 10px !important;
 }
 
 .sample-pills-row .pill, .pill {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
     background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95)) !important;
-    border: 1px solid rgba(139, 92, 246, 0.35) !important;
+    border: 1px solid rgba(139, 92, 246, 0.4) !important;
     border-radius: 20px !important;
     color: #f1f5f9 !important;
-    padding: 7px 12px !important;
-    font-size: 0.8rem !important;
+    padding: 8px 16px !important;
+    font-size: 0.84rem !important;
     font-weight: 700 !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
     display: inline-flex !important;
     align-items: center !important;
     gap: 6px !important;
     cursor: pointer !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
 }
 
 .sample-pills-row .pill:hover, .pill.active, .pill:hover {
