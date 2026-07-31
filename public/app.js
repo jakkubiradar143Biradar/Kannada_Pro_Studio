@@ -19,10 +19,24 @@ const KANGLISH_DICTIONARY = {
     "houdu": "ಹೌದು"
 };
 
+// 🎯 DEDICATED PRESET TEXTS FOR EACH INTONATION STYLE
+const PRESET_TEXTS = {
+    'news': 'ರಾಜ್ಯದಾದ್ಯಂತ ಕೃಷಿ ಮತ್ತು ಶೈಕ್ಷಣಿಕ ವಲಯಕ್ಕೆ ಸರ್ಕಾರದ ಕಡೆಯಿಂದ ಭಾರಿ ಅನುದಾನ ಬಿಡುಗಡೆಯಾಗಿದೆ. ಅರ್ಹ ಫಲಾನುಭವಿಗಳು ತಕ್ಷಣವೇ ಆನ್‌ಲೈನ್ ಮೂಲಕ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ ಸೌಲಭ್ಯ ಪಡೆಯಿರಿ.',
+    'story': 'ಒಂದಾನೊಂದು ಕಾಲದಲ್ಲಿ ದಟ್ಟವಾದ ಸೌಂದರ್ಯದ ಪ್ರಕೃತಿಯ ಕಾಡಿನಲ್ಲಿ ಒಂದು ಸುಂದರವಾದ ಸರೋವರವಿತ್ತು. ಅಲ್ಲಿ ವಾಸಿಸುತ್ತಿದ್ದ ಪ್ರಾಣಿಗಳು ಪರಸ್ಪರ ಪ್ರೀತಿ ಮತ್ತು ಸೌಹಾರ್ದತೆಯಿಂದ ಜೀವಿಸುತ್ತಿದ್ದವು.',
+    'mass': 'ಸಾಮ್ರಾಜ್ಯಕ್ಕೆ ಒಬ್ಬನೇ ಸಿಂಹ! ನನ್ನ ದಾರಿ ಅಡ್ಡ ಬಂದರೆ ಯಾವ ಶಕ್ತಿಯೂ ಉಳಿಲು ಸಾಧ್ಯವಿಲ್ಲ! ಇದು ಕನ್ನಡ ಚಿತ್ರರಂಗದ ಭವ್ಯ ಮಾಸ್ ಪವರ್!',
+    'ad': 'ಬೃಹತ್ ಧಮಾಕಾ ಆಫರ್! ನಿಮ್ಮ ನೆಚ್ಚಿನ ಬ್ರಾಂಡೆಡ್ ಬಟ್ಟೆಗಳು ಮತ್ತು ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ಸಾಮಗ್ರಿಗಳ ಮೇಲೆ ಶೇಕಡಾ 50 ರಷ್ಟು ಭಾರಿ ರಿಯಾಯಿತಿ ಸಿಗುತ್ತಿದೆ! ಇಂದು ಭೇಟಿ ನೀಡಿ!',
+    'edu': 'ಆತ್ಮೀಯ ವಿದ್ಯಾರ್ಥಿಗಳೇ, ಇಂದಿನ ತರಗತಿಯಲ್ಲಿ ನಾವು ವಿಜ್ಞಾನ ಮತ್ತು ಗಣಿತದ ಪ್ರಮುಖ ಸೂತ್ರಗಳನ್ನು ಸರಳ ಹಾಗೂ ಆಸಕ್ತಿದಾಯಕವಾಗಿ ಕಲಿಯೋಣ.'
+};
+
 // 🎯 SPEECH INTONATION & FLOW STYLE PRESETS ENGINE
 function applyFlowPreset(style, element) {
     document.querySelectorAll('.sample-pills-row .pill').forEach(p => p.classList.remove('active'));
     if (element) element.classList.add('active');
+
+    const ttsInput = document.getElementById('ttsTextInput');
+    if (ttsInput && PRESET_TEXTS[style]) {
+        ttsInput.value = PRESET_TEXTS[style];
+    }
 
     const rateSlider = document.getElementById('rateSlider');
     const pitchSlider = document.getElementById('pitchSlider');
@@ -62,26 +76,11 @@ function applyFlowPreset(style, element) {
 }
 
 function clearText() {
-    document.getElementById('ttsTextInput').value = "";
-    document.getElementById('ttsTextInput').focus();
-}
-
-// Filter Male / Female / All Voices
-function filterGender(gender, element) {
-    if (element) {
-        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-        element.classList.add('active');
+    const ttsInput = document.getElementById('ttsTextInput');
+    if (ttsInput) {
+        ttsInput.value = "";
+        ttsInput.focus();
     }
-
-    const cards = document.querySelectorAll('.voice-models-container .model-card');
-    cards.forEach(card => {
-        const cardGender = card.getAttribute('data-gender');
-        if (gender === 'all' || cardGender === gender) {
-            card.style.display = 'flex';
-        } else {
-            card.style.display = 'none';
-        }
-    });
 }
 
 // Select Voice Model
@@ -95,16 +94,21 @@ function selectVoiceModel(voiceId, element) {
 
 // Customizer Sliders
 function updateRateLabel(val) {
-    document.getElementById('rateVal').innerText = val + 'x (Fast)';
+    const el = document.getElementById('rateVal');
+    if (el) el.innerText = val + 'x (Fast)';
 }
 
 function updateVolLabel(val) {
-    document.getElementById('volVal').innerText = `+${val}% (Loud)`;
+    const el = document.getElementById('volVal');
+    if (el) el.innerText = `+${val}% (Loud)`;
 }
 
 function updatePitchLabel(val) {
-    const v = parseInt(val);
-    document.getElementById('pitchVal').innerText = v > 0 ? `+${v}Hz` : `${v}Hz`;
+    const el = document.getElementById('pitchVal');
+    if (el) {
+        const v = parseInt(val);
+        el.innerText = v > 0 ? `+${v}Hz` : `${v}Hz`;
+    }
 }
 
 // Kanglish Accordion & Translator
@@ -119,19 +123,22 @@ function toggleKanglish() {
 }
 
 function convertKanglish(text) {
+    const resEl = document.getElementById('kangResult');
     if (!text) {
-        document.getElementById('kangResult').innerText = "Converted Kannada text will appear here...";
+        if (resEl) resEl.innerText = "Converted Kannada text will appear here...";
         return;
     }
     const words = text.toLowerCase().split(/\s+/);
     const converted = words.map(w => KANGLISH_DICTIONARY[w] || w).join(' ');
-    document.getElementById('kangResult').innerText = converted;
+    if (resEl) resEl.innerText = converted;
 }
 
 function applyKanglish() {
-    const res = document.getElementById('kangResult').innerText;
+    const resEl = document.getElementById('kangResult');
+    const res = resEl ? resEl.innerText : '';
     if (res && res !== "Converted Kannada text will appear here...") {
-        document.getElementById('ttsTextInput').value = res;
+        const ttsInput = document.getElementById('ttsTextInput');
+        if (ttsInput) ttsInput.value = res;
     }
 }
 
@@ -267,6 +274,38 @@ function audioBufferToWav(buffer) {
     return new Blob([outBuffer], { type: 'audio/wav' });
 }
 
+// PRO AUDIO UTILITY FUNCTIONS
+function copyAudioUrl() {
+    const player = document.getElementById('mainAudioPlayer');
+    if (player && player.src) {
+        navigator.clipboard.writeText(player.src);
+        alert("📋 Studio Audio Link copied to clipboard!");
+    } else {
+        alert("Please generate speech first!");
+    }
+}
+
+async function shareAudioFile() {
+    const player = document.getElementById('mainAudioPlayer');
+    if (player && player.src) {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'Mahiti Chakra Pro AI Voice',
+                    text: 'Check out this HD AI Voice speech generated on Mahiti Chakra Pro Studio!',
+                    url: player.src
+                });
+            } catch (e) {
+                console.log('Share canceled');
+            }
+        } else {
+            copyAudioUrl();
+        }
+    } else {
+        alert("Please generate speech first!");
+    }
+}
+
 // Generate Speech Function
 async function generateProTTS() {
     const textInput = document.getElementById('ttsTextInput');
@@ -333,12 +372,26 @@ async function generateProTTS() {
             player.play();
         }
 
-        const dlBtn = document.getElementById('downloadBtn');
-        if (dlBtn) {
-            dlBtn.href = audioUrl;
-            dlBtn.download = `mahiti_chakra_${selectedVoice}_${eq}.wav`;
-            dlBtn.classList.remove('disabled');
+        // Enable All Pro Export Buttons
+        const mp3Btn = document.getElementById('downloadMp3Btn');
+        if (mp3Btn) {
+            mp3Btn.href = audioUrl;
+            mp3Btn.download = `mahiti_chakra_${selectedVoice}_${eq}.mp3`;
+            mp3Btn.classList.remove('disabled');
         }
+
+        const wavBtn = document.getElementById('downloadWavBtn');
+        if (wavBtn) {
+            wavBtn.href = audioUrl;
+            wavBtn.download = `mahiti_chakra_${selectedVoice}_${eq}_master.wav`;
+            wavBtn.classList.remove('disabled');
+        }
+
+        const copyBtn = document.getElementById('copyAudioLinkBtn');
+        if (copyBtn) copyBtn.classList.remove('disabled');
+
+        const shareBtn = document.getElementById('shareAudioBtn');
+        if (shareBtn) shareBtn.classList.remove('disabled');
 
         clearInterval(timerInterval);
         const totalDurationSec = ((performance.now() - startTime) / 1000).toFixed(2);

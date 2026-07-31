@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio - 20 Pro HD AI Voices</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=11.0.0">
+    <link rel="stylesheet" href="style.css?v=12.0.0">
     <style>
     /* 100% BUTTER-SMOOTH LIQUID VERTICAL PAGE SCROLLING */
     html {
@@ -198,7 +198,7 @@
         box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 25px rgba(236, 72, 153, 0.5) !important;
     }
 
-    /* Select Option Dropdown Fix - Crystal Clear White Text on Dark Background */
+    /* Select Option Dropdown Fix */
     #eqSelect, select {
         background: linear-gradient(135deg, #1e1b4b, #311b92) !important;
         border: 1px solid #8b5cf6 !important;
@@ -218,6 +218,81 @@
         padding: 12px !important;
         font-size: 0.92rem !important;
         font-weight: 600 !important;
+    }
+
+    /* PRO AUDIO EXPORT & UTILITY GRID (4 PRO OPTIONS) */
+    .pro-export-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        margin-top: 14px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    @media (max-width: 550px) {
+        .pro-export-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
+    .btn-export {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 12px 14px !important;
+        border-radius: 14px !important;
+        font-size: 0.86rem !important;
+        font-weight: 700 !important;
+        color: #ffffff !important;
+        text-decoration: none !important;
+        cursor: pointer !important;
+        transition: all 0.25s ease !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        box-sizing: border-box !important;
+    }
+
+    .btn-mp3 {
+        background: linear-gradient(135deg, #10b981, #059669) !important;
+        border-color: #34d399 !important;
+    }
+    .btn-mp3:hover {
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5) !important;
+        transform: translateY(-2px) !important;
+    }
+
+    .btn-wav {
+        background: linear-gradient(135deg, #8b5cf6, #6d28d9) !important;
+        border-color: #a78bfa !important;
+    }
+    .btn-wav:hover {
+        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5) !important;
+        transform: translateY(-2px) !important;
+    }
+
+    .btn-copy {
+        background: linear-gradient(135deg, #0284c7, #0369a1) !important;
+        border-color: #38bdf8 !important;
+    }
+    .btn-copy:hover {
+        box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5) !important;
+        transform: translateY(-2px) !important;
+    }
+
+    .btn-share {
+        background: linear-gradient(135deg, #ec4899, #be185d) !important;
+        border-color: #f472b6 !important;
+    }
+    .btn-share:hover {
+        box-shadow: 0 6px 20px rgba(236, 72, 153, 0.5) !important;
+        transform: translateY(-2px) !important;
+    }
+
+    .btn-export.disabled {
+        opacity: 0.45 !important;
+        pointer-events: none !important;
+        filter: grayscale(80%) !important;
     }
     </style>
 </head>
@@ -437,14 +512,26 @@
                         <audio id="mainAudioPlayer" controls autoplay></audio>
                     </div>
 
-                    <a id="downloadBtn" class="btn-download-mp3 disabled" download="mahiti_chakra_speech.mp3">
-                        <span>📥 Download Pro MP3 Audio</span>
-                    </a>
+                    <!-- 4 PRO AUDIO EXPORT & UTILITY BUTTONS -->
+                    <div class="pro-export-grid">
+                        <a id="downloadMp3Btn" class="btn-export btn-mp3 disabled" download="mahiti_chakra_speech.mp3">
+                            <span>📥 Download Studio MP3 (320kbps)</span>
+                        </a>
+                        <a id="downloadWavBtn" class="btn-export btn-wav disabled" download="mahiti_chakra_master.wav">
+                            <span>🎵 Download Ultra WAV (Studio Master)</span>
+                        </a>
+                        <button id="copyAudioLinkBtn" class="btn-export btn-copy disabled" onclick="copyAudioUrl()">
+                            <span>📋 Copy Audio Link</span>
+                        </button>
+                        <button id="shareAudioBtn" class="btn-export btn-share disabled" onclick="shareAudioFile()">
+                            <span>🚀 Share Pro Audio</span>
+                        </button>
+                    </div>
                 </div>
             </section>
         </main>
     </div>
 
-    <script src="app.js?v=11.0.0"></script>
+    <script src="app.js?v=12.0.0"></script>
 </body>
 </html>

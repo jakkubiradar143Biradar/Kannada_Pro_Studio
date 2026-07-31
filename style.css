@@ -684,3 +684,78 @@ input[type="range"] {
     font-size: 0.78rem !important;
     color: var(--text-secondary) !important;
 }
+
+/* PRO AUDIO EXPORT & UTILITY GRID (4 PRO OPTIONS) */
+.pro-export-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    margin-top: 14px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 550px) {
+    .pro-export-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+.btn-export {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 12px 14px !important;
+    border-radius: 14px !important;
+    font-size: 0.86rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-sizing: border-box !important;
+}
+
+.btn-mp3 {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    border-color: #34d399 !important;
+}
+.btn-mp3:hover {
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5) !important;
+    transform: translateY(-2px) !important;
+}
+
+.btn-wav {
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9) !important;
+    border-color: #a78bfa !important;
+}
+.btn-wav:hover {
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5) !important;
+    transform: translateY(-2px) !important;
+}
+
+.btn-copy {
+    background: linear-gradient(135deg, #0284c7, #0369a1) !important;
+    border-color: #38bdf8 !important;
+}
+.btn-copy:hover {
+    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5) !important;
+    transform: translateY(-2px) !important;
+}
+
+.btn-share {
+    background: linear-gradient(135deg, #ec4899, #be185d) !important;
+    border-color: #f472b6 !important;
+}
+.btn-share:hover {
+    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.5) !important;
+    transform: translateY(-2px) !important;
+}
+
+.btn-export.disabled {
+    opacity: 0.45 !important;
+    pointer-events: none !important;
+    filter: grayscale(80%) !important;
+}

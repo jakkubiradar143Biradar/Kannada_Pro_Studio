@@ -83,24 +83,6 @@ function clearText() {
     }
 }
 
-// Filter Male / Female / All Voices
-function filterGender(gender, element) {
-    if (element) {
-        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-        element.classList.add('active');
-    }
-
-    const cards = document.querySelectorAll('.voice-models-container .model-card');
-    cards.forEach(card => {
-        const cardGender = card.getAttribute('data-gender');
-        if (gender === 'all' || cardGender === gender) {
-            card.style.display = 'flex';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-}
-
 // Select Voice Model
 function selectVoiceModel(voiceId, element) {
     selectedVoice = voiceId;
@@ -292,6 +274,38 @@ function audioBufferToWav(buffer) {
     return new Blob([outBuffer], { type: 'audio/wav' });
 }
 
+// PRO AUDIO UTILITY FUNCTIONS
+function copyAudioUrl() {
+    const player = document.getElementById('mainAudioPlayer');
+    if (player && player.src) {
+        navigator.clipboard.writeText(player.src);
+        alert("📋 Studio Audio Link copied to clipboard!");
+    } else {
+        alert("Please generate speech first!");
+    }
+}
+
+async function shareAudioFile() {
+    const player = document.getElementById('mainAudioPlayer');
+    if (player && player.src) {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'Mahiti Chakra Pro AI Voice',
+                    text: 'Check out this HD AI Voice speech generated on Mahiti Chakra Pro Studio!',
+                    url: player.src
+                });
+            } catch (e) {
+                console.log('Share canceled');
+            }
+        } else {
+            copyAudioUrl();
+        }
+    } else {
+        alert("Please generate speech first!");
+    }
+}
+
 // Generate Speech Function
 async function generateProTTS() {
     const textInput = document.getElementById('ttsTextInput');
@@ -358,12 +372,26 @@ async function generateProTTS() {
             player.play();
         }
 
-        const dlBtn = document.getElementById('downloadBtn');
-        if (dlBtn) {
-            dlBtn.href = audioUrl;
-            dlBtn.download = `mahiti_chakra_${selectedVoice}_${eq}.wav`;
-            dlBtn.classList.remove('disabled');
+        // Enable All Pro Export Buttons
+        const mp3Btn = document.getElementById('downloadMp3Btn');
+        if (mp3Btn) {
+            mp3Btn.href = audioUrl;
+            mp3Btn.download = `mahiti_chakra_${selectedVoice}_${eq}.mp3`;
+            mp3Btn.classList.remove('disabled');
         }
+
+        const wavBtn = document.getElementById('downloadWavBtn');
+        if (wavBtn) {
+            wavBtn.href = audioUrl;
+            wavBtn.download = `mahiti_chakra_${selectedVoice}_${eq}_master.wav`;
+            wavBtn.classList.remove('disabled');
+        }
+
+        const copyBtn = document.getElementById('copyAudioLinkBtn');
+        if (copyBtn) copyBtn.classList.remove('disabled');
+
+        const shareBtn = document.getElementById('shareAudioBtn');
+        if (shareBtn) shareBtn.classList.remove('disabled');
 
         clearInterval(timerInterval);
         const totalDurationSec = ((performance.now() - startTime) / 1000).toFixed(2);
