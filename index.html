@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio - 20 Pro HD AI Voices</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=10.0.0">
+    <link rel="stylesheet" href="style.css?v=11.0.0">
     <style>
     /* 100% BUTTER-SMOOTH LIQUID VERTICAL PAGE SCROLLING */
     html {
@@ -134,53 +134,37 @@
         width: 100% !important;
     }
 
-    /* ULTRA-SMOOTH MOMENTUM HORIZONTAL TOUCH SCROLLING FOR INTONATION PILLS */
+    /* 2 ROWS LOCKED GRID (3 PILLS PER ROW - CLEAN KANNADA ONLY) */
     .sample-pills-row {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-        gap: 8px !important;
-        padding: 6px 4px 12px 4px !important;
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 6px !important;
         margin-bottom: 12px !important;
-        -webkit-overflow-scrolling: touch !important;
-        scroll-behavior: smooth !important;
-        touch-action: pan-x !important;
         width: 100% !important;
         box-sizing: border-box !important;
     }
 
-    .sample-pills-row::-webkit-scrollbar {
-        height: 4px !important;
-    }
-    .sample-pills-row::-webkit-scrollbar-track {
-        background: rgba(0, 0, 0, 0.2) !important;
-        border-radius: 10px !important;
-    }
-    .sample-pills-row::-webkit-scrollbar-thumb {
-        background: linear-gradient(90deg, #ec4899, #8b5cf6) !important;
-        border-radius: 10px !important;
-    }
-
     .sample-pills-row .pill, .pill {
-        flex: 0 0 auto !important;
+        width: 100% !important;
+        justify-content: center !important;
+        text-align: center !important;
         white-space: nowrap !important;
         background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95)) !important;
         border: 1px solid rgba(139, 92, 246, 0.4) !important;
-        border-radius: 20px !important;
+        border-radius: 14px !important;
         color: #f1f5f9 !important;
-        padding: 8px 16px !important;
-        font-size: 0.84rem !important;
+        padding: 7px 4px !important;
+        font-size: 0.78rem !important;
         font-weight: 700 !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
-        display: inline-flex !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+        display: flex !important;
         align-items: center !important;
-        gap: 6px !important;
+        gap: 4px !important;
         cursor: pointer !important;
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
         user-select: none !important;
         -webkit-user-select: none !important;
+        box-sizing: border-box !important;
     }
 
     .sample-pills-row .pill:hover, .sample-pills-row .pill.active {
@@ -256,18 +240,20 @@
         <!-- Main Studio Layout -->
         <main class="studio-main">
             
-            <!-- 1. TOP SECTION: Text Input & Horizontal Intonation Presets Carousel -->
+            <!-- 1. TOP SECTION: Text Input & 2 Rows Locked Intonation Presets (3 per row) -->
             <section class="section-card">
                 <h2>1. Enter Text (ಕನ್ನಡದಲ್ಲಿ ಪಠ್ಯ ಟೈಪ್ ಮಾಡಿ)</h2>
 
-                <!-- Horizontal Scrollable Intonation Style Pills -->
+                <!-- 2 Rows Grid with 3 Compact Pills Each (Clean Kannada Only) -->
                 <div class="sample-pills-row">
-                    <button class="pill active" onclick="applyFlowPreset('news', this)">📰 ಸುದ್ದಿ ಶೈಲಿ (Newsroom)</button>
-                    <button class="pill" onclick="applyFlowPreset('story', this)">📖 ಕಥೆ ಶೈಲಿ (Storytelling)</button>
-                    <button class="pill" onclick="applyFlowPreset('mass', this)">🎬 ಮಾಸ್ ಶೈಲಿ (Cinema Mass)</button>
-                    <button class="pill pill-aff" onclick="applyFlowPreset('ad', this)">📢 ಜಾಹೀರಾತು (FM Radio)</button>
-                    <button class="pill" onclick="applyFlowPreset('edu', this)">🎓 ಶಿಕ್ಷಣ ಶೈಲಿ (Teacher Calm)</button>
-                    <button class="pill pill-clear" onclick="clearText()">🗑️ ಖಾಲಿ ಮಾಡಿ (Clear Text)</button>
+                    <!-- Top Row (3) -->
+                    <button class="pill active" onclick="applyFlowPreset('news', this)">📰 ಸುದ್ದಿ ಶೈಲಿ</button>
+                    <button class="pill" onclick="applyFlowPreset('story', this)">📖 ಕಥೆ ಶೈಲಿ</button>
+                    <button class="pill" onclick="applyFlowPreset('mass', this)">🎬 ಮಾಸ್ ಶೈಲಿ</button>
+                    <!-- Bottom Row (3) -->
+                    <button class="pill pill-aff" onclick="applyFlowPreset('ad', this)">📢 ಜಾಹೀರಾತು</button>
+                    <button class="pill" onclick="applyFlowPreset('edu', this)">🎓 ಶಿಕ್ಷಣ ಶೈಲಿ</button>
+                    <button class="pill pill-clear" onclick="clearText()">🗑️ ಖಾಲಿ ಮಾಡಿ</button>
                 </div>
 
                 <div class="input-container">
@@ -459,6 +445,6 @@
         </main>
     </div>
 
-    <script src="app.js?v=10.0.0"></script>
+    <script src="app.js?v=11.0.0"></script>
 </body>
 </html>
