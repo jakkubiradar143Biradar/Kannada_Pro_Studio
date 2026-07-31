@@ -274,35 +274,25 @@ function audioBufferToWav(buffer) {
     return new Blob([outBuffer], { type: 'audio/wav' });
 }
 
-// PRO AUDIO UTILITY FUNCTIONS
-function copyAudioUrl() {
-    const player = document.getElementById('mainAudioPlayer');
-    if (player && player.src) {
-        navigator.clipboard.writeText(player.src);
-        alert("📋 Studio Audio Link copied to clipboard!");
-    } else {
-        alert("Please generate speech first!");
-    }
-}
-
+// PRO SOCIAL MEDIA SHARING WITH SPECIFIC MAHITICHAKRA STUDIO URL
 async function shareAudioFile() {
-    const player = document.getElementById('mainAudioPlayer');
-    if (player && player.src) {
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: 'Mahiti Chakra Pro AI Voice',
-                    text: 'Check out this HD AI Voice speech generated on Mahiti Chakra Pro Studio!',
-                    url: player.src
-                });
-            } catch (e) {
-                console.log('Share canceled');
-            }
-        } else {
-            copyAudioUrl();
+    const targetUrl = 'https://mahitichakra.in/kannada-ai-voice-studio/';
+    const shareData = {
+        title: 'ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio',
+        text: '🔥 ಕನ್ನಡದ 20 Ultra-HD AI ಧ್ವನಿಗಳ ಉಚಿತ AI Voice Studio! ನಿಮ್ಮ ಪಠ್ಯವನ್ನು 100% HD ಮಾನವ ಧ್ವನಿಗೆ ಉಚಿತವಾಗಿ ಬದಲಾಯಿಸಿ:',
+        url: targetUrl
+    };
+
+    if (navigator.share) {
+        try {
+            await navigator.share(shareData);
+        } catch (e) {
+            console.log('Share canceled', e);
         }
     } else {
-        alert("Please generate speech first!");
+        // Fallback: Copy direct URL to clipboard
+        navigator.clipboard.writeText(targetUrl);
+        alert(`🚀 Studio Link Copied!\n\n${targetUrl}\n\nShare this link with your friends on WhatsApp, Facebook & Telegram!`);
     }
 }
 
@@ -372,7 +362,7 @@ async function generateProTTS() {
             player.play();
         }
 
-        // Enable All Pro Export Buttons
+        // Enable All Pro Export & Share Buttons
         const mp3Btn = document.getElementById('downloadMp3Btn');
         if (mp3Btn) {
             mp3Btn.href = audioUrl;
@@ -386,12 +376,6 @@ async function generateProTTS() {
             wavBtn.download = `mahiti_chakra_${selectedVoice}_${eq}_master.wav`;
             wavBtn.classList.remove('disabled');
         }
-
-        const copyBtn = document.getElementById('copyAudioLinkBtn');
-        if (copyBtn) copyBtn.classList.remove('disabled');
-
-        const shareBtn = document.getElementById('shareAudioBtn');
-        if (shareBtn) shareBtn.classList.remove('disabled');
 
         clearInterval(timerInterval);
         const totalDurationSec = ((performance.now() - startTime) / 1000).toFixed(2);
