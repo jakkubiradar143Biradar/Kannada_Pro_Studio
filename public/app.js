@@ -8,6 +8,7 @@ let recordedAudioBlob = null;
 let isRecording = false;
 let recTimerInterval = null;
 let recSeconds = 0;
+let isUserTypedText = false; // Flag to track if user typed custom text
 
 // Kanglish Transliteration Dictionary
 const KANGLISH_DICTIONARY = {
@@ -27,7 +28,31 @@ const KANGLISH_DICTIONARY = {
     "houdu": "ಹೌದು"
 };
 
-// 🎯 DEDICATED PRESET TEXTS FOR EACH INTONATION STYLE
+// 🎯 DEDICATED SAMPLE GREETINGS FOR EACH VOICE MODEL
+const VOICE_SAMPLES = {
+    'm1': 'ನನ್ನ ಹೆಸರು ಗಗನ್. ಸುದ್ದಿ ಪ್ರಸಾರಕ್ಕೆ ನನ್ನ ಧ್ವನಿ ಸಿದ್ಧವಾಗಿದೆ.',
+    'f1': 'ನನ್ನ ಹೆಸರು ಸಪ್ನಾ. ನಿಮ್ಮ ಆಡಿಯೋ ಲೇಖನಗಳಿಗೆ ನನ್ನ ಸ್ಪಷ್ಟ ಧ್ವನಿ ಬಳಸಿ.',
+    'm2': 'ನನ್ನ ಹೆಸರು ರಾಜೇಶ್. ಎಫ್‌ಎಂ ರೇಡಿಯೋ ಶೈಲಿಯಲ್ಲಿ ನಿಮ್ಮ ಧ್ವನಿ ಕೇಳಿ.',
+    'f2': 'ನನ್ನ ಹೆಸರು ರಶ್ಮಿ. ರೇಡಿಯೋ ಜಾಕಿಯಂತೆ ನಿಮ್ಮೊಂದಿಗೆ ಮಾತನಾಡಲು ಬಂದಿದ್ದೇನೆ.',
+    'm3': 'ನನ್ನ ಹೆಸರು ವಿಕ್ರಮ್. ಇಂದಿನ ಮುಖ್ಯ ವರದಿಗಳನ್ನು ಓದಲು ಧ್ವನಿ ಸಿದ್ಧ.',
+    'f3': 'ನನ್ನ ಹೆಸರು ಪ್ರಿಯಾ. ಬ್ರೇಕಿಂಗ್ ನ್ಯೂಸ್ ಸುದ್ದಿ ಪ್ರಸಾರಕ್ಕೆ ನನ್ನ ಧ್ವನಿ ಬಳಸಿ.',
+    'm4': 'ನನ್ನ ಹೆಸರು ದೇವ್. ಮಾಸ್ ಡೈಲಾಗ್ ಮತ್ತು ಆಕ್ಷನ್ ಕಥೆಗಳಿಗೆ ನನ್ನ ಪವರ್‌ಫುಲ್ ಧ್ವನಿ ಸಿದ್ಧ.',
+    'f4': 'ನನ್ನ ಹೆಸರು ಪೂಜಾ. ಫ್ಯಾಶನ್ ಮತ್ತು ಶೋ ರೂಮ್ ಜಾಹೀರಾತುಗಳಿಗೆ ನನ್ನ ಧ್ವನಿ ಬಳಸಿ.',
+    'm5': 'ನನ್ನ ಹೆಸರು ಅರ್ಜುನ್. ಕ್ರಿಕೆಟ್ ಮತ್ತು ಕ್ರೀಡಾ ವರದಿಗಳಿಗೆ ನನ್ನ ಧ್ವನಿ ಕೇಳಿ.',
+    'f5': 'ನನ್ನ ಹೆಸರು ಅನನ್ಯ. ಚಂದಮಾಮ ಕಥೆಗಳನ್ನು ಹೇಳಲು ನನ್ನ ಧ್ವನಿ ಇಲ್ಲಿದೆ.',
+    'm6': 'ನನ್ನ ಹೆಸರು ಸೂರ್ಯ. ಟೆಕ್ನಾಲಜಿ ಮತ್ತು ಮೊಬೈಲ್ ರಿವ್ಯೂಗಳಿಗೆ ಧ್ವನಿ ಬಳಸಿ.',
+    'f6': 'ನನ್ನ ಹೆಸರು ಕಾವ್ಯ. ರಿಯಾಯಿತಿ ಮತ್ತು ಧಮಾಕಾ ಆಫರ್ ಜಾಹೀರಾತುಗಳಿಗೆ ಧ್ವನಿ ಬಳಸಿ.',
+    'm7': 'ನನ್ನ ಹೆಸರು ಗುರು. ಭಕ್ತಿ ಸಂದೇಶ ಮತ್ತು ಪ್ರವಚನಗಳಿಗೆ ನನ್ನ ಧ್ವನಿ ಕೇಳಿ.',
+    'f7': 'ನನ್ನ ಹೆಸರು ಸ್ನೇಹಾ. ಸಂಜೆಯ ಎಫ್‌ಎಂ ಕಾರ್ಯಕ್ರಮಗಳಿಗೆ ನನ್ನ ಧ್ವನಿ ಸಿದ್ಧ.',
+    'm8': 'ನನ್ನ ಹೆಸರು ಚೇತನ್. ಸುಂದರವಾದ ಕಥೆಗಳನ್ನು ಹೇಳಲು ನನ್ನ ಧ್ವನಿ ಸಿದ್ಧ.',
+    'f8': 'ನನ್ನ ಹೆಸರು ಶ್ರೇಯಾ. ಶೈಕ್ಷಣಿಕ ಪಾಠಗಳು ಮತ್ತು ತರಗತಿಗಳಿಗೆ ನನ್ನ ಧ್ವನಿ ಬಳಸಿ.',
+    'm9': 'ನನ್ನ ಹೆಸರು ಕಿರಣ್. ಬಿಲ್ಡಿಂಗ್ ಮತ್ತು ಶೋರೂಮ್ ಜಾಹೀರಾತುಗಳಿಗೆ ಧ್ವನಿ ಬಳಸಿ.',
+    'f9': 'ನನ್ನ ಹೆಸರು ಮೌಲ್ಯ. ಪ್ರಶಾಂತವಾದ ಮೆಡಿಟೇಶನ್ ಧ್ವನಿ ಇಲ್ಲಿದೆ.',
+    'm10': 'ನನ್ನ ಹೆಸರು ಧನಂಜಯ. ಮಾಸ್ ಹಾಗೂ ಪವರ್‌ಫುಲ್ ಕಂಠದ ಧ್ವನಿ ಸಿದ್ಧ.',
+    'f10': 'ನನ್ನ ಹೆಸರು ಸ್ಪಂದನಾ. ಎಚ್‌ಡಿ ಕ್ಲಾರಿಟಿ ರೇಡಿಯೋ ಧ್ವನಿ ಇಲ್ಲಿದೆ.'
+};
+
+// 🎯 PRESET TEXTS FOR INTONATION STYLES
 const PRESET_TEXTS = {
     'news': 'ರಾಜ್ಯದಾದ್ಯಂತ ಕೃಷಿ ಮತ್ತು ಶೈಕ್ಷಣಿಕ ವಲಯಕ್ಕೆ ಸರ್ಕಾರದ ಕಡೆಯಿಂದ ಭಾರಿ ಅನುದಾನ ಬಿಡುಗಡೆಯಾಗಿದೆ. ಅರ್ಹ ಫಲಾನುಭವಿಗಳು ತಕ್ಷಣವೇ ಆನ್‌ಲೈನ್ ಮೂಲಕ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ ಸೌಲಭ್ಯ ಪಡೆಯಿರಿ.',
     'story': 'ಒಂದಾನೊಂದು ಕಾಲದಲ್ಲಿ ದಟ್ಟವಾದ ಸೌಂದರ್ಯದ ಪ್ರಕೃತಿಯ ಕಾಡಿನಲ್ಲಿ ಒಂದು ಸುಂದರವಾದ ಸರೋವರವಿತ್ತು. ಅಲ್ಲಿ ವಾಸಿಸುತ್ತಿದ್ದ ಪ್ರಾಣಿಗಳು ಪರಸ್ಪರ ಪ್ರೀತಿ ಮತ್ತು ಸೌಹಾರ್ದತೆಯಿಂದ ಜೀವಿಸುತ್ತಿದ್ದವು.',
@@ -36,14 +61,52 @@ const PRESET_TEXTS = {
     'edu': 'ಆತ್ಮೀಯ ವಿದ್ಯಾರ್ಥಿಗಳೇ, ಇಂದಿನ ತರಗತಿಯಲ್ಲಿ ನಾವು ವಿಜ್ಞಾನ ಮತ್ತು ಗಣಿತದ ಪ್ರಮುಖ ಸೂತ್ರಗಳನ್ನು ಸರಳ ಹಾಗೂ ಆಸಕ್ತಿದಾಯಕವಾಗಿ ಕಲಿಯೋಣ.'
 };
 
-// 🎯 SPEECH INTONATION & FLOW STYLE PRESETS ENGINE
+// Setup Listeners on Load
+document.addEventListener('DOMContentLoaded', () => {
+    const ttsInput = document.getElementById('ttsTextInput');
+    if (ttsInput) {
+        ttsInput.addEventListener('input', () => {
+            if (ttsInput.value.trim().length > 0) {
+                isUserTypedText = true;
+            } else {
+                isUserTypedText = false;
+            }
+        });
+    }
+});
+
+// Select Voice Model - Inserts sample greeting if empty or untyped
+function selectVoiceModel(voiceId, element) {
+    selectedVoice = voiceId;
+    document.querySelectorAll('.voice-models-container .model-card').forEach(c => c.classList.remove('active'));
+    if (element) {
+        element.classList.add('active');
+    }
+
+    const ttsInput = document.getElementById('ttsTextInput');
+    if (ttsInput) {
+        const val = ttsInput.value.trim();
+        const isSampleOrEmpty = (!isUserTypedText || val === '' || Object.values(VOICE_SAMPLES).includes(val) || Object.values(PRESET_TEXTS).includes(val));
+        if (isSampleOrEmpty && VOICE_SAMPLES[voiceId]) {
+            ttsInput.value = VOICE_SAMPLES[voiceId];
+            isUserTypedText = false;
+        }
+    }
+}
+
+// 🎯 SPEECH INTONATION & FLOW STYLE PRESETS ENGINE - Preserves user typed text
 function applyFlowPreset(style, element) {
     document.querySelectorAll('.sample-pills-row .pill').forEach(p => p.classList.remove('active'));
     if (element) element.classList.add('active');
 
     const ttsInput = document.getElementById('ttsTextInput');
     if (ttsInput && PRESET_TEXTS[style]) {
-        ttsInput.value = PRESET_TEXTS[style];
+        const val = ttsInput.value.trim();
+        const isSampleOrEmpty = (!isUserTypedText || val === '' || Object.values(PRESET_TEXTS).includes(val) || Object.values(VOICE_SAMPLES).includes(val));
+        if (isSampleOrEmpty) {
+            ttsInput.value = PRESET_TEXTS[style];
+            isUserTypedText = false;
+        }
     }
 
     const rateSlider = document.getElementById('rateSlider');
@@ -87,16 +150,8 @@ function clearText() {
     const ttsInput = document.getElementById('ttsTextInput');
     if (ttsInput) {
         ttsInput.value = "";
+        isUserTypedText = false;
         ttsInput.focus();
-    }
-}
-
-// Select Voice Model
-function selectVoiceModel(voiceId, element) {
-    selectedVoice = voiceId;
-    document.querySelectorAll('.voice-models-container .model-card').forEach(c => c.classList.remove('active'));
-    if (element) {
-        element.classList.add('active');
     }
 }
 
@@ -146,7 +201,10 @@ function applyKanglish() {
     const res = resEl ? resEl.innerText : '';
     if (res && res !== "Converted Kannada text will appear here...") {
         const ttsInput = document.getElementById('ttsTextInput');
-        if (ttsInput) ttsInput.value = res;
+        if (ttsInput) {
+            ttsInput.value = res;
+            isUserTypedText = true;
+        }
     }
 }
 
@@ -384,7 +442,6 @@ async function toggleRecording() {
             if (recStatus) recStatus.innerText = "🔴 Live Voice Recording Active... Speak now!";
         } catch (err) {
             console.error("Microphone Access Error:", err);
-            // Fallback for Android WebView App
             const appMicInput = document.getElementById('appMicInput');
             if (appMicInput) {
                 alert("Opening Android App Voice Recorder...");
