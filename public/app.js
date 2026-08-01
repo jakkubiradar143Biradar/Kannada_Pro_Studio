@@ -217,36 +217,137 @@ function toggleKanglish() {
     }
 }
 
-// 🌐 100% ACCURATE GOOGLE KANNADA TRANSLITERATION ENGINE
+// Helper: Fetch Google Transliteration Chunk & Top 5 Variations
+async function fetchGoogleTransliterationChunk(chunk) {
+    if (!chunk || chunk.trim() === '') return { result: '', variations: [] };
+    try {
+        const url = `https://inputtools.google.com/request?text=${encodeURIComponent(chunk)}&itc=kn-t-i0-und&num=5`;
+        const response = await fetch(url);
+        if (response.ok) {
+            const data = await response.json();
+            if (data && data[0] === 'SUCCESS' && data[1] && data[1][0]) {
+                const topResult = data[1][0][1][0] || chunk;
+                const variations = data[1][0][1] || [];
+                return { result: topResult, variations: variations };
+            }
+        }
+    } catch (err) {
+        console.log("Chunk transliteration error:", err);
+    }
+    // Fallback: local dictionary
+    const words = chunk.toLowerCase().split(/\s+/);
+    const local = words.map(w => KANGLISH_DICTIONARY[w] || w).join(' ');
+    return { result: local, variations: [] };
+}
+
+// 🌐 UNLIMITED MULTI-PARAGRAPH KANGLISH TRANSLITERATION ENGINE
 async function convertKanglish(text) {
     const resEl = document.getElementById('kangResult');
+    const statsEl = document.getElementById('kangStats');
+    const sugContainer = document.getElementById('kangSuggestions');
+    const sugChipsRow = document.getElementById('sugChipsRow');
+
     if (!text || text.trim() === '') {
         if (resEl) resEl.innerText = "Converted Kannada text will appear here...";
+        if (statsEl) statsEl.innerText = "0 Words | 0 Chars";
+        if (sugContainer) sugContainer.style.display = 'none';
         return;
     }
+
+    // Live Stats
+    const wordsCount = text.trim().split(/\s+/).length;
+    const charCount = text.length;
+    if (statsEl) statsEl.innerText = `📊 ${wordsCount} Words | ${charCount} Chars (Unlimited)`;
 
     // 1. Instant local dictionary fallback
     const words = text.toLowerCase().split(/\s+/);
     const localConverted = words.map(w => KANGLISH_DICTIONARY[w] || w).join(' ');
     if (resEl) resEl.innerText = localConverted;
 
-    // 2. Debounced 100% Perfect Google Transliteration API Call
+    // 2. Multi-Chunk Google API for UNLIMITED paragraph length
     clearTimeout(kanglishDebounceTimer);
     kanglishDebounceTimer = setTimeout(async () => {
-        try {
-            const url = `https://inputtools.google.com/request?text=${encodeURIComponent(text)}&itc=kn-t-i0-und&num=1`;
-            const response = await fetch(url);
-            if (response.ok) {
-                const data = await response.json();
-                if (data && data[0] === 'SUCCESS' && data[1] && data[1][0] && data[1][0][1] && data[1][0][1][0]) {
-                    const googleResult = data[1][0][1][0];
-                    if (resEl) resEl.innerText = googleResult;
+        const lines = text.split('\n');
+        const translatedLines = [];
+        let lastWordVariations = [];
+
+        for (let line of lines) {
+            if (line.trim() === '') {
+                translatedLines.push('');
+                continue;
+            }
+
+            // Split line into sentence chunks if too long
+            const chunks = line.match(/.{1,250}(\s|$)/g) || [line];
+            const translatedChunks = [];
+
+            for (let chunk of chunks) {
+                const resObj = await fetchGoogleTransliterationChunk(chunk.trim());
+                if (typeof resObj === 'object') {
+                    translatedChunks.push(resObj.result);
+                    if (resObj.variations && resObj.variations.length > 1) {
+                        lastWordVariations = resObj.variations;
+                    }
+                } else {
+                    translatedChunks.push(resObj);
                 }
             }
-        } catch (err) {
-            console.log("Google Transliteration Fallback to Local Engine:", err);
+            translatedLines.push(translatedChunks.join(' '));
+        }
+
+        const fullKannadaText = translatedLines.join('\n');
+        if (resEl) resEl.innerText = fullKannadaText;
+
+        // Render Smart Variation Suggestion Chips if available
+        if (lastWordVariations && lastWordVariations.length > 1 && sugChipsRow && sugContainer) {
+            sugChipsRow.innerHTML = '';
+            lastWordVariations.slice(0, 5).forEach(v => {
+                const chip = document.createElement('button');
+                chip.className = 'sug-chip';
+                chip.innerText = v;
+                chip.onclick = () => applySuggestionChip(v);
+                sugChipsRow.appendChild(chip);
+            });
+            sugContainer.style.display = 'flex';
+        } else if (sugContainer) {
+            sugContainer.style.display = 'none';
         }
     }, 150);
+}
+
+function applySuggestionChip(variationWord) {
+    const kangInput = document.getElementById('kangInput');
+    if (!kangInput) return;
+    const words = kangInput.value.trim().split(/\s+/);
+    if (words.length > 0) {
+        const resEl = document.getElementById('kangResult');
+        if (resEl) {
+            const currentResWords = resEl.innerText.trim().split(/\s+/);
+            currentResWords[currentResWords.length - 1] = variationWord;
+            resEl.innerText = currentResWords.join(' ');
+        }
+    }
+}
+
+function copyKanglishResult() {
+    const resEl = document.getElementById('kangResult');
+    const res = resEl ? resEl.innerText : '';
+    if (res && res !== "Converted Kannada text will appear here...") {
+        navigator.clipboard.writeText(res);
+        alert("📋 Converted Kannada Text Copied!");
+    }
+}
+
+function clearKanglish() {
+    const kangInput = document.getElementById('kangInput');
+    const resEl = document.getElementById('kangResult');
+    const statsEl = document.getElementById('kangStats');
+    const sugContainer = document.getElementById('kangSuggestions');
+
+    if (kangInput) kangInput.value = '';
+    if (resEl) resEl.innerText = 'Converted Kannada text will appear here...';
+    if (statsEl) statsEl.innerText = '0 Words | 0 Chars';
+    if (sugContainer) sugContainer.style.display = 'none';
 }
 
 function applyKanglish() {

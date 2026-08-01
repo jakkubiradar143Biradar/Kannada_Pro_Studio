@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ಮಾಹಿತಿ ಚಕ್ರ Pro AI Voice Studio - 20 Pro HD AI Voices</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=22.0.0">
+    <link rel="stylesheet" href="style.css?v=23.0.0">
     <style>
     /* 100% BUTTER-SMOOTH LIQUID VERTICAL PAGE SCROLLING */
     html {
@@ -58,6 +58,120 @@
 
     .btn-voice-changer-nav:hover {
         transform: scale(1.04) !important;
+    }
+
+    /* UNLIMITED PRO KANGLISH TRANSLITERATION ENGINE STYLING */
+    .kang-badge-pro {
+        background: linear-gradient(135deg, #ec4899, #8b5cf6) !important;
+        color: #ffffff !important;
+        font-size: 0.72rem !important;
+        font-weight: 800 !important;
+        padding: 3px 8px !important;
+        border-radius: 8px !important;
+        margin-left: 8px !important;
+    }
+
+    .kanglish-accordion textarea {
+        width: 100% !important;
+        min-height: 90px !important;
+        background: rgba(15, 23, 42, 0.9) !important;
+        border: 1px solid rgba(139, 92, 246, 0.4) !important;
+        border-radius: 12px !important;
+        padding: 12px !important;
+        color: #ffffff !important;
+        font-family: 'Outfit', sans-serif !important;
+        font-size: 0.95rem !important;
+        resize: vertical !important;
+        outline: none !important;
+        box-sizing: border-box !important;
+        margin-bottom: 10px !important;
+    }
+
+    .suggestions-container {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        background: rgba(30, 41, 59, 0.6) !important;
+        border-radius: 10px !important;
+        padding: 8px 10px !important;
+        margin-bottom: 10px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .sug-label {
+        font-size: 0.78rem !important;
+        color: #f472b6 !important;
+        font-weight: 700 !important;
+    }
+
+    .sug-chips-row {
+        display: flex !important;
+        gap: 6px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .sug-chip {
+        background: linear-gradient(135deg, #7c3aed, #4c1d95) !important;
+        color: #ffffff !important;
+        border: 1px solid #a78bfa !important;
+        border-radius: 8px !important;
+        padding: 4px 10px !important;
+        font-size: 0.82rem !important;
+        font-weight: 700 !important;
+        cursor: pointer !important;
+        transition: transform 0.15s ease !important;
+    }
+
+    .sug-chip:hover {
+        transform: scale(1.05) !important;
+    }
+
+    .kang-result-box {
+        background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95)) !important;
+        border: 1px solid rgba(16, 185, 129, 0.4) !important;
+        border-radius: 14px !important;
+        padding: 14px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .kang-result-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        font-size: 0.8rem !important;
+        font-weight: 700 !important;
+        color: #34d399 !important;
+        margin-bottom: 8px !important;
+    }
+
+    .kang-stats {
+        color: #a78bfa !important;
+    }
+
+    .kang-result {
+        color: #ffffff !important;
+        font-family: 'Noto Sans Kannada', sans-serif !important;
+        font-size: 1.05rem !important;
+        line-height: 1.7 !important;
+        white-space: pre-wrap !important;
+        word-break: break-word !important;
+    }
+
+    .kang-actions-row {
+        display: flex !important;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .btn-copy-kang, .btn-clear-kang {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: #ffffff !important;
+        border-radius: 10px !important;
+        padding: 8px 12px !important;
+        font-size: 0.8rem !important;
+        font-weight: 700 !important;
+        cursor: pointer !important;
     }
 
     /* Clean Square App Cards & Horizontal Swipe Carousel */
@@ -643,15 +757,39 @@
                     <textarea id="ttsTextInput" placeholder="ಇಲ್ಲಿ ಉಚಿತವಾಗಿ ಕನ್ನಡ ಅಕ್ಷರಗಳಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ ಅಥವಾ ಬ್ಲಾಗ್ ಲೇಖನವನ್ನು ಪೇಸ್ಟ್ ಮಾಡಿ..." rows="8"></textarea>
                 </div>
 
-                <!-- Kanglish Helper Accordion -->
+                <!-- Kanglish Helper Accordion (UNLIMITED PRO ENGINE WITH SUGGESTION CHIPS) -->
                 <div class="kanglish-accordion">
                     <div class="accordion-header" onclick="toggleKanglish()">
-                        <span>🌐 Kanglish Transliteration Helper (Type English ➔ Get Kannada) ▼</span>
+                        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:6px;">
+                            <span>🌐 Unlimited Kanglish AI Transliteration Engine (Type English ➔ Get 100% Kannada)</span>
+                            <span class="kang-badge-pro">✨ PRO UNLIMITED</span>
+                        </div>
+                        <span class="acc-arrow">▼</span>
                     </div>
                     <div class="accordion-body" id="kangBody" style="display:none;">
-                        <input type="text" id="kangInput" placeholder="Type: namaskara, hegidira, kannada, mahiti..." oninput="convertKanglish(this.value)">
-                        <div class="kang-result" id="kangResult">Converted Kannada text will appear here...</div>
-                        <button class="btn-apply-kang" onclick="applyKanglish()">Apply to Main Box</button>
+                        <!-- Multi-Line Textarea for Unlimited Text -->
+                        <textarea id="kangInput" placeholder="Type or paste long English/Kanglish paragraphs here... (e.g. karnataka janathige hosa suddi, namaskara, v a o, v e o...)" rows="4" oninput="convertKanglish(this.value)"></textarea>
+
+                        <!-- Smart Phonetic Variation Chips (e.g. v a o / v e o) -->
+                        <div class="suggestions-container" id="kangSuggestions" style="display:none;">
+                            <span class="sug-label">💡 Smart Variations:</span>
+                            <div class="sug-chips-row" id="sugChipsRow"></div>
+                        </div>
+
+                        <!-- Live Converted Result Box with Stats -->
+                        <div class="kang-result-box">
+                            <div class="kang-result-header">
+                                <span>🎯 100% Accurate Converted Kannada Result:</span>
+                                <span class="kang-stats" id="kangStats">0 Words | 0 Chars</span>
+                            </div>
+                            <div class="kang-result" id="kangResult">Converted Kannada text will appear here...</div>
+                        </div>
+
+                        <div class="kang-actions-row">
+                            <button class="btn-apply-kang" onclick="applyKanglish()">🚀 Apply to Main Text Box</button>
+                            <button class="btn-copy-kang" onclick="copyKanglishResult()">📋 Copy Kannada Text</button>
+                            <button class="btn-clear-kang" onclick="clearKanglish()">🗑️ Clear</button>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -960,6 +1098,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=22.0.0"></script>
+    <script src="app.js?v=23.0.0"></script>
 </body>
 </html>
