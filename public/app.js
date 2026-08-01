@@ -10,7 +10,7 @@ let recTimerInterval = null;
 let recSeconds = 0;
 let isUserTypedText = false; // Flag to track if user typed custom text
 let kanglishDebounceTimer = null;
-let currentActiveWord = "";
+let committedWordChoices = {}; // Maps wordIndex -> userChosenKannadaWord (LOCKED Gboard Choices)
 
 // Expanded Kanglish Transliteration Fallback Dictionary
 const KANGLISH_DICTIONARY = {
@@ -220,7 +220,7 @@ function toggleKanglish() {
 
 // Helper: Fetch Google Transliteration Chunk for full text
 async function fetchGoogleTransliterationChunk(chunk) {
-    if (!chunk || chunk.trim() === '') return { result: '', variations: [] };
+    if (!chunk || chunk.trim() === '') return { result: '' };
     try {
         const url = `https://inputtools.google.com/request?text=${encodeURIComponent(chunk)}&itc=kn-t-i0-und&num=1`;
         const response = await fetch(url);
@@ -257,7 +257,7 @@ async function fetchActiveWordVariations(word) {
     return [];
 }
 
-// 🌐 GBOARD-STYLE MOBILE KEYBOARD KANGLISH TRANSLITERATION ENGINE
+// 🌐 GBOARD-STYLE MOBILE KEYBOARD KANGLISH TRANSLITERATION ENGINE (WITH USER CHOICE LOCK)
 async function convertKanglish(text) {
     const resEl = document.getElementById('kangResult');
     const statsEl = document.getElementById('kangStats');
@@ -265,6 +265,7 @@ async function convertKanglish(text) {
     const sugChipsRow = document.getElementById('sugChipsRow');
 
     if (!text || text.trim() === '') {
+        committedWordChoices = {};
         if (resEl) resEl.innerText = "Converted Kannada text will appear here...";
         if (statsEl) statsEl.innerText = "0 Words | 0 Chars";
         if (sugContainer) sugContainer.style.display = 'none';
@@ -277,39 +278,33 @@ async function convertKanglish(text) {
     const charCount = text.length;
     if (statsEl) statsEl.innerText = `📊 ${wordsCount} Words | ${charCount} Chars (Unlimited Mode)`;
 
-    // Get the LAST ACTIVE WORD being typed
-    const lastWord = wordsArr[wordsArr.length - 1] || "";
-    currentActiveWord = lastWord;
+    const lastWordIndex = wordsArr.length - 1;
+    const lastWord = wordsArr[lastWordIndex] || "";
 
-    // 1. Instant local dictionary fallback
-    const localConverted = wordsArr.map(w => KANGLISH_DICTIONARY[w.toLowerCase()] || w).join(' ');
-    if (resEl) resEl.innerText = localConverted;
+    // 1. Instant local dictionary fallback with committed choices
+    const localConvertedWords = wordsArr.map((w, idx) => {
+        if (committedWordChoices[idx]) return committedWordChoices[idx];
+        return KANGLISH_DICTIONARY[w.toLowerCase()] || w;
+    });
+    if (resEl) resEl.innerText = localConvertedWords.join(' ');
 
-    // 2. Multi-Chunk Full Text Transliteration + Gboard Active Word Suggestion Bar
+    // 2. Debounced Google API call respecting user-committed choices
     clearTimeout(kanglishDebounceTimer);
     kanglishDebounceTimer = setTimeout(async () => {
-        // Transliterate full text
-        const lines = text.split('\n');
-        const translatedLines = [];
+        const finalKannadaWords = [];
 
-        for (let line of lines) {
-            if (line.trim() === '') {
-                translatedLines.push('');
-                continue;
+        for (let idx = 0; idx < wordsArr.length; idx++) {
+            // IF user explicitly locked a choice for this word index, PRESERVE IT FOREVER!
+            if (committedWordChoices[idx]) {
+                finalKannadaWords.push(committedWordChoices[idx]);
+            } else {
+                const wordToken = wordsArr[idx];
+                const resObj = await fetchGoogleTransliterationChunk(wordToken);
+                finalKannadaWords.push(typeof resObj === 'object' ? resObj.result : resObj);
             }
-
-            const chunks = line.match(/.{1,250}(\s|$)/g) || [line];
-            const translatedChunks = [];
-
-            for (let chunk of chunks) {
-                const resObj = await fetchGoogleTransliterationChunk(chunk.trim());
-                translatedChunks.push(typeof resObj === 'object' ? resObj.result : resObj);
-            }
-            translatedLines.push(translatedChunks.join(' '));
         }
 
-        const fullKannadaText = translatedLines.join('\n');
-        if (resEl) resEl.innerText = fullKannadaText;
+        resEl.innerText = finalKannadaWords.join(' ');
 
         // Fetch Gboard-Style Word Variations ONLY for the ACTIVE WORD being typed!
         if (lastWord.length >= 1) {
@@ -318,7 +313,9 @@ async function convertKanglish(text) {
                 sugChipsRow.innerHTML = '';
                 wordVariations.slice(0, 5).forEach((v, idx) => {
                     const chip = document.createElement('button');
-                    chip.className = idx === 0 ? 'sug-chip selected' : 'sug-chip';
+                    // Check if this variation matches current committed choice
+                    const isSelected = (committedWordChoices[lastWordIndex] === v) || (!committedWordChoices[lastWordIndex] && idx === 0);
+                    chip.className = isSelected ? 'sug-chip selected' : 'sug-chip';
                     chip.innerText = v;
                     chip.onclick = () => applyActiveWordSuggestion(v, chip);
                     sugChipsRow.appendChild(chip);
@@ -333,18 +330,25 @@ async function convertKanglish(text) {
     }, 120);
 }
 
-// Replace ONLY the active last word in the converted result with selected variation chip
+// APPLY CHIP CHOICE & LOCK IT PERMANENTLY (Spacebar & typing new words will NEVER override user's choice!)
 function applyActiveWordSuggestion(variationWord, clickedChip) {
+    const kangInput = document.getElementById('kangInput');
     const resEl = document.getElementById('kangResult');
-    if (!resEl) return;
+    if (!resEl || !kangInput) return;
 
-    const currentText = resEl.innerText.trim();
-    if (!currentText || currentText === "Converted Kannada text will appear here...") return;
+    const rawWords = kangInput.value.trim().split(/\s+/);
+    const lastWordIndex = rawWords.length - 1;
 
-    const words = currentText.split(/\s+/);
-    if (words.length > 0) {
-        words[words.length - 1] = variationWord; // Replace ONLY the active word!
-        resEl.innerText = words.join(' ');
+    if (lastWordIndex >= 0) {
+        // Lock this word index to user's chosen variation!
+        committedWordChoices[lastWordIndex] = variationWord;
+
+        // Update result box immediately
+        const currentResWords = resEl.innerText.trim().split(/\s+/);
+        if (currentResWords.length > lastWordIndex) {
+            currentResWords[lastWordIndex] = variationWord;
+            resEl.innerText = currentResWords.join(' ');
+        }
     }
 
     // Highlight selected chip
@@ -369,6 +373,7 @@ function clearKanglish() {
     const statsEl = document.getElementById('kangStats');
     const sugContainer = document.getElementById('kangSuggestions');
 
+    committedWordChoices = {};
     if (kangInput) kangInput.value = '';
     if (resEl) resEl.innerText = 'Converted Kannada text will appear here...';
     if (statsEl) statsEl.innerText = '0 Words | 0 Chars';
