@@ -277,7 +277,6 @@ async function convertKanglish(text) {
                 continue;
             }
 
-            // Split line into sentence chunks if too long
             const chunks = line.match(/.{1,250}(\s|$)/g) || [line];
             const translatedChunks = [];
 
@@ -298,14 +297,14 @@ async function convertKanglish(text) {
         const fullKannadaText = translatedLines.join('\n');
         if (resEl) resEl.innerText = fullKannadaText;
 
-        // Render Smart Variation Suggestion Chips if available
+        // Render Smart Variation Suggestion Chips
         if (lastWordVariations && lastWordVariations.length > 1 && sugChipsRow && sugContainer) {
             sugChipsRow.innerHTML = '';
-            lastWordVariations.slice(0, 5).forEach(v => {
+            lastWordVariations.slice(0, 5).forEach((v, index) => {
                 const chip = document.createElement('button');
-                chip.className = 'sug-chip';
+                chip.className = index === 0 ? 'sug-chip selected' : 'sug-chip';
                 chip.innerText = v;
-                chip.onclick = () => applySuggestionChip(v);
+                chip.onclick = () => applySuggestionChip(v, chip);
                 sugChipsRow.appendChild(chip);
             });
             sugContainer.style.display = 'flex';
@@ -315,17 +314,17 @@ async function convertKanglish(text) {
     }, 150);
 }
 
-function applySuggestionChip(variationWord) {
-    const kangInput = document.getElementById('kangInput');
-    if (!kangInput) return;
-    const words = kangInput.value.trim().split(/\s+/);
-    if (words.length > 0) {
-        const resEl = document.getElementById('kangResult');
-        if (resEl) {
-            const currentResWords = resEl.innerText.trim().split(/\s+/);
-            currentResWords[currentResWords.length - 1] = variationWord;
-            resEl.innerText = currentResWords.join(' ');
-        }
+// CLEAN CHIP SELECTION FIX: Replaces converted result cleanly with clicked variation chip
+function applySuggestionChip(variationWord, clickedChip) {
+    const resEl = document.getElementById('kangResult');
+    if (resEl) {
+        resEl.innerText = variationWord;
+    }
+
+    // Highlight active chip
+    document.querySelectorAll('.sug-chip').forEach(c => c.classList.remove('selected'));
+    if (clickedChip) {
+        clickedChip.classList.add('selected');
     }
 }
 

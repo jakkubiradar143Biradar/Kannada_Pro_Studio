@@ -845,3 +845,11 @@ input[type="range"] {
 .share-tg { background: #0088cc !important; }
 .share-fb { background: #1877f2 !important; }
 .share-copy { background: #8b5cf6 !important; }
+
+/* SUGGESTION CHIP SELECTED GREEN GLOW STYLE */
+.sug-chip.selected {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    border-color: #34d399 !important;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.6) !important;
+}
+
