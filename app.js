@@ -11,6 +11,7 @@ let recSeconds = 0;
 let isUserTypedText = false; // Flag to track if user typed custom text
 let kanglishDebounceTimer = null;
 let committedWordChoices = {}; // Maps wordIndex -> userChosenKannadaWord (LOCKED Gboard Choices)
+let currentCursorWordIndex = -1;
 
 // Expanded Kanglish Transliteration Fallback Dictionary
 const KANGLISH_DICTIONARY = {
@@ -58,7 +59,9 @@ const KANGLISH_DICTIONARY = {
     "bhaarat": "ಭಾರತ",
     "bharata": "ಭಾರತ",
     "bengaluru": "ಬೆಂಗಳೂರು",
-    "mysuru": "ಮೈಸೂರು"
+    "mysuru": "ಮೈಸೂರು",
+    "exam": "ಎಕ್ಸಾಮ್",
+    "date": "ಡೇಟ್"
 };
 
 // 🎯 DEDICATED SAMPLE GREETINGS FOR EACH VOICE MODEL
@@ -104,6 +107,14 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 isUserTypedText = false;
             }
+        });
+    }
+
+    const kangInput = document.getElementById('kangInput');
+    if (kangInput) {
+        // Listen to mouse click & arrow navigation inside Kanglish input to detect cursor position
+        ['click', 'keyup', 'select'].forEach(evt => {
+            kangInput.addEventListener(evt, () => handleKanglishCursorMove());
         });
     }
 });
@@ -218,6 +229,41 @@ function toggleKanglish() {
     }
 }
 
+// Detect exact word & index under mouse cursor / caret
+function getWordAtCursor(textarea) {
+    if (!textarea) return { word: '', index: -1 };
+    const text = textarea.value;
+    const pos = textarea.selectionStart || text.length;
+
+    // Find start of word
+    const left = text.slice(0, pos).search(/\S+$/);
+    const start = left === -1 ? pos : left;
+
+    // Find end of word
+    const right = text.slice(pos).search(/\s/);
+    const end = right === -1 ? text.length : pos + right;
+
+    const word = text.slice(start, end).trim();
+    
+    // Calculate index among space-separated words
+    const wordsBefore = text.slice(0, start).trim().split(/\s+/).filter(w => w.length > 0);
+    const wordIndex = text.slice(0, start).trim() === '' ? 0 : wordsBefore.length;
+
+    return { word: word, index: wordIndex };
+}
+
+// Handle cursor navigation / mouse click inside Kanglish box
+async function handleKanglishCursorMove() {
+    const kangInput = document.getElementById('kangInput');
+    if (!kangInput || kangInput.value.trim() === '') return;
+
+    const cursorInfo = getWordAtCursor(kangInput);
+    if (cursorInfo.word && cursorInfo.word.length >= 1) {
+        currentCursorWordIndex = cursorInfo.index;
+        await updateSmartVariationsForWord(cursorInfo.word, cursorInfo.index);
+    }
+}
+
 // Helper: Fetch Google Transliteration Chunk for full text
 async function fetchGoogleTransliterationChunk(chunk) {
     if (!chunk || chunk.trim() === '') return { result: '' };
@@ -239,7 +285,7 @@ async function fetchGoogleTransliterationChunk(chunk) {
     return { result: local };
 }
 
-// Helper: Fetch suggestions for ONLY the single active word being typed
+// Helper: Fetch suggestions for ONLY the single active word under cursor
 async function fetchActiveWordVariations(word) {
     if (!word || word.trim() === '' || word.length < 1) return [];
     try {
@@ -257,12 +303,39 @@ async function fetchActiveWordVariations(word) {
     return [];
 }
 
-// 🌐 GBOARD-STYLE MOBILE KEYBOARD KANGLISH TRANSLITERATION ENGINE (WITH USER CHOICE LOCK)
+// Update Smart Variations UI chips for specific word at wordIndex
+async function updateSmartVariationsForWord(word, wordIndex) {
+    const sugContainer = document.getElementById('kangSuggestions');
+    const sugChipsRow = document.getElementById('sugChipsRow');
+    if (!sugContainer || !sugChipsRow) return;
+
+    if (!word || word.length < 1) {
+        sugContainer.style.display = 'none';
+        return;
+    }
+
+    const wordVariations = await fetchActiveWordVariations(word);
+    if (wordVariations && wordVariations.length > 0) {
+        sugChipsRow.innerHTML = '';
+        wordVariations.slice(0, 5).forEach((v, idx) => {
+            const chip = document.createElement('button');
+            const isSelected = (committedWordChoices[wordIndex] === v) || (!committedWordChoices[wordIndex] && idx === 0);
+            chip.className = isSelected ? 'sug-chip selected' : 'sug-chip';
+            chip.innerText = v;
+            chip.onclick = () => applyActiveWordSuggestionAt(v, wordIndex, chip);
+            sugChipsRow.appendChild(chip);
+        });
+        sugContainer.style.display = 'flex';
+    } else {
+        sugContainer.style.display = 'none';
+    }
+}
+
+// 🌐 CURSOR-AWARE GBOARD KANGLISH TRANSLITERATION ENGINE
 async function convertKanglish(text) {
     const resEl = document.getElementById('kangResult');
     const statsEl = document.getElementById('kangStats');
     const sugContainer = document.getElementById('kangSuggestions');
-    const sugChipsRow = document.getElementById('sugChipsRow');
 
     if (!text || text.trim() === '') {
         committedWordChoices = {};
@@ -278,8 +351,11 @@ async function convertKanglish(text) {
     const charCount = text.length;
     if (statsEl) statsEl.innerText = `📊 ${wordsCount} Words | ${charCount} Chars (Unlimited Mode)`;
 
-    const lastWordIndex = wordsArr.length - 1;
-    const lastWord = wordsArr[lastWordIndex] || "";
+    const kangInput = document.getElementById('kangInput');
+    const cursorInfo = getWordAtCursor(kangInput);
+    const targetWord = cursorInfo.word || wordsArr[wordsArr.length - 1] || "";
+    const targetIndex = cursorInfo.index >= 0 ? cursorInfo.index : wordsArr.length - 1;
+    currentCursorWordIndex = targetIndex;
 
     // 1. Instant local dictionary fallback with committed choices
     const localConvertedWords = wordsArr.map((w, idx) => {
@@ -294,7 +370,6 @@ async function convertKanglish(text) {
         const finalKannadaWords = [];
 
         for (let idx = 0; idx < wordsArr.length; idx++) {
-            // IF user explicitly locked a choice for this word index, PRESERVE IT FOREVER!
             if (committedWordChoices[idx]) {
                 finalKannadaWords.push(committedWordChoices[idx]);
             } else {
@@ -306,47 +381,24 @@ async function convertKanglish(text) {
 
         resEl.innerText = finalKannadaWords.join(' ');
 
-        // Fetch Gboard-Style Word Variations ONLY for the ACTIVE WORD being typed!
-        if (lastWord.length >= 1) {
-            const wordVariations = await fetchActiveWordVariations(lastWord);
-            if (wordVariations && wordVariations.length > 0 && sugChipsRow && sugContainer) {
-                sugChipsRow.innerHTML = '';
-                wordVariations.slice(0, 5).forEach((v, idx) => {
-                    const chip = document.createElement('button');
-                    // Check if this variation matches current committed choice
-                    const isSelected = (committedWordChoices[lastWordIndex] === v) || (!committedWordChoices[lastWordIndex] && idx === 0);
-                    chip.className = isSelected ? 'sug-chip selected' : 'sug-chip';
-                    chip.innerText = v;
-                    chip.onclick = () => applyActiveWordSuggestion(v, chip);
-                    sugChipsRow.appendChild(chip);
-                });
-                sugContainer.style.display = 'flex';
-            } else if (sugContainer) {
-                sugContainer.style.display = 'none';
-            }
-        } else if (sugContainer) {
-            sugContainer.style.display = 'none';
-        }
+        // Update Smart Variations for the exact word under cursor!
+        await updateSmartVariationsForWord(targetWord, targetIndex);
     }, 120);
 }
 
-// APPLY CHIP CHOICE & LOCK IT PERMANENTLY (Spacebar & typing new words will NEVER override user's choice!)
-function applyActiveWordSuggestion(variationWord, clickedChip) {
-    const kangInput = document.getElementById('kangInput');
+// APPLY CHIP CHOICE AT SPECIFIC WORD INDEX (Works for middle words & cursor position!)
+function applyActiveWordSuggestionAt(variationWord, targetIndex, clickedChip) {
     const resEl = document.getElementById('kangResult');
-    if (!resEl || !kangInput) return;
+    if (!resEl) return;
 
-    const rawWords = kangInput.value.trim().split(/\s+/);
-    const lastWordIndex = rawWords.length - 1;
-
-    if (lastWordIndex >= 0) {
+    if (targetIndex >= 0) {
         // Lock this word index to user's chosen variation!
-        committedWordChoices[lastWordIndex] = variationWord;
+        committedWordChoices[targetIndex] = variationWord;
 
-        // Update result box immediately
+        // Update result box at exact word index
         const currentResWords = resEl.innerText.trim().split(/\s+/);
-        if (currentResWords.length > lastWordIndex) {
-            currentResWords[lastWordIndex] = variationWord;
+        if (currentResWords.length > targetIndex) {
+            currentResWords[targetIndex] = variationWord;
             resEl.innerText = currentResWords.join(' ');
         }
     }
