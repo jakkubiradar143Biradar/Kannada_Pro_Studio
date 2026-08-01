@@ -10,6 +10,7 @@ let recTimerInterval = null;
 let recSeconds = 0;
 let isUserTypedText = false; // Flag to track if user typed custom text
 let kanglishDebounceTimer = null;
+let currentActiveWord = "";
 
 // Expanded Kanglish Transliteration Fallback Dictionary
 const KANGLISH_DICTIONARY = {
@@ -217,30 +218,46 @@ function toggleKanglish() {
     }
 }
 
-// Helper: Fetch Google Transliteration Chunk & Top 5 Variations
+// Helper: Fetch Google Transliteration Chunk for full text
 async function fetchGoogleTransliterationChunk(chunk) {
     if (!chunk || chunk.trim() === '') return { result: '', variations: [] };
     try {
-        const url = `https://inputtools.google.com/request?text=${encodeURIComponent(chunk)}&itc=kn-t-i0-und&num=5`;
+        const url = `https://inputtools.google.com/request?text=${encodeURIComponent(chunk)}&itc=kn-t-i0-und&num=1`;
         const response = await fetch(url);
         if (response.ok) {
             const data = await response.json();
             if (data && data[0] === 'SUCCESS' && data[1] && data[1][0]) {
                 const topResult = data[1][0][1][0] || chunk;
-                const variations = data[1][0][1] || [];
-                return { result: topResult, variations: variations };
+                return { result: topResult };
             }
         }
     } catch (err) {
         console.log("Chunk transliteration error:", err);
     }
-    // Fallback: local dictionary
     const words = chunk.toLowerCase().split(/\s+/);
     const local = words.map(w => KANGLISH_DICTIONARY[w] || w).join(' ');
-    return { result: local, variations: [] };
+    return { result: local };
 }
 
-// 🌐 UNLIMITED MULTI-PARAGRAPH KANGLISH TRANSLITERATION ENGINE
+// Helper: Fetch suggestions for ONLY the single active word being typed
+async function fetchActiveWordVariations(word) {
+    if (!word || word.trim() === '' || word.length < 1) return [];
+    try {
+        const url = `https://inputtools.google.com/request?text=${encodeURIComponent(word)}&itc=kn-t-i0-und&num=5`;
+        const response = await fetch(url);
+        if (response.ok) {
+            const data = await response.json();
+            if (data && data[0] === 'SUCCESS' && data[1] && data[1][0] && data[1][0][1]) {
+                return data[1][0][1]; // Top 5 word variations for active word
+            }
+        }
+    } catch (err) {
+        console.log("Active word suggestion error:", err);
+    }
+    return [];
+}
+
+// 🌐 GBOARD-STYLE MOBILE KEYBOARD KANGLISH TRANSLITERATION ENGINE
 async function convertKanglish(text) {
     const resEl = document.getElementById('kangResult');
     const statsEl = document.getElementById('kangStats');
@@ -255,21 +272,25 @@ async function convertKanglish(text) {
     }
 
     // Live Stats
-    const wordsCount = text.trim().split(/\s+/).length;
+    const wordsArr = text.trim().split(/\s+/);
+    const wordsCount = wordsArr.length;
     const charCount = text.length;
-    if (statsEl) statsEl.innerText = `📊 ${wordsCount} Words | ${charCount} Chars (Unlimited)`;
+    if (statsEl) statsEl.innerText = `📊 ${wordsCount} Words | ${charCount} Chars (Unlimited Mode)`;
+
+    // Get the LAST ACTIVE WORD being typed
+    const lastWord = wordsArr[wordsArr.length - 1] || "";
+    currentActiveWord = lastWord;
 
     // 1. Instant local dictionary fallback
-    const words = text.toLowerCase().split(/\s+/);
-    const localConverted = words.map(w => KANGLISH_DICTIONARY[w] || w).join(' ');
+    const localConverted = wordsArr.map(w => KANGLISH_DICTIONARY[w.toLowerCase()] || w).join(' ');
     if (resEl) resEl.innerText = localConverted;
 
-    // 2. Multi-Chunk Google API for UNLIMITED paragraph length
+    // 2. Multi-Chunk Full Text Transliteration + Gboard Active Word Suggestion Bar
     clearTimeout(kanglishDebounceTimer);
     kanglishDebounceTimer = setTimeout(async () => {
+        // Transliterate full text
         const lines = text.split('\n');
         const translatedLines = [];
-        let lastWordVariations = [];
 
         for (let line of lines) {
             if (line.trim() === '') {
@@ -282,14 +303,7 @@ async function convertKanglish(text) {
 
             for (let chunk of chunks) {
                 const resObj = await fetchGoogleTransliterationChunk(chunk.trim());
-                if (typeof resObj === 'object') {
-                    translatedChunks.push(resObj.result);
-                    if (resObj.variations && resObj.variations.length > 1) {
-                        lastWordVariations = resObj.variations;
-                    }
-                } else {
-                    translatedChunks.push(resObj);
-                }
+                translatedChunks.push(typeof resObj === 'object' ? resObj.result : resObj);
             }
             translatedLines.push(translatedChunks.join(' '));
         }
@@ -297,31 +311,43 @@ async function convertKanglish(text) {
         const fullKannadaText = translatedLines.join('\n');
         if (resEl) resEl.innerText = fullKannadaText;
 
-        // Render Smart Variation Suggestion Chips
-        if (lastWordVariations && lastWordVariations.length > 1 && sugChipsRow && sugContainer) {
-            sugChipsRow.innerHTML = '';
-            lastWordVariations.slice(0, 5).forEach((v, index) => {
-                const chip = document.createElement('button');
-                chip.className = index === 0 ? 'sug-chip selected' : 'sug-chip';
-                chip.innerText = v;
-                chip.onclick = () => applySuggestionChip(v, chip);
-                sugChipsRow.appendChild(chip);
-            });
-            sugContainer.style.display = 'flex';
+        // Fetch Gboard-Style Word Variations ONLY for the ACTIVE WORD being typed!
+        if (lastWord.length >= 1) {
+            const wordVariations = await fetchActiveWordVariations(lastWord);
+            if (wordVariations && wordVariations.length > 0 && sugChipsRow && sugContainer) {
+                sugChipsRow.innerHTML = '';
+                wordVariations.slice(0, 5).forEach((v, idx) => {
+                    const chip = document.createElement('button');
+                    chip.className = idx === 0 ? 'sug-chip selected' : 'sug-chip';
+                    chip.innerText = v;
+                    chip.onclick = () => applyActiveWordSuggestion(v, chip);
+                    sugChipsRow.appendChild(chip);
+                });
+                sugContainer.style.display = 'flex';
+            } else if (sugContainer) {
+                sugContainer.style.display = 'none';
+            }
         } else if (sugContainer) {
             sugContainer.style.display = 'none';
         }
-    }, 150);
+    }, 120);
 }
 
-// CLEAN CHIP SELECTION FIX: Replaces converted result cleanly with clicked variation chip
-function applySuggestionChip(variationWord, clickedChip) {
+// Replace ONLY the active last word in the converted result with selected variation chip
+function applyActiveWordSuggestion(variationWord, clickedChip) {
     const resEl = document.getElementById('kangResult');
-    if (resEl) {
-        resEl.innerText = variationWord;
+    if (!resEl) return;
+
+    const currentText = resEl.innerText.trim();
+    if (!currentText || currentText === "Converted Kannada text will appear here...") return;
+
+    const words = currentText.split(/\s+/);
+    if (words.length > 0) {
+        words[words.length - 1] = variationWord; // Replace ONLY the active word!
+        resEl.innerText = words.join(' ');
     }
 
-    // Highlight active chip
+    // Highlight selected chip
     document.querySelectorAll('.sug-chip').forEach(c => c.classList.remove('selected'));
     if (clickedChip) {
         clickedChip.classList.add('selected');
