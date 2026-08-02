@@ -19,7 +19,7 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Cleanup old files every 30 mins
+// Cleanup old files every 15 mins
 setInterval(() => {
     fs.readdir(uploadDir, (err, files) => {
         if (!err && files) {
@@ -27,14 +27,14 @@ setInterval(() => {
             files.forEach(file => {
                 const filePath = path.join(uploadDir, file);
                 fs.stat(filePath, (err, stat) => {
-                    if (!err && now - stat.mtimeMs > 15 * 60 * 1000) {
+                    if (!err && now - stat.mtimeMs > 10 * 60 * 1000) {
                         fs.unlink(filePath, () => {});
                     }
                 });
             });
         }
     });
-}, 30 * 60 * 1000);
+}, 15 * 60 * 1000);
 
 // English Acronyms to Kannada Phonetics
 const ENGLISH_TO_KANNADA_PHONETICS = {
@@ -87,7 +87,7 @@ const VOICE_PRESETS = {
 
 // 💚 HEALTHCHECK / WAKE-UP PING ENDPOINT (Prevents Render Server Sleep)
 app.get('/api/health', (req, res) => {
-    res.status(200).json({ status: 'ok', time: new Date().toISOString() });
+    res.status(200).json({ status: 'ok', uptime: process.uptime(), time: new Date().toISOString() });
 });
 
 // 🌐 INSTANT GOOGLE KANNADA TTS FETCHING ENGINE (0-Second Delay, 100% Uptime)
@@ -109,7 +109,7 @@ function fetchGoogleTTSChunk(chunkText) {
             res.on('end', () => resolve(Buffer.concat(data)));
         });
         req.on('error', (err) => reject(err));
-        req.setTimeout(4000, () => {
+        req.setTimeout(3500, () => {
             req.destroy();
             reject(new Error('Google TTS HTTP Timeout'));
         });
@@ -160,7 +160,7 @@ app.post('/api/generate-tts', async (req, res) => {
 
         let finalAudioBuffer = null;
 
-        // 1. Primary Attempt: EdgeTTS with strict 4.5s Timeout Promise
+        // 1. Layer 1: EdgeTTS with strict 4.0s Timeout Promise
         try {
             const edgePromise = new Promise(async (resolve, reject) => {
                 try {
@@ -184,23 +184,23 @@ app.post('/api/generate-tts', async (req, res) => {
             });
 
             const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('EdgeTTS 4.5s Timeout')), 4500)
+                setTimeout(() => reject(new Error('EdgeTTS 4s Timeout')), 4000)
             );
 
             finalAudioBuffer = await Promise.race([edgePromise, timeoutPromise]);
-            console.log("⚡ EdgeTTS Primary Engine Succeeded!");
+            console.log("⚡ Layer 1 EdgeTTS Engine Succeeded!");
 
         } catch (edgeErr) {
-            console.log("⚠️ EdgeTTS Primary Engine timed out or failed. Switching to Instant Google HD Engine:", edgeErr.message);
+            console.log("⚠️ Layer 1 EdgeTTS timed out or failed. Activating Layer 2 Google HD Engine:", edgeErr.message);
         }
 
-        // 2. Backup Engine: Instant Google HD Kannada Engine (Runs in 300ms if EdgeTTS timed out!)
+        // 2. Layer 2: Instant Google HD Kannada Engine (Runs in 250ms if EdgeTTS timed out!)
         if (!finalAudioBuffer) {
             try {
                 finalAudioBuffer = await generateGoogleTTS(formattedText);
-                console.log("⚡ Instant Google HD Engine Fallback Succeeded!");
+                console.log("⚡ Layer 2 Google HD Engine Fallback Succeeded!");
             } catch (gErr) {
-                console.error("❌ Both EdgeTTS and Google TTS failed:", gErr);
+                console.error("❌ Layer 2 Google TTS Fallback failed:", gErr);
             }
         }
 
@@ -211,7 +211,6 @@ app.post('/api/generate-tts', async (req, res) => {
             });
             res.send(finalAudioBuffer);
 
-            // Cleanup temp file if created
             if (fs.existsSync(tempMp3Path)) {
                 fs.unlink(tempMp3Path, () => {});
             }
