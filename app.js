@@ -123,12 +123,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Select Voice Model - Inserts sample greeting if empty or untyped
+// Helper: Get currently active model ID directly from the DOM to guarantee 100% accuracy
+function getActiveVoiceModelId() {
+    const activeCard = document.querySelector('.voice-models-container .model-card.active');
+    if (activeCard) {
+        const onclickAttr = activeCard.getAttribute('onclick');
+        if (onclickAttr) {
+            const match = onclickAttr.match(/selectVoiceModel\(['"]([^'"]+)['"]/);
+            if (match && match[1]) {
+                return match[1];
+            }
+        }
+    }
+    return selectedVoice || 'm1';
+}
+
+// Select Voice Model - Inserts sample greeting if empty or untyped, and guarantees active state update
 function selectVoiceModel(voiceId, element) {
     selectedVoice = voiceId;
-    document.querySelectorAll('.voice-models-container .model-card').forEach(c => c.classList.remove('active'));
+    
+    // Clear active class from all model cards
+    document.querySelectorAll('.voice-models-container .model-card').forEach(c => {
+        c.classList.remove('active');
+    });
+
+    // Add active class to selected card
     if (element) {
         element.classList.add('active');
+    } else {
+        const targetCard = document.querySelector(`.model-card[onclick*="'${voiceId}'"]`);
+        if (targetCard) targetCard.classList.add('active');
     }
 
     const ttsInput = document.getElementById('ttsTextInput');
@@ -437,7 +461,7 @@ function applyKanglish() {
     }
 }
 
-// 🎧 Web Audio API Clean Studio Equalizer Engine (Preserves Natural AI Speech Pitch)
+// 🎧 Web Audio API Clean Studio Equalizer Engine
 async function applyVocalEQ(audioArrayBuffer, eqType) {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const decodedData = await audioCtx.decodeAudioData(audioArrayBuffer);
@@ -453,7 +477,6 @@ async function applyVocalEQ(audioArrayBuffer, eqType) {
 
     let lastNode = source;
 
-    // Apply Pure Equalizer Filters
     if (eqType === 'bass') {
         const bassFilter = offlineCtx.createBiquadFilter();
         bassFilter.type = "lowshelf";
@@ -858,7 +881,7 @@ async function processVoiceChanger() {
     }
 }
 
-// 🔊 ROBUST GENERATE SPEECH ENGINE WITH SSML MODEL & SHAILI TUNING
+// 🔊 ROBUST GENERATE SPEECH ENGINE WITH DOM MODEL SYNC & DYNAMIC SWITCHING
 async function generateProTTS() {
     const textInput = document.getElementById('ttsTextInput');
     const text = textInput ? textInput.value.trim() : '';
@@ -866,6 +889,10 @@ async function generateProTTS() {
         alert("Please enter text first!");
         return;
     }
+
+    // ALWAYS read the currently active model ID directly from the DOM!
+    const currentActiveVoice = getActiveVoiceModelId();
+    selectedVoice = currentActiveVoice;
 
     const rate = ((parseFloat(document.getElementById('rateSlider').value) - 1.0) * 100).toFixed(0);
     const pitch = document.getElementById('pitchSlider').value;
@@ -886,7 +913,7 @@ async function generateProTTS() {
     if (progressContainer) progressContainer.style.display = 'block';
     if (timerLog) timerLog.style.display = 'flex';
     if (progressBarFill) progressBarFill.style.width = '15%';
-    if (playerStatus) playerStatus.innerText = '⏳ Processing HD Speech...';
+    if (playerStatus) playerStatus.innerText = `⏳ Generating in ${selectedVoice.toUpperCase()} Voice...`;
 
     const startTime = performance.now();
     let timerInterval = setInterval(() => {
@@ -962,7 +989,7 @@ async function generateProTTS() {
 
             const totalDurationSec = ((performance.now() - startTime) / 1000).toFixed(2);
             if (progressBarFill) progressBarFill.style.width = '100%';
-            if (timerLog) timerLog.innerText = `⚡ Generated in ${totalDurationSec}s!`;
+            if (timerLog) timerLog.innerText = `⚡ Generated in ${totalDurationSec}s with ${selectedVoice.toUpperCase()} Voice Profile!`;
             if (playerStatus) playerStatus.innerText = `✅ Generated in ${totalDurationSec}s!`;
             if (genBtn) genBtn.classList.remove('loading');
 
