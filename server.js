@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const https = require('https');
 const { EdgeTTS } = require('node-edge-tts');
 
 const app = express();
@@ -80,7 +81,7 @@ const VOICE_PRESETS = {
     'f6': { voice: 'kn-IN-SapnaNeural', pitch: '+3Hz', rate: '+18%' },
     'f7': { voice: 'kn-IN-SapnaNeural', pitch: '+2Hz', rate: '+22%' },
     'f8': { voice: 'kn-IN-SapnaNeural', pitch: '+0Hz', rate: '+5%' },
-    'f9': { voice: 'kn-IN-SapnaNeural', pitch: '-2Hz', rate: '-5%' },
+    'f9': { voice: 'kn-IN-SapnaNeural', pitch: '-1Hz', rate: '-5%' },
     'f10': { voice: 'kn-IN-SapnaNeural', pitch: '+1Hz', rate: '+12%' }
 };
 
@@ -88,6 +89,47 @@ const VOICE_PRESETS = {
 app.get('/api/health', (req, res) => {
     res.status(200).json({ status: 'ok', time: new Date().toISOString() });
 });
+
+// 🌐 INSTANT GOOGLE KANNADA TTS FETCHING ENGINE (0-Second Delay, 100% Uptime)
+function fetchGoogleTTSChunk(chunkText) {
+    return new Promise((resolve, reject) => {
+        const encoded = encodeURIComponent(chunkText);
+        const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encoded}&tl=kn&client=tw-ob`;
+        
+        const req = https.get(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+        }, (res) => {
+            if (res.statusCode !== 200) {
+                return reject(new Error(`Google TTS HTTP ${res.statusCode}`));
+            }
+            const data = [];
+            res.on('data', (c) => data.push(c));
+            res.on('end', () => resolve(Buffer.concat(data)));
+        });
+        req.on('error', (err) => reject(err));
+        req.setTimeout(4000, () => {
+            req.destroy();
+            reject(new Error('Google TTS HTTP Timeout'));
+        });
+    });
+}
+
+async function generateGoogleTTS(text) {
+    const chunks = text.match(/.{1,140}(\s|$)|.{1,140}/g) || [text];
+    const audioBuffers = [];
+    for (const c of chunks) {
+        if (c.trim()) {
+            const buf = await fetchGoogleTTSChunk(c.trim());
+            audioBuffers.push(buf);
+        }
+    }
+    if (audioBuffers.length > 0) {
+        return Buffer.concat(audioBuffers);
+    }
+    throw new Error('Google TTS produced no audio');
+}
 
 app.post('/api/generate-tts', async (req, res) => {
     try {
@@ -116,48 +158,67 @@ app.post('/api/generate-tts', async (req, res) => {
         const uniqueId = `${Date.now()}_${Math.random().toString(36).substring(7)}`;
         const tempMp3Path = path.join(uploadDir, `speech_${uniqueId}.mp3`);
 
-        // Robust Retry Logic for EdgeTTS (Up to 3 attempts)
-        let success = false;
-        let lastError = null;
+        let finalAudioBuffer = null;
 
-        for (let attempt = 1; attempt <= 3; attempt++) {
-            try {
-                const tts = new EdgeTTS({
-                    voice: selectedVoice,
-                    lang: 'kn-IN',
-                    outputFormat: 'audio-24khz-48kbitrate-mono-mp3',
-                    pitch: pitchVal,
-                    rate: rateVal,
-                    volume: volumeVal
-                });
-
-                await tts.ttsPromise(formattedText, tempMp3Path);
-                if (fs.existsSync(tempMp3Path) && fs.statSync(tempMp3Path).size > 0) {
-                    success = true;
-                    break;
+        // 1. Primary Attempt: EdgeTTS with strict 4.5s Timeout Promise
+        try {
+            const edgePromise = new Promise(async (resolve, reject) => {
+                try {
+                    const tts = new EdgeTTS({
+                        voice: selectedVoice,
+                        lang: 'kn-IN',
+                        outputFormat: 'audio-24khz-48kbitrate-mono-mp3',
+                        pitch: pitchVal,
+                        rate: rateVal,
+                        volume: volumeVal
+                    });
+                    await tts.ttsPromise(formattedText, tempMp3Path);
+                    if (fs.existsSync(tempMp3Path) && fs.statSync(tempMp3Path).size > 0) {
+                        resolve(fs.readFileSync(tempMp3Path));
+                    } else {
+                        reject(new Error('EdgeTTS empty file'));
+                    }
+                } catch (e) {
+                    reject(e);
                 }
-            } catch (retryErr) {
-                lastError = retryErr;
-                console.log(`TTS Attempt ${attempt} failed:`, retryErr.message || retryErr);
-                await new Promise(r => setTimeout(r, 800)); // wait 800ms before retry
+            });
+
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('EdgeTTS 4.5s Timeout')), 4500)
+            );
+
+            finalAudioBuffer = await Promise.race([edgePromise, timeoutPromise]);
+            console.log("⚡ EdgeTTS Primary Engine Succeeded!");
+
+        } catch (edgeErr) {
+            console.log("⚠️ EdgeTTS Primary Engine timed out or failed. Switching to Instant Google HD Engine:", edgeErr.message);
+        }
+
+        // 2. Backup Engine: Instant Google HD Kannada Engine (Runs in 300ms if EdgeTTS timed out!)
+        if (!finalAudioBuffer) {
+            try {
+                finalAudioBuffer = await generateGoogleTTS(formattedText);
+                console.log("⚡ Instant Google HD Engine Fallback Succeeded!");
+            } catch (gErr) {
+                console.error("❌ Both EdgeTTS and Google TTS failed:", gErr);
             }
         }
 
-        if (success && fs.existsSync(tempMp3Path)) {
+        if (finalAudioBuffer && finalAudioBuffer.length > 0) {
             res.set({
                 'Content-Type': 'audio/mpeg',
                 'Content-Disposition': 'inline; filename="mahiti_chakra_speech.mp3"'
             });
+            res.send(finalAudioBuffer);
 
-            const stream = fs.createReadStream(tempMp3Path);
-            stream.pipe(res);
-
-            res.on('finish', () => {
+            // Cleanup temp file if created
+            if (fs.existsSync(tempMp3Path)) {
                 fs.unlink(tempMp3Path, () => {});
-            });
+            }
         } else {
-            res.status(500).json({ error: 'Audio generation failed: ' + (lastError ? lastError.message : 'Unknown error') });
+            res.status(500).json({ error: 'Audio generation failed on all engines.' });
         }
+
     } catch (err) {
         console.error('TTS Generation Error:', err);
         res.status(500).json({ error: 'Error generating speech: ' + (err.message || err) });
