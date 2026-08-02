@@ -18,7 +18,7 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Cleanup old files
+// Cleanup old files every 30 mins
 setInterval(() => {
     fs.readdir(uploadDir, (err, files) => {
         if (!err && files) {
@@ -61,7 +61,6 @@ function formatHumanFlow(rawText) {
 
 // 20 Best Models (10 Male + 10 Female)
 const VOICE_PRESETS = {
-    // 10 Male Voices
     'm1': { voice: 'kn-IN-GaganNeural', pitch: '+0Hz', rate: '+10%' },
     'm2': { voice: 'kn-IN-GaganNeural', pitch: '-2Hz', rate: '+20%' },
     'm3': { voice: 'kn-IN-GaganNeural', pitch: '+2Hz', rate: '+15%' },
@@ -73,7 +72,6 @@ const VOICE_PRESETS = {
     'm9': { voice: 'kn-IN-GaganNeural', pitch: '+3Hz', rate: '+18%' },
     'm10': { voice: 'kn-IN-GaganNeural', pitch: '-2Hz', rate: '+30%' },
 
-    // 10 Female Voices
     'f1': { voice: 'kn-IN-SapnaNeural', pitch: '+0Hz', rate: '+10%' },
     'f2': { voice: 'kn-IN-SapnaNeural', pitch: '+2Hz', rate: '+20%' },
     'f3': { voice: 'kn-IN-SapnaNeural', pitch: '+1Hz', rate: '+15%' },
@@ -85,6 +83,11 @@ const VOICE_PRESETS = {
     'f9': { voice: 'kn-IN-SapnaNeural', pitch: '-2Hz', rate: '-5%' },
     'f10': { voice: 'kn-IN-SapnaNeural', pitch: '+1Hz', rate: '+12%' }
 };
+
+// 💚 HEALTHCHECK / WAKE-UP PING ENDPOINT (Prevents Render Server Sleep)
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'ok', time: new Date().toISOString() });
+});
 
 app.post('/api/generate-tts', async (req, res) => {
     try {
@@ -113,18 +116,34 @@ app.post('/api/generate-tts', async (req, res) => {
         const uniqueId = `${Date.now()}_${Math.random().toString(36).substring(7)}`;
         const tempMp3Path = path.join(uploadDir, `speech_${uniqueId}.mp3`);
 
-        const tts = new EdgeTTS({
-            voice: selectedVoice,
-            lang: 'kn-IN',
-            outputFormat: 'audio-24khz-48kbitrate-mono-mp3',
-            pitch: pitchVal,
-            rate: rateVal,
-            volume: volumeVal
-        });
+        // Robust Retry Logic for EdgeTTS (Up to 3 attempts)
+        let success = false;
+        let lastError = null;
 
-        await tts.ttsPromise(formattedText, tempMp3Path);
+        for (let attempt = 1; attempt <= 3; attempt++) {
+            try {
+                const tts = new EdgeTTS({
+                    voice: selectedVoice,
+                    lang: 'kn-IN',
+                    outputFormat: 'audio-24khz-48kbitrate-mono-mp3',
+                    pitch: pitchVal,
+                    rate: rateVal,
+                    volume: volumeVal
+                });
 
-        if (fs.existsSync(tempMp3Path)) {
+                await tts.ttsPromise(formattedText, tempMp3Path);
+                if (fs.existsSync(tempMp3Path) && fs.statSync(tempMp3Path).size > 0) {
+                    success = true;
+                    break;
+                }
+            } catch (retryErr) {
+                lastError = retryErr;
+                console.log(`TTS Attempt ${attempt} failed:`, retryErr.message || retryErr);
+                await new Promise(r => setTimeout(r, 800)); // wait 800ms before retry
+            }
+        }
+
+        if (success && fs.existsSync(tempMp3Path)) {
             res.set({
                 'Content-Type': 'audio/mpeg',
                 'Content-Disposition': 'inline; filename="mahiti_chakra_speech.mp3"'
@@ -137,7 +156,7 @@ app.post('/api/generate-tts', async (req, res) => {
                 fs.unlink(tempMp3Path, () => {});
             });
         } else {
-            res.status(500).json({ error: 'Audio generation failed.' });
+            res.status(500).json({ error: 'Audio generation failed: ' + (lastError ? lastError.message : 'Unknown error') });
         }
     } catch (err) {
         console.error('TTS Generation Error:', err);

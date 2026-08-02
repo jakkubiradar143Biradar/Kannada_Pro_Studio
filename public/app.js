@@ -97,8 +97,14 @@ const PRESET_TEXTS = {
     'edu': 'ಆತ್ಮೀಯ ವಿದ್ಯಾರ್ಥಿಗಳೇ, ಇಂದಿನ ತರಗತಿಯಲ್ಲಿ ನಾವು ವಿಜ್ಞಾನ ಮತ್ತು ಗಣಿತದ ಪ್ರಮುಖ ಸೂತ್ರಗಳನ್ನು ಸರಳ ಹಾಗೂ ಆಸಕ್ತಿದಾಯಕವಾಗಿ ಕಲಿಯೋಣ.'
 };
 
-// Setup Listeners on Load
+// Setup Listeners & Auto Keep-Alive Server Ping on Load
 document.addEventListener('DOMContentLoaded', () => {
+    // 💚 AUTO KEEP-ALIVE SERVER PING (Prevents Render Free Tier Cold Sleep)
+    fetch('/api/health').catch(() => {});
+    setInterval(() => {
+        fetch('/api/health').catch(() => {});
+    }, 4 * 60 * 1000); // Every 4 mins keep server hot!
+
     const ttsInput = document.getElementById('ttsTextInput');
     if (ttsInput) {
         ttsInput.addEventListener('input', () => {
@@ -112,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const kangInput = document.getElementById('kangInput');
     if (kangInput) {
-        // Listen to mouse click & arrow navigation inside Kanglish input to detect cursor position
         ['click', 'keyup', 'select'].forEach(evt => {
             kangInput.addEventListener(evt, () => handleKanglishCursorMove());
         });
@@ -235,17 +240,14 @@ function getWordAtCursor(textarea) {
     const text = textarea.value;
     const pos = textarea.selectionStart || text.length;
 
-    // Find start of word
     const left = text.slice(0, pos).search(/\S+$/);
     const start = left === -1 ? pos : left;
 
-    // Find end of word
     const right = text.slice(pos).search(/\s/);
     const end = right === -1 ? text.length : pos + right;
 
     const word = text.slice(start, end).trim();
     
-    // Calculate index among space-separated words
     const wordsBefore = text.slice(0, start).trim().split(/\s+/).filter(w => w.length > 0);
     const wordIndex = text.slice(0, start).trim() === '' ? 0 : wordsBefore.length;
 
@@ -294,7 +296,7 @@ async function fetchActiveWordVariations(word) {
         if (response.ok) {
             const data = await response.json();
             if (data && data[0] === 'SUCCESS' && data[1] && data[1][0] && data[1][0][1]) {
-                return data[1][0][1]; // Top 5 word variations for active word
+                return data[1][0][1];
             }
         }
     } catch (err) {
@@ -345,7 +347,6 @@ async function convertKanglish(text) {
         return;
     }
 
-    // Live Stats
     const wordsArr = text.trim().split(/\s+/);
     const wordsCount = wordsArr.length;
     const charCount = text.length;
@@ -392,10 +393,8 @@ function applyActiveWordSuggestionAt(variationWord, targetIndex, clickedChip) {
     if (!resEl) return;
 
     if (targetIndex >= 0) {
-        // Lock this word index to user's chosen variation!
         committedWordChoices[targetIndex] = variationWord;
 
-        // Update result box at exact word index
         const currentResWords = resEl.innerText.trim().split(/\s+/);
         if (currentResWords.length > targetIndex) {
             currentResWords[targetIndex] = variationWord;
@@ -403,7 +402,6 @@ function applyActiveWordSuggestionAt(variationWord, targetIndex, clickedChip) {
         }
     }
 
-    // Highlight selected chip
     document.querySelectorAll('.sug-chip').forEach(c => c.classList.remove('selected'));
     if (clickedChip) {
         clickedChip.classList.add('selected');
@@ -798,7 +796,6 @@ async function processVoiceChanger() {
 
         // 2. Formant Resonator & Vocal Resonance Filter
         if (semitoneShift < -2) {
-            // Deep Male Voice Formant Resonator
             const formantFilter = offlineCtx.createBiquadFilter();
             formantFilter.type = "lowshelf";
             formantFilter.frequency.value = 240;
@@ -814,7 +811,6 @@ async function processVoiceChanger() {
             lastNode = subBass;
 
         } else if (semitoneShift > 2) {
-            // Female High Voice Formant Resonator
             const femaleFormant = offlineCtx.createBiquadFilter();
             femaleFormant.type = "highshelf";
             femaleFormant.frequency.value = 2800;
@@ -871,7 +867,7 @@ async function processVoiceChanger() {
     }
 }
 
-// Generate Speech Function
+// 🔊 ROBUST GENERATE SPEECH WITH SILENT 3-ATTEMPT AUTO-RETRY
 async function generateProTTS() {
     const textInput = document.getElementById('ttsTextInput');
     const text = textInput ? textInput.value.trim() : '';
@@ -898,7 +894,7 @@ async function generateProTTS() {
     if (genBtn) genBtn.classList.add('loading');
     if (progressContainer) progressContainer.style.display = 'block';
     if (timerLog) timerLog.style.display = 'flex';
-    if (progressBarFill) progressBarFill.style.width = '10%';
+    if (progressBarFill) progressBarFill.style.width = '15%';
     if (playerStatus) playerStatus.innerText = '⏳ Processing HD Speech...';
 
     const startTime = performance.now();
@@ -906,70 +902,91 @@ async function generateProTTS() {
         const elapsedSec = ((performance.now() - startTime) / 1000).toFixed(1);
         if (timerLog) timerLog.innerText = `⏳ Generating HD Audio... ${elapsedSec}s`;
         if (progressBarFill && parseFloat(progressBarFill.style.width) < 85) {
-            progressBarFill.style.width = (parseFloat(progressBarFill.style.width) + 5) + '%';
+            progressBarFill.style.width = (parseFloat(progressBarFill.style.width) + 4) + '%';
         }
     }, 100);
 
-    try {
-        const response = await fetch('/api/generate-tts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                text: text,
-                voice: selectedVoice,
-                pitch: pitchParam,
-                rate: rateParam,
-                volume: volParam
-            })
-        });
+    let audioSuccess = false;
+    let rawArrayBuffer = null;
+    let maxRetries = 3;
 
-        if (!response.ok) throw new Error("Synthesis failed");
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            if (attempt > 1 && playerStatus) {
+                playerStatus.innerText = `⏳ Waking up HD Voice Engine... (Attempt ${attempt}/${maxRetries})`;
+            }
 
-        const rawArrayBuffer = await response.arrayBuffer();
+            const response = await fetch('/api/generate-tts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    text: text,
+                    voice: selectedVoice,
+                    pitch: pitchParam,
+                    rate: rateParam,
+                    volume: volParam
+                })
+            });
 
-        if (progressBarFill) progressBarFill.style.width = '90%';
-        const processedWavBlob = await applyVocalEQ(rawArrayBuffer, eq);
-        const audioUrl = URL.createObjectURL(processedWavBlob);
-        
-        const player = document.getElementById('mainAudioPlayer');
-        if (player) {
-            player.src = audioUrl;
-            player.play();
+            if (response.ok) {
+                rawArrayBuffer = await response.arrayBuffer();
+                if (rawArrayBuffer && rawArrayBuffer.byteLength > 100) {
+                    audioSuccess = true;
+                    break;
+                }
+            }
+        } catch (err) {
+            console.log(`Frontend Fetch Attempt ${attempt} failed:`, err);
         }
-
-        // Enable All Pro Export Buttons
-        const mp3Btn = document.getElementById('downloadMp3Btn');
-        if (mp3Btn) {
-            mp3Btn.href = audioUrl;
-            mp3Btn.download = `mahiti_chakra_${selectedVoice}_${eq}.mp3`;
-            mp3Btn.classList.remove('disabled');
-        }
-
-        const wavBtn = document.getElementById('downloadWavBtn');
-        if (wavBtn) {
-            wavBtn.href = audioUrl;
-            wavBtn.download = `mahiti_chakra_${selectedVoice}_${eq}_master.wav`;
-            wavBtn.classList.remove('disabled');
-        }
-
-        clearInterval(timerInterval);
-        const totalDurationSec = ((performance.now() - startTime) / 1000).toFixed(2);
-        
-        if (progressBarFill) progressBarFill.style.width = '100%';
-        if (timerLog) timerLog.innerText = `⚡ Generated in ${totalDurationSec}s with ${eq.toUpperCase()} EQ!`;
-        if (playerStatus) playerStatus.innerText = `✅ Generated in ${totalDurationSec}s!`;
-        if (genBtn) genBtn.classList.remove('loading');
-
-        setTimeout(() => {
-            if (progressContainer) progressContainer.style.display = 'none';
-        }, 3000);
-
-    } catch (err) {
-        clearInterval(timerInterval);
-        console.error(err);
-        if (playerStatus) playerStatus.innerText = "❌ Error Generating Speech";
-        if (timerLog) timerLog.innerText = "❌ Generation Failed";
-        if (genBtn) genBtn.classList.remove('loading');
-        alert("Error generating speech. Please try again.");
+        await new Promise(r => setTimeout(r, 1000)); // Wait 1 sec before retrying
     }
+
+    clearInterval(timerInterval);
+
+    if (audioSuccess && rawArrayBuffer) {
+        try {
+            if (progressBarFill) progressBarFill.style.width = '90%';
+            const processedWavBlob = await applyVocalEQ(rawArrayBuffer, eq);
+            const audioUrl = URL.createObjectURL(processedWavBlob);
+            
+            const player = document.getElementById('mainAudioPlayer');
+            if (player) {
+                player.src = audioUrl;
+                player.play();
+            }
+
+            const mp3Btn = document.getElementById('downloadMp3Btn');
+            if (mp3Btn) {
+                mp3Btn.href = audioUrl;
+                mp3Btn.download = `mahiti_chakra_${selectedVoice}_${eq}.mp3`;
+                mp3Btn.classList.remove('disabled');
+            }
+
+            const wavBtn = document.getElementById('downloadWavBtn');
+            if (wavBtn) {
+                wavBtn.href = audioUrl;
+                wavBtn.download = `mahiti_chakra_${selectedVoice}_${eq}_master.wav`;
+                wavBtn.classList.remove('disabled');
+            }
+
+            const totalDurationSec = ((performance.now() - startTime) / 1000).toFixed(2);
+            if (progressBarFill) progressBarFill.style.width = '100%';
+            if (timerLog) timerLog.innerText = `⚡ Generated in ${totalDurationSec}s with ${eq.toUpperCase()} EQ!`;
+            if (playerStatus) playerStatus.innerText = `✅ Generated in ${totalDurationSec}s!`;
+            if (genBtn) genBtn.classList.remove('loading');
+
+            setTimeout(() => {
+                if (progressContainer) progressContainer.style.display = 'none';
+            }, 3000);
+            return;
+        } catch (postErr) {
+            console.error("Audio EQ Post-processing Error:", postErr);
+        }
+    }
+
+    // Fail-safe handling without annoying popups
+    if (playerStatus) playerStatus.innerText = "⚠️ Voice Engine is waking up. Please click Generate again!";
+    if (timerLog) timerLog.innerText = "⚠️ Temporary Network Timeout. Please retry.";
+    if (genBtn) genBtn.classList.remove('loading');
+    if (progressContainer) progressContainer.style.display = 'none';
 }
