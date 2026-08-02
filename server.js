@@ -60,37 +60,39 @@ function formatHumanFlow(rawText) {
     return cleaned.replace(/\s+/g, ' ').trim();
 }
 
-// 20 Best Models (10 Male + 10 Female)
+// 20 Distinct Voice Profiles with Neural Pitch & Speed Preset Tuning
 const VOICE_PRESETS = {
-    'm1': { voice: 'kn-IN-GaganNeural', pitch: '+0Hz', rate: '+10%' },
-    'm2': { voice: 'kn-IN-GaganNeural', pitch: '-2Hz', rate: '+20%' },
-    'm3': { voice: 'kn-IN-GaganNeural', pitch: '+2Hz', rate: '+15%' },
-    'm4': { voice: 'kn-IN-GaganNeural', pitch: '-4Hz', rate: '+25%' },
-    'm5': { voice: 'kn-IN-GaganNeural', pitch: '+4Hz', rate: '+20%' },
-    'm6': { voice: 'kn-IN-GaganNeural', pitch: '+0Hz', rate: '+5%' },
-    'm7': { voice: 'kn-IN-GaganNeural', pitch: '-3Hz', rate: '-10%' },
-    'm8': { voice: 'kn-IN-GaganNeural', pitch: '-1Hz', rate: '+0%' },
-    'm9': { voice: 'kn-IN-GaganNeural', pitch: '+3Hz', rate: '+18%' },
-    'm10': { voice: 'kn-IN-GaganNeural', pitch: '-2Hz', rate: '+30%' },
+    // 10 Male Voice Profiles
+    'm1':  { voice: 'kn-IN-GaganNeural', pitch: '+0Hz',  rate: '+5%',  volume: '+50%' }, // Gagan Anchor
+    'm2':  { voice: 'kn-IN-GaganNeural', pitch: '-5Hz',  rate: '+15%', volume: '+60%' }, // Rajesh RJ
+    'm3':  { voice: 'kn-IN-GaganNeural', pitch: '-2Hz',  rate: '+10%', volume: '+50%' }, // Vikram News
+    'm4':  { voice: 'kn-IN-GaganNeural', pitch: '-8Hz',  rate: '+20%', volume: '+70%' }, // Dev Mass (Hero)
+    'm5':  { voice: 'kn-IN-GaganNeural', pitch: '-1Hz',  rate: '+25%', volume: '+60%' }, // Arjun Sports
+    'm6':  { voice: 'kn-IN-GaganNeural', pitch: '+2Hz',  rate: '+12%', volume: '+50%' }, // Surya Tech
+    'm7':  { voice: 'kn-IN-GaganNeural', pitch: '-4Hz',  rate: '-8%',  volume: '+50%' }, // Guru Bhakti
+    'm8':  { voice: 'kn-IN-GaganNeural', pitch: '-3Hz',  rate: '-5%',  volume: '+45%' }, // Chetan Story
+    'm9':  { voice: 'kn-IN-GaganNeural', pitch: '-3Hz',  rate: '+22%', volume: '+65%' }, // Kiran Ad
+    'm10': { voice: 'kn-IN-GaganNeural', pitch: '-10Hz', rate: '+18%', volume: '+75%' }, // Dhananjaya Pro
 
-    'f1': { voice: 'kn-IN-SapnaNeural', pitch: '+0Hz', rate: '+10%' },
-    'f2': { voice: 'kn-IN-SapnaNeural', pitch: '+2Hz', rate: '+20%' },
-    'f3': { voice: 'kn-IN-SapnaNeural', pitch: '+1Hz', rate: '+15%' },
-    'f4': { voice: 'kn-IN-SapnaNeural', pitch: '+4Hz', rate: '+25%' },
-    'f5': { voice: 'kn-IN-SapnaNeural', pitch: '-1Hz', rate: '+0%' },
-    'f6': { voice: 'kn-IN-SapnaNeural', pitch: '+3Hz', rate: '+18%' },
-    'f7': { voice: 'kn-IN-SapnaNeural', pitch: '+2Hz', rate: '+22%' },
-    'f8': { voice: 'kn-IN-SapnaNeural', pitch: '+0Hz', rate: '+5%' },
-    'f9': { voice: 'kn-IN-SapnaNeural', pitch: '-1Hz', rate: '-5%' },
-    'f10': { voice: 'kn-IN-SapnaNeural', pitch: '+1Hz', rate: '+12%' }
+    // 10 Female Voice Profiles
+    'f1':  { voice: 'kn-IN-SapnaNeural', pitch: '+0Hz',  rate: '+5%',  volume: '+50%' }, // Sapna Pro
+    'f2':  { voice: 'kn-IN-SapnaNeural', pitch: '+4Hz',  rate: '+18%', volume: '+55%' }, // Rashmi RJ
+    'f3':  { voice: 'kn-IN-SapnaNeural', pitch: '+2Hz',  rate: '+12%', volume: '+50%' }, // Priya News
+    'f4':  { voice: 'kn-IN-SapnaNeural', pitch: '+6Hz',  rate: '+22%', volume: '+65%' }, // Pooja Fashion
+    'f5':  { voice: 'kn-IN-SapnaNeural', pitch: '-1Hz',  rate: '-6%',  volume: '+45%' }, // Ananya Story
+    'f6':  { voice: 'kn-IN-SapnaNeural', pitch: '+5Hz',  rate: '+20%', volume: '+60%' }, // Kavya Ad
+    'f7':  { voice: 'kn-IN-SapnaNeural', pitch: '+3Hz',  rate: '+15%', volume: '+50%' }, // Sneha FM
+    'f8':  { voice: 'kn-IN-SapnaNeural', pitch: '+1Hz',  rate: '+5%',  volume: '+50%' }, // Shreya Edu
+    'f9':  { voice: 'kn-IN-SapnaNeural', pitch: '-2Hz',  rate: '-10%', volume: '+40%' }, // Maulya Shanta
+    'f10': { voice: 'kn-IN-SapnaNeural', pitch: '+7Hz',  rate: '+15%', volume: '+60%' }  // Spandana Pro
 };
 
-// 💚 HEALTHCHECK / WAKE-UP PING ENDPOINT (Prevents Render Server Sleep)
+// Health Check
 app.get('/api/health', (req, res) => {
     res.status(200).json({ status: 'ok', uptime: process.uptime(), time: new Date().toISOString() });
 });
 
-// 🌐 INSTANT GOOGLE KANNADA TTS FETCHING ENGINE (0-Second Delay, 100% Uptime)
+// Google TTS Chunk Fetcher
 function fetchGoogleTTSChunk(chunkText) {
     return new Promise((resolve, reject) => {
         const encoded = encodeURIComponent(chunkText);
@@ -98,7 +100,7 @@ function fetchGoogleTTSChunk(chunkText) {
         
         const req = https.get(url, {
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             }
         }, (res) => {
             if (res.statusCode !== 200) {
@@ -142,13 +144,18 @@ app.post('/api/generate-tts', async (req, res) => {
         let preset = VOICE_PRESETS[rawVoice] || VOICE_PRESETS['m1'];
         let selectedVoice = preset.voice;
 
+        // Calculate combined pitch & rate from user sliders + voice profile presets
         let userPitchNum = parseInt(pitch) || 0;
         let basePitchNum = parseInt(preset.pitch) || 0;
         let finalPitchNum = userPitchNum + basePitchNum;
         let pitchVal = finalPitchNum >= 0 ? `+${finalPitchNum}Hz` : `${finalPitchNum}Hz`;
 
-        let rateVal = rate || preset.rate || '+15%';
-        let volumeVal = volume || '+50%';
+        let userRateNum = parseInt(rate) || 0;
+        let baseRateNum = parseInt(preset.rate) || 0;
+        let finalRateNum = userRateNum + baseRateNum;
+        let rateVal = finalRateNum >= 0 ? `+${finalRateNum}%` : `${finalRateNum}%`;
+
+        let volumeVal = volume || preset.volume || '+50%';
 
         let formattedText = formatHumanFlow(text);
         if (!formattedText) {
@@ -160,7 +167,7 @@ app.post('/api/generate-tts', async (req, res) => {
 
         let finalAudioBuffer = null;
 
-        // 1. Layer 1: EdgeTTS with strict 4.0s Timeout Promise
+        // 1. Primary Attempt: EdgeTTS with Neural SSML Prosody Pitch/Rate Shifting
         try {
             const edgePromise = new Promise(async (resolve, reject) => {
                 try {
@@ -188,19 +195,19 @@ app.post('/api/generate-tts', async (req, res) => {
             );
 
             finalAudioBuffer = await Promise.race([edgePromise, timeoutPromise]);
-            console.log("⚡ Layer 1 EdgeTTS Engine Succeeded!");
+            console.log(`⚡ Primary EdgeTTS Succeeded for voice ${rawVoice} (${selectedVoice}, pitch=${pitchVal}, rate=${rateVal})`);
 
         } catch (edgeErr) {
-            console.log("⚠️ Layer 1 EdgeTTS timed out or failed. Activating Layer 2 Google HD Engine:", edgeErr.message);
+            console.log(`⚠️ Primary EdgeTTS failed for ${rawVoice}. Activating Instant Google HD Engine:`, edgeErr.message);
         }
 
-        // 2. Layer 2: Instant Google HD Kannada Engine (Runs in 250ms if EdgeTTS timed out!)
+        // 2. Backup Engine: Instant Google HD Engine
         if (!finalAudioBuffer) {
             try {
                 finalAudioBuffer = await generateGoogleTTS(formattedText);
-                console.log("⚡ Layer 2 Google HD Engine Fallback Succeeded!");
+                console.log("⚡ Instant Google HD Engine Fallback Succeeded!");
             } catch (gErr) {
-                console.error("❌ Layer 2 Google TTS Fallback failed:", gErr);
+                console.error("❌ Both EdgeTTS and Google TTS failed:", gErr);
             }
         }
 

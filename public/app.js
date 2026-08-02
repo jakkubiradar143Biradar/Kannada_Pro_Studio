@@ -437,110 +437,79 @@ function applyKanglish() {
     }
 }
 
-// 🎧 Web Audio API Real-time Vocal Pitch & Formant Engine for 20 Unique Voice Models
-async function applyVocalEQ(audioArrayBuffer, eqType, voiceId) {
+// 🎧 Web Audio API Clean Studio Equalizer Engine (Preserves Natural AI Speech Pitch)
+async function applyVocalEQ(audioArrayBuffer, eqType) {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const decodedData = await audioCtx.decodeAudioData(audioArrayBuffer);
 
-    // Define unique pitch semitones for each of the 20 models
-    const VOICE_PITCH_PROFILES = {
-        'm1': 0,     // Gagan Anchor (Anchor News Male)
-        'f1': 5,     // Sapna Pro (Female Pro)
-        'm2': -6,    // Rajesh RJ (Heavy Bass Broadcast DJ)
-        'f2': 6,     // Rashmi RJ (Female FM RJ)
-        'm3': -3,    // Vikram News (Deep News Male)
-        'f3': 4,     // Priya News (Crisp News Female)
-        'm4': -8,    // Dev Mass (Action Hero Heavy Mass)
-        'f4': 7,     // Pooja Fashion (Ultra Bright Female)
-        'm5': -2,    // Arjun Sports (Energetic Male)
-        'f5': 3,     // Ananya Story (Warm Story Female)
-        'm6': 1,     // Surya Tech (Tech Male)
-        'f6': 6,     // Kavya Ad (Ad Commercial Female)
-        'm7': -5,    // Guru Bhakti (Devotional Male)
-        'f7': 5,     // Sneha FM (Soft FM Female)
-        'm8': -3,    // Chetan Story (Narrative Male)
-        'f8': 2,     // Shreya Edu (Classroom Female)
-        'm9': -4,    // Kiran Ad (Promo Male)
-        'f9': 1,     // Maulya Shanta (Meditation Female)
-        'm10': -9,   // Dhananjaya Pro (Mass Power Male)
-        'f10': 8     // Spandana Pro (Crystal HD Female)
-    };
-
-    const semitoneShift = VOICE_PITCH_PROFILES[voiceId] !== undefined ? VOICE_PITCH_PROFILES[voiceId] : 0;
-    const pitchRatio = Math.pow(2, semitoneShift / 12.0);
-
-    const renderDuration = decodedData.duration / (pitchRatio > 0 ? pitchRatio : 1);
     const offlineCtx = new OfflineAudioContext(
         decodedData.numberOfChannels,
-        Math.ceil(renderDuration * decodedData.sampleRate),
+        decodedData.length,
         decodedData.sampleRate
     );
 
     const source = offlineCtx.createBufferSource();
     source.buffer = decodedData;
-    source.playbackRate.value = pitchRatio;
 
     let lastNode = source;
 
-    // Formant EQ Resonators for Gender & Character Distinction
-    if (semitoneShift < -2) {
-        // Deep Male Formant Boost
-        const maleFormant = offlineCtx.createBiquadFilter();
-        maleFormant.type = "lowshelf";
-        maleFormant.frequency.value = 220;
-        maleFormant.gain.value = 12;
-
-        const subBass = offlineCtx.createBiquadFilter();
-        subBass.type = "peaking";
-        subBass.frequency.value = 90;
-        subBass.gain.value = 8;
-
-        lastNode.connect(maleFormant);
-        maleFormant.connect(subBass);
-        lastNode = subBass;
-    } else if (semitoneShift > 2) {
-        // Female High Formant Boost & Male Chest Cut
-        const hp = offlineCtx.createBiquadFilter();
-        hp.type = "highpass";
-        hp.frequency.value = 240;
-
-        const femaleFormant = offlineCtx.createBiquadFilter();
-        femaleFormant.type = "highshelf";
-        femaleFormant.frequency.value = 3200;
-        femaleFormant.gain.value = 10;
-
-        lastNode.connect(hp);
-        hp.connect(femaleFormant);
-        lastNode = femaleFormant;
-    }
-
-    // EQ Preset Filters
+    // Apply Pure Equalizer Filters
     if (eqType === 'bass') {
         const bassFilter = offlineCtx.createBiquadFilter();
         bassFilter.type = "lowshelf";
-        bassFilter.frequency.value = 120;
-        bassFilter.gain.value = 14;
+        bassFilter.frequency.value = 140;
+        bassFilter.gain.value = 12;
+
+        const subFilter = offlineCtx.createBiquadFilter();
+        subFilter.type = "peaking";
+        subFilter.frequency.value = 90;
+        subFilter.gain.value = 6;
+
         lastNode.connect(bassFilter);
-        lastNode = bassFilter;
+        bassFilter.connect(subFilter);
+        lastNode = subFilter;
+
     } else if (eqType === 'radio') {
+        const hp = offlineCtx.createBiquadFilter();
+        hp.type = "highpass";
+        hp.frequency.value = 160;
+
         const mid = offlineCtx.createBiquadFilter();
         mid.type = "peaking";
-        mid.frequency.value = 2500;
-        mid.gain.value = 8;
-        lastNode.connect(mid);
+        mid.frequency.value = 2600;
+        mid.gain.value = 7;
+
+        lastNode.connect(hp);
+        hp.connect(mid);
         lastNode = mid;
+
     } else if (eqType === 'bright') {
         const hs = offlineCtx.createBiquadFilter();
         hs.type = "highshelf";
-        hs.frequency.value = 3500;
+        hs.frequency.value = 3400;
         hs.gain.value = 10;
-        lastNode.connect(hs);
+
+        const hp = offlineCtx.createBiquadFilter();
+        hp.type = "highpass";
+        hp.frequency.value = 180;
+
+        lastNode.connect(hp);
+        hp.connect(hs);
         lastNode = hs;
+
+    } else {
+        const warm = offlineCtx.createBiquadFilter();
+        warm.type = "peaking";
+        warm.frequency.value = 1800;
+        warm.gain.value = 3;
+
+        lastNode.connect(warm);
+        lastNode = warm;
     }
 
     const compressor = offlineCtx.createDynamicsCompressor();
-    compressor.threshold.value = -20;
-    compressor.ratio.value = 5;
+    compressor.threshold.value = -22;
+    compressor.ratio.value = 4;
     lastNode.connect(compressor);
     lastNode = compressor;
 
@@ -889,7 +858,7 @@ async function processVoiceChanger() {
     }
 }
 
-// 🔊 ROBUST GENERATE SPEECH WITH 20 DISTINCT VOICE CHARACTER ENGINE
+// 🔊 ROBUST GENERATE SPEECH ENGINE WITH SSML MODEL & SHAILI TUNING
 async function generateProTTS() {
     const textInput = document.getElementById('ttsTextInput');
     const text = textInput ? textInput.value.trim() : '';
@@ -968,8 +937,7 @@ async function generateProTTS() {
     if (audioSuccess && rawArrayBuffer) {
         try {
             if (progressBarFill) progressBarFill.style.width = '90%';
-            // Apply 20 Unique Voice Model Formant Pitch Transposition!
-            const processedWavBlob = await applyVocalEQ(rawArrayBuffer, eq, selectedVoice);
+            const processedWavBlob = await applyVocalEQ(rawArrayBuffer, eq);
             const audioUrl = URL.createObjectURL(processedWavBlob);
             
             const player = document.getElementById('mainAudioPlayer');
@@ -994,7 +962,7 @@ async function generateProTTS() {
 
             const totalDurationSec = ((performance.now() - startTime) / 1000).toFixed(2);
             if (progressBarFill) progressBarFill.style.width = '100%';
-            if (timerLog) timerLog.innerText = `⚡ Generated in ${totalDurationSec}s with ${selectedVoice.toUpperCase()} Voice Profile!`;
+            if (timerLog) timerLog.innerText = `⚡ Generated in ${totalDurationSec}s!`;
             if (playerStatus) playerStatus.innerText = `✅ Generated in ${totalDurationSec}s!`;
             if (genBtn) genBtn.classList.remove('loading');
 
