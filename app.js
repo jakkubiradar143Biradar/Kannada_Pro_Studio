@@ -68,7 +68,7 @@ const KANGLISH_DICTIONARY = {
 const VOICE_SAMPLES = {
     'm1': 'ನನ್ನ ಹೆಸರು ಗಗನ್. ಸುದ್ದಿ ಪ್ರಸಾರಕ್ಕೆ ನನ್ನ ಧ್ವನಿ ಸಿದ್ಧವಾಗಿದೆ.',
     'f1': 'ನನ್ನ ಹೆಸರು ಸಪ್ನಾ. ನಿಮ್ಮ ಆಡಿಯೋ ಲೇಖನಗಳಿಗೆ ನನ್ನ ಸ್ಪಷ್ಟ ಧ್ವನಿ ಬಳಸಿ.',
-    'm2': 'ನನ್ನ ಹೆಸರು ರಾಜೇಶ್. ಎಫ್‌ಎಂ ರೇಡಿಯೋ ಶೈಲಿಯಲ್ಲಿ ನಿಮ್ಮ ಧ್ವನಿ ಕೇಳಿ.',
+    'm2': 'ನನ್ನ ಹೆಸರು ರಾಜೇಶ್. ಎಫ್‌ಎಂ ರೇಡಿಯೋ ಶೈಲಿಯಲ್ಲಿ ನನ್ನ ಧ್ವನಿ ಕೇಳಿ.',
     'f2': 'ನನ್ನ ಹೆಸರು ರಶ್ಮಿ. ರೇಡಿಯೋ ಜಾಕಿಯಂತೆ ನಿಮ್ಮೊಂದಿಗೆ ಮಾತನಾಡಲು ಬಂದಿದ್ದೇನೆ.',
     'm3': 'ನನ್ನ ಹೆಸರು ವಿಕ್ರಮ್. ಇಂದಿನ ಮುಖ್ಯ ವರದಿಗಳನ್ನು ಓದಲು ಧ್ವನಿ ಸಿದ್ಧ.',
     'f3': 'ನನ್ನ ಹೆಸರು ಪ್ರಿಯಾ. ಬ್ರೇಕಿಂಗ್ ನ್ಯೂಸ್ ಸುದ್ದಿ ಪ್ರಸಾರಕ್ಕೆ ನನ್ನ ಧ್ವನಿ ಬಳಸಿ.',
@@ -99,11 +99,10 @@ const PRESET_TEXTS = {
 
 // Setup Listeners & Auto Keep-Alive Server Ping on Load
 document.addEventListener('DOMContentLoaded', () => {
-    // 💚 AUTO KEEP-ALIVE SERVER PING (Prevents Render Free Tier Cold Sleep)
     fetch('/api/health').catch(() => {});
     setInterval(() => {
         fetch('/api/health').catch(() => {});
-    }, 4 * 60 * 1000); // Every 4 mins keep server hot!
+    }, 4 * 60 * 1000);
 
     const ttsInput = document.getElementById('ttsTextInput');
     if (ttsInput) {
@@ -358,14 +357,12 @@ async function convertKanglish(text) {
     const targetIndex = cursorInfo.index >= 0 ? cursorInfo.index : wordsArr.length - 1;
     currentCursorWordIndex = targetIndex;
 
-    // 1. Instant local dictionary fallback with committed choices
     const localConvertedWords = wordsArr.map((w, idx) => {
         if (committedWordChoices[idx]) return committedWordChoices[idx];
         return KANGLISH_DICTIONARY[w.toLowerCase()] || w;
     });
     if (resEl) resEl.innerText = localConvertedWords.join(' ');
 
-    // 2. Debounced Google API call respecting user-committed choices
     clearTimeout(kanglishDebounceTimer);
     kanglishDebounceTimer = setTimeout(async () => {
         const finalKannadaWords = [];
@@ -381,13 +378,11 @@ async function convertKanglish(text) {
         }
 
         resEl.innerText = finalKannadaWords.join(' ');
-
-        // Update Smart Variations for the exact word under cursor!
         await updateSmartVariationsForWord(targetWord, targetIndex);
     }, 120);
 }
 
-// APPLY CHIP CHOICE AT SPECIFIC WORD INDEX (Works for middle words & cursor position!)
+// APPLY CHIP CHOICE AT SPECIFIC WORD INDEX
 function applyActiveWordSuggestionAt(variationWord, targetIndex, clickedChip) {
     const resEl = document.getElementById('kangResult');
     if (!resEl) return;
@@ -442,85 +437,112 @@ function applyKanglish() {
     }
 }
 
-// Web Audio API Real-time Vocal EQ Engine
-async function applyVocalEQ(audioArrayBuffer, eqType) {
+// 🎧 Web Audio API Real-time Vocal Pitch & Formant Engine for 20 Unique Voice Models
+async function applyVocalEQ(audioArrayBuffer, eqType, voiceId) {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const decodedData = await audioCtx.decodeAudioData(audioArrayBuffer);
 
+    // Define unique pitch semitones for each of the 20 models
+    const VOICE_PITCH_PROFILES = {
+        'm1': 0,     // Gagan Anchor (Anchor News Male)
+        'f1': 5,     // Sapna Pro (Female Pro)
+        'm2': -6,    // Rajesh RJ (Heavy Bass Broadcast DJ)
+        'f2': 6,     // Rashmi RJ (Female FM RJ)
+        'm3': -3,    // Vikram News (Deep News Male)
+        'f3': 4,     // Priya News (Crisp News Female)
+        'm4': -8,    // Dev Mass (Action Hero Heavy Mass)
+        'f4': 7,     // Pooja Fashion (Ultra Bright Female)
+        'm5': -2,    // Arjun Sports (Energetic Male)
+        'f5': 3,     // Ananya Story (Warm Story Female)
+        'm6': 1,     // Surya Tech (Tech Male)
+        'f6': 6,     // Kavya Ad (Ad Commercial Female)
+        'm7': -5,    // Guru Bhakti (Devotional Male)
+        'f7': 5,     // Sneha FM (Soft FM Female)
+        'm8': -3,    // Chetan Story (Narrative Male)
+        'f8': 2,     // Shreya Edu (Classroom Female)
+        'm9': -4,    // Kiran Ad (Promo Male)
+        'f9': 1,     // Maulya Shanta (Meditation Female)
+        'm10': -9,   // Dhananjaya Pro (Mass Power Male)
+        'f10': 8     // Spandana Pro (Crystal HD Female)
+    };
+
+    const semitoneShift = VOICE_PITCH_PROFILES[voiceId] !== undefined ? VOICE_PITCH_PROFILES[voiceId] : 0;
+    const pitchRatio = Math.pow(2, semitoneShift / 12.0);
+
+    const renderDuration = decodedData.duration / (pitchRatio > 0 ? pitchRatio : 1);
     const offlineCtx = new OfflineAudioContext(
         decodedData.numberOfChannels,
-        decodedData.length,
+        Math.ceil(renderDuration * decodedData.sampleRate),
         decodedData.sampleRate
     );
 
     const source = offlineCtx.createBufferSource();
     source.buffer = decodedData;
+    source.playbackRate.value = pitchRatio;
 
     let lastNode = source;
 
+    // Formant EQ Resonators for Gender & Character Distinction
+    if (semitoneShift < -2) {
+        // Deep Male Formant Boost
+        const maleFormant = offlineCtx.createBiquadFilter();
+        maleFormant.type = "lowshelf";
+        maleFormant.frequency.value = 220;
+        maleFormant.gain.value = 12;
+
+        const subBass = offlineCtx.createBiquadFilter();
+        subBass.type = "peaking";
+        subBass.frequency.value = 90;
+        subBass.gain.value = 8;
+
+        lastNode.connect(maleFormant);
+        maleFormant.connect(subBass);
+        lastNode = subBass;
+    } else if (semitoneShift > 2) {
+        // Female High Formant Boost & Male Chest Cut
+        const hp = offlineCtx.createBiquadFilter();
+        hp.type = "highpass";
+        hp.frequency.value = 240;
+
+        const femaleFormant = offlineCtx.createBiquadFilter();
+        femaleFormant.type = "highshelf";
+        femaleFormant.frequency.value = 3200;
+        femaleFormant.gain.value = 10;
+
+        lastNode.connect(hp);
+        hp.connect(femaleFormant);
+        lastNode = femaleFormant;
+    }
+
+    // EQ Preset Filters
     if (eqType === 'bass') {
         const bassFilter = offlineCtx.createBiquadFilter();
         bassFilter.type = "lowshelf";
         bassFilter.frequency.value = 120;
         bassFilter.gain.value = 14;
-
-        const subFilter = offlineCtx.createBiquadFilter();
-        subFilter.type = "peaking";
-        subFilter.frequency.value = 80;
-        subFilter.gain.value = 6;
-
         lastNode.connect(bassFilter);
-        bassFilter.connect(subFilter);
-        lastNode = subFilter;
-
+        lastNode = bassFilter;
     } else if (eqType === 'radio') {
-        const hp = offlineCtx.createBiquadFilter();
-        hp.type = "highpass";
-        hp.frequency.value = 150;
-
         const mid = offlineCtx.createBiquadFilter();
         mid.type = "peaking";
         mid.frequency.value = 2500;
         mid.gain.value = 8;
-
-        const comp = offlineCtx.createDynamicsCompressor();
-        comp.threshold.value = -20;
-        comp.knee.value = 20;
-        comp.ratio.value = 8;
-
-        lastNode.connect(hp);
-        hp.connect(mid);
-        mid.connect(comp);
-        lastNode = comp;
-
+        lastNode.connect(mid);
+        lastNode = mid;
     } else if (eqType === 'bright') {
         const hs = offlineCtx.createBiquadFilter();
         hs.type = "highshelf";
         hs.frequency.value = 3500;
-        hs.gain.value = 12;
-
-        const hp = offlineCtx.createBiquadFilter();
-        hp.type = "highpass";
-        hp.frequency.value = 200;
-
-        lastNode.connect(hp);
-        hp.connect(hs);
+        hs.gain.value = 10;
+        lastNode.connect(hs);
         lastNode = hs;
-
-    } else {
-        const comp = offlineCtx.createDynamicsCompressor();
-        comp.threshold.value = -24;
-        comp.ratio.value = 4;
-
-        const warm = offlineCtx.createBiquadFilter();
-        warm.type = "peaking";
-        warm.frequency.value = 1800;
-        warm.gain.value = 3;
-
-        lastNode.connect(comp);
-        comp.connect(warm);
-        lastNode = warm;
     }
+
+    const compressor = offlineCtx.createDynamicsCompressor();
+    compressor.threshold.value = -20;
+    compressor.ratio.value = 5;
+    lastNode.connect(compressor);
+    lastNode = compressor;
 
     lastNode.connect(offlineCtx.destination);
     source.start(0);
@@ -867,7 +889,7 @@ async function processVoiceChanger() {
     }
 }
 
-// 🔊 ROBUST GENERATE SPEECH WITH SILENT 3-ATTEMPT AUTO-RETRY
+// 🔊 ROBUST GENERATE SPEECH WITH 20 DISTINCT VOICE CHARACTER ENGINE
 async function generateProTTS() {
     const textInput = document.getElementById('ttsTextInput');
     const text = textInput ? textInput.value.trim() : '';
@@ -938,7 +960,7 @@ async function generateProTTS() {
         } catch (err) {
             console.log(`Frontend Fetch Attempt ${attempt} failed:`, err);
         }
-        await new Promise(r => setTimeout(r, 1000)); // Wait 1 sec before retrying
+        await new Promise(r => setTimeout(r, 1000));
     }
 
     clearInterval(timerInterval);
@@ -946,7 +968,8 @@ async function generateProTTS() {
     if (audioSuccess && rawArrayBuffer) {
         try {
             if (progressBarFill) progressBarFill.style.width = '90%';
-            const processedWavBlob = await applyVocalEQ(rawArrayBuffer, eq);
+            // Apply 20 Unique Voice Model Formant Pitch Transposition!
+            const processedWavBlob = await applyVocalEQ(rawArrayBuffer, eq, selectedVoice);
             const audioUrl = URL.createObjectURL(processedWavBlob);
             
             const player = document.getElementById('mainAudioPlayer');
@@ -971,7 +994,7 @@ async function generateProTTS() {
 
             const totalDurationSec = ((performance.now() - startTime) / 1000).toFixed(2);
             if (progressBarFill) progressBarFill.style.width = '100%';
-            if (timerLog) timerLog.innerText = `⚡ Generated in ${totalDurationSec}s with ${eq.toUpperCase()} EQ!`;
+            if (timerLog) timerLog.innerText = `⚡ Generated in ${totalDurationSec}s with ${selectedVoice.toUpperCase()} Voice Profile!`;
             if (playerStatus) playerStatus.innerText = `✅ Generated in ${totalDurationSec}s!`;
             if (genBtn) genBtn.classList.remove('loading');
 
@@ -984,7 +1007,6 @@ async function generateProTTS() {
         }
     }
 
-    // Fail-safe handling without annoying popups
     if (playerStatus) playerStatus.innerText = "⚠️ Voice Engine is waking up. Please click Generate again!";
     if (timerLog) timerLog.innerText = "⚠️ Temporary Network Timeout. Please retry.";
     if (genBtn) genBtn.classList.remove('loading');
